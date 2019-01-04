@@ -37,6 +37,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     public FlutterVideoView(Context context, BinaryMessenger messenger, int id) {
         this.context = context;
         textureView = new TextureView(context);
+        SurfaceTexture texture = new SurfaceTexture(false);
+        textureView.setSurfaceTexture(texture);
         channel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         channel.setMethodCallHandler(this);
     }
