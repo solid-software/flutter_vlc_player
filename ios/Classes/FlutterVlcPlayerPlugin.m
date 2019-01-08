@@ -55,8 +55,6 @@ UIView *_view;
 VLCMediaPlayer *_player;
 FlutterResult _result;
 UIView *_view;
-bool _sent = false;
-
 
 + (void)registerWithRegistrar:(nonnull NSObject<FlutterPluginRegistrar> *)registrar {
     CGRect _rect = CGRectMake(0, 0, 700, 100);
@@ -103,13 +101,11 @@ bool _sent = false;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
 
-    if ([_player isPlaying] && !_sent){
-        _sent = true;
+    if ([_player isPlaying]){
         [_player setDrawable:_view];
         [_player setVideoAspectRatio:"0.7"];
         [_player setCurrentVideoTrackIndex:0];
         [_player setScaleFactor:0.0];
-        NSLog(@"%s", [_player videoAspectRatio]);
         char *_aspectRatioChar = [_player videoAspectRatio];
         NSNumber *_aspectRatio = [NSString stringWithFormat:@"%s", _aspectRatioChar];
 
