@@ -85,4 +85,10 @@ class _VlcPlayerState extends State<VlcPlayer> {
   void createScreenshot() {
     _controller.makeSnapshot();
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }
