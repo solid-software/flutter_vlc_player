@@ -2,7 +2,10 @@ package com.flutterVlcPlayer.fluttervlcplayer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.view.TextureView;
 import android.view.View;
@@ -34,6 +37,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private MethodChannel.Result result;
     private boolean replyAlreadySubmitted = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public FlutterVideoView(Context context, BinaryMessenger messenger, int id) {
         this.context = context;
         textureView = new TextureView(context);
