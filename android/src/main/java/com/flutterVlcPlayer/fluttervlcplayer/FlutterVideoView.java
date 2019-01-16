@@ -61,7 +61,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-        System.out.println(methodCall.method);
         switch (methodCall.method) {
             case "playVideo":
                 this.result = result;
@@ -100,8 +99,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     Bitmap bitmap = textureView.getBitmap();
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    System.out.println(Arrays.toString(outputStream.toByteArray()));
-                    System.out.println("compressed");
                     imageBytes = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
                     response.put("snapshot", imageBytes);
                     textureView.setDrawingCacheEnabled(false);

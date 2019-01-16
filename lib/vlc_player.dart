@@ -68,7 +68,6 @@ class _VlcPlayerState extends State<VlcPlayer> {
   }
 
   void _onPlatformViewCreated(int id) async {
-    print("created platform view");
     _controller = widget.controller;
     _controller.initView(id);
     if (_controller.hasClients) {
@@ -80,10 +79,6 @@ class _VlcPlayerState extends State<VlcPlayer> {
       if (aspectRatioString != null && aspectRatioString.isNotEmpty)
       aspectRatio = double.parse(aspectRatioString);
     }
-  }
-
-  void createScreenshot() {
-    _controller.makeSnapshot();
   }
 
   @override
