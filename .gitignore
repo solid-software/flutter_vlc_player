@@ -1,6 +1,7 @@
 .DS_Store
 .dart_tool/
-
+.idea
+flutter_vlc_player.iml
 .packages
 .pub/
 pubspec.lock

@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
             new VlcPlayer(
               defaultWidth: 640,
               defaultHeight: 360,
-              url: "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov",
+              url: "http://213.226.254.135:91/mjpg/video.mjpg",
               controller: _videoViewController,
               placeholder: Container(
                 height: 250.0,
