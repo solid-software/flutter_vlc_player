@@ -1,6 +1,6 @@
 #  VLC Player Plugin
-Flutter plugin to view local videos and videos from the network.
-
+Flutter plugin to view local videos and videos from the network. Work example:   
+<img src="https://github.com/solid-software/flutter_vlc_player/blob/master/imgpsh_mobile_save.jfif?raw=true" width="200">
 ## Getting Started
 To start using the plugin, copy this code or follow the [example](https://github.com/solid-software/flutter_vlc_player/tree/master/example):
 ```dart
