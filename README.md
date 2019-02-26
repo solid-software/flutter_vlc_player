@@ -39,6 +39,6 @@ To take screenshot from video just follow next code:
 ```dart
 Uint8List image = await controller.makeSnapshot();
 ```
-
+## Current issues
 Current issues list [is here](https://github.com/solid-software/flutter_notification_settings/issues).   
 Found a bug? [Open the issue](https://github.com/solid-software/flutter_notification_settings/issues/new).
