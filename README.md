@@ -1,9 +1,7 @@
 #  VLC Player Plugin
----
 Flutter plugin for streaming or local video viewing.
 
 ## Getting Started
-----
 For help getting started with Flutter, view our online [documentation](http://flutter.io).
 #### To start using the plugin, copy this code or follow the [example](https://github.com/solid-software/flutter_vlc_player/tree/master/example):
 ```dart
@@ -42,8 +40,3 @@ class _ExampleVideoState extends State<ExampleVideo> {
 ```dart
 Uint8List image = await controller.makeSnapshot();
 ```
-
-### License
--------
-
-### BSD License 2.0 
