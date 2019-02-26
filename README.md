@@ -40,6 +40,5 @@ To take screenshot from video just follow next code:
 Uint8List image = await controller.makeSnapshot();
 ```
 
-# Current issues
-List of current issues you can see [here](https://github.com/solid-software/flutter_vlc_player/issues?q=is%3Aopen+is%3Aissue).  
-Found a bug? [Inform us](https://github.com/solid-software/flutter_vlc_player/issues/new)!
+Current issues list [is here](https://github.com/solid-software/flutter_notification_settings/issues).   
+Found a bug? [Open the issue](https://github.com/solid-software/flutter_notification_settings/issues/new).
