@@ -1,9 +1,8 @@
 #  VLC Player Plugin
-Flutter plugin for streaming or local video viewing.
+Flutter plugin to view local videos and videos from the network.
 
 ## Getting Started
-For help getting started with Flutter, view our online [documentation](http://flutter.io).
-#### To start using the plugin, copy this code or follow the [example](https://github.com/solid-software/flutter_vlc_player/tree/master/example):
+To start using the plugin, copy this code or follow the [example](https://github.com/solid-software/flutter_vlc_player/tree/master/example):
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/vlc_player.dart';
@@ -36,7 +35,11 @@ class _ExampleVideoState extends State<ExampleVideo> {
 
 ```
 
-#### To take screenshot from video just follow next code:
+To take screenshot from video just follow next code:
 ```dart
 Uint8List image = await controller.makeSnapshot();
 ```
+
+# Current issues
+List of current issues you can see [here](https://github.com/solid-software/flutter_vlc_player/issues?q=is%3Aopen+is%3Aissue).  
+Found a bug? [Inform us](https://github.com/solid-software/flutter_vlc_player/issues/new)!
