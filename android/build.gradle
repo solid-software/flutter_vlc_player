@@ -1,4 +1,4 @@
-group 'com.flutterVlcPlayer.fluttervlcplayer'
+group 'software.solid.fluttervlcplayer'
 version '1.0-SNAPSHOT'
 
 buildscript {

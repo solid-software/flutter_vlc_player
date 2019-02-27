@@ -1,4 +1,4 @@
-package com.flutterVlcPlayer.fluttervlcplayerexample;
+package software.solid.fluttervlcplayerexample;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

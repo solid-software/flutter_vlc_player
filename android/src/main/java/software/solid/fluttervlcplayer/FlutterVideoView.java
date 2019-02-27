@@ -1,4 +1,4 @@
-package com.flutterVlcPlayer.fluttervlcplayer;
+package software.solid.fluttervlcplayer;
 
 import android.content.Context;
 import android.graphics.Bitmap;

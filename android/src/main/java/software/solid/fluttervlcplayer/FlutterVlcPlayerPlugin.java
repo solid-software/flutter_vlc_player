@@ -1,4 +1,4 @@
-package com.flutterVlcPlayer.fluttervlcplayer;
+package software.solid.fluttervlcplayer;
 
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
