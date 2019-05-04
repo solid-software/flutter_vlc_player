@@ -5,11 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Build;
+import android.view.Surface;
 import androidx.annotation.RequiresApi;
 import android.util.Base64;
 import android.view.TextureView;
 import android.view.View;
 
+import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.view.FlutterView;
+import io.flutter.view.TextureRegistry;
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -30,18 +34,22 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private final Context context;
 
     private MediaPlayer mediaPlayer;
+    private TextureRegistry.SurfaceTextureEntry textureEntry;
     private TextureView textureView;
     private String url;
     private IVLCVout vout;
     private MethodChannel.Result result;
     private boolean replyAlreadySubmitted = false;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public FlutterVideoView(Context context, BinaryMessenger messenger, int id) {
+    // @RequiresApi(api = Build.VERSION_CODES.O)
+    public FlutterVideoView(Context context, PluginRegistry.Registrar registrar, BinaryMessenger messenger, int id) {
         this.context = context;
+
+        //SurfaceTexture texture = new SurfaceTexture(0);
+        textureEntry = registrar.textures().createSurfaceTexture();
         textureView = new TextureView(context);
-        SurfaceTexture texture = new SurfaceTexture(false);
-        textureView.setSurfaceTexture(texture);
+        textureView.setSurfaceTexture(textureEntry.surfaceTexture());
+
         channel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         channel.setMethodCallHandler(this);
     }
@@ -80,7 +88,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout = mediaPlayer.getVLCVout();
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
-                vout.setVideoView(textureView);
+                //vout.setVideoView(textureView);
+                vout.setVideoSurface(textureView.getSurfaceTexture());
 
                 vout.attachViews();
                 mediaPlayer.setMedia(media);

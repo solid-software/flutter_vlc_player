@@ -38,8 +38,7 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: <Widget>[
             new VlcPlayer(
-              defaultWidth: 640,
-              defaultHeight: 360,
+              aspectRatio: 16 / 9,
               url: "http://213.226.254.135:91/mjpg/video.mjpg",
               controller: _videoViewController,
               placeholder: Container(

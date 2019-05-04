@@ -16,8 +16,10 @@
       <excludeFolder url="file://$MODULE_DIR$/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/example/build" />
     </content>
-    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="Dart SDK" level="project" />
     <orderEntry type="library" name="Flutter Plugins" level="project" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Flutter for Android" level="project" />
   </component>
 </module>

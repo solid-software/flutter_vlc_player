@@ -6,18 +6,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_vlc_player/vlc_player_controller.dart';
 
 class VlcPlayer extends StatefulWidget {
-  final int defaultHeight;
-  final int defaultWidth;
+  final double aspectRatio;
   final String url;
   final Widget placeholder;
   final VlcPlayerController controller;
 
   const VlcPlayer({
     Key key,
-    @required this.defaultHeight,
-    @required this.defaultWidth,
-    @required this.url,
     @required this.controller,
+    @required this.aspectRatio,
+    @required this.url,
     this.placeholder,
   });
 
@@ -27,7 +25,6 @@ class VlcPlayer extends StatefulWidget {
 
 class _VlcPlayerState extends State<VlcPlayer> {
   int videoRenderId;
-  double aspectRatio = 0.7;
   VlcPlayerController _controller;
   bool readyToShow = false;
 
@@ -40,7 +37,7 @@ class _VlcPlayerState extends State<VlcPlayer> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1 + aspectRatio,
+      aspectRatio: widget.aspectRatio,
       child: Stack(
         children: <Widget>[
           Offstage(offstage: readyToShow, child: widget.placeholder),
@@ -71,13 +68,11 @@ class _VlcPlayerState extends State<VlcPlayer> {
     _controller = widget.controller;
     _controller.initView(id);
     if (_controller.hasClients) {
-      String aspectRatioString =
-      await _controller.setStreamUrl(widget.url, widget.defaultHeight, widget.defaultWidth);
+      await _controller.setStreamUrl(widget.url);
+
       setState(() {
         readyToShow = true;
       });
-      if (aspectRatioString != null && aspectRatioString.isNotEmpty)
-      aspectRatio = double.parse(aspectRatioString);
     }
   }
 

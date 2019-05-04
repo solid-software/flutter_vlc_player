@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cryptoutils/cryptoutils.dart';
@@ -12,7 +13,7 @@ class VlcPlayerController {
     hasClients = true;
   }
 
-  Future<String> setStreamUrl(String url, int defaultHeight, int defaultWidth) async {
+  Future<String> setStreamUrl(String url) async {
     var result = await _channel.invokeMethod("playVideo", {
       'url': url,
     });
