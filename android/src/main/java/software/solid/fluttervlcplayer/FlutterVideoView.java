@@ -170,7 +170,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 resultMap.put("height", height);
                 resultMap.put("width", width);
-                resultMap.put("aspectRatio", mediaPlayer.getAspectRatio());
+                resultMap.put("aspectRatio", height > 0 ? (double) width / (double) height : 0D);
                 resultMap.put("length", mediaPlayer.getLength());
 
                 result.success(resultMap);
@@ -247,6 +247,46 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         Map<String, Object> eventObject = new HashMap<>();
 
         switch (event.type) {
+            case MediaPlayer.Event.Playing:
+                // Insert buffering=false event first:
+                eventObject.put("name", "buffering");
+                eventObject.put("value", false);
+                eventSink.success(eventObject);
+                eventObject.clear();
+
+                // Now send playing info:
+                int height = 0;
+                int width = 0;
+
+                Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
+                if (currentVideoTrack != null) {
+                    height = currentVideoTrack.height;
+                    width = currentVideoTrack.width;
+                }
+
+                eventObject.put("name", "playing");
+                eventObject.put("ratio", height > 0 ? (double) width / (double) height : 0D);
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+                break;
+
+            case MediaPlayer.Event.EndReached:
+                mediaPlayer.stop();
+
+                eventObject.put("name", "ended");
+                eventSink.success(eventObject);
+                eventObject.clear();
+
+                eventObject.put("name", "playing");
+                eventObject.put("value", false);
+                eventSink.success(eventObject);
+
+            case MediaPlayer.Event.Buffering:
+                eventObject.put("name", "buffering");
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+                break;
+
             case MediaPlayer.Event.Vout:
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;
@@ -256,6 +296,32 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("name", "timeChanged");
                 eventObject.put("value", mediaPlayer.getTime());
                 eventObject.put("speed", mediaPlayer.getRate());
+                eventSink.success(eventObject);
+                break;
+
+            case MediaPlayer.Event.Paused:
+            case MediaPlayer.Event.Stopped:
+                eventObject.put("name", "buffering");
+                eventObject.put("value", false);
+                eventSink.success(eventObject);
+
+                eventObject.clear();
+
+                eventObject.put("name", "playing");
+                eventObject.put("value", false);
+                eventSink.success(eventObject);
+                break;
+
+            case MediaPlayer.Event.EncounteredError:
+                // TODO: Send error information
+                eventObject.put("name", "buffering");
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+
+                eventObject.clear();
+
+                eventObject.put("name", "playing");
+                eventObject.put("value", false);
                 eventSink.success(eventObject);
                 break;
         }

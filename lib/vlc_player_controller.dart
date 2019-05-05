@@ -13,7 +13,13 @@ class VlcPlayerController {
   List<Function> _eventHandlers;
 
   bool _initialized = false;
-  get initialized => _initialized;
+  bool get initialized => _initialized;
+
+  bool _playing = false;
+  bool get playing => _playing;
+
+  bool _buffering = false;
+  bool get buffering => _buffering;
 
   int _currentTime;
   int get currentTime => _currentTime;
@@ -78,6 +84,13 @@ class VlcPlayerController {
 
     _eventChannel.receiveBroadcastStream().listen((event){
       switch(event['name']){
+        case 'playing':
+          if(event['ratio'] != null) _aspectRatio = event['ratio'];
+          _playing = event['value'];
+          break;
+        case 'buffering':
+          _buffering = event['value'];
+          break;
         case 'timeChanged':
           _currentTime = event['value'];
           _playbackSpeed = event['speed'];

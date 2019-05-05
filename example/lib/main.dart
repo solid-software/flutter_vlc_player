@@ -76,6 +76,7 @@ class _MyAppState extends State<MyApp> {
             ),
 
             Text("current=" + _videoViewController.currentTime.toString() + ", max=" + _videoViewController.totalTime.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
+            Text("ratio=" + _videoViewController.aspectRatio.toString()),
 
             Expanded(
               child: image == null
