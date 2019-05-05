@@ -153,7 +153,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout.attachViews();
                 mediaPlayer.setMedia(media);
                 mediaPlayer.setEventListener(this);
-                mediaPlayer.play();
+                //mediaPlayer.play();
                 break;
             case "dispose":
                 mediaPlayer.stop();
@@ -167,7 +167,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 String newURL = methodCall.argument("url");
                 Media newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
                 mediaPlayer.setMedia(newMedia);
-                mediaPlayer.play();
+                // mediaPlayer.play();
 
                 result.success(null);
                 break;

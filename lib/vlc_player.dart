@@ -178,8 +178,6 @@ class VlcPlayerController {
           _playing = event['value'];
 
           if(!_initialized){
-            _initialized = true;
-            _onInit();
             _fireEventHandlers();
           }
           break;
@@ -195,6 +193,8 @@ class VlcPlayerController {
       }
     });
 
+    _initialized = true;
+    _onInit();
     _fireEventHandlers();
   }
 
