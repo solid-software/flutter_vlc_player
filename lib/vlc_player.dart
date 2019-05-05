@@ -221,7 +221,7 @@ class VlcPlayerController {
     });
   }
 
-  Future<void> seek(double time) async {
+  Future<void> seek(num time) async {
     await _methodChannel.invokeMethod("seek", {
       'time': time.toString()
     });
