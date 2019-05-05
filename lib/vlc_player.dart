@@ -24,9 +24,9 @@ class VlcPlayer extends StatefulWidget {
 }
 
 class _VlcPlayerState extends State<VlcPlayer> {
-  int videoRenderId;
   VlcPlayerController _controller;
-  bool readyToShow = false;
+  int videoRenderId;
+  bool playerInitialized = false;
 
 
   @override
@@ -40,9 +40,9 @@ class _VlcPlayerState extends State<VlcPlayer> {
       aspectRatio: widget.aspectRatio,
       child: Stack(
         children: <Widget>[
-          Offstage(offstage: readyToShow, child: widget.placeholder),
+          Offstage(offstage: playerInitialized, child: widget.placeholder ?? Container()),
           Offstage(
-            offstage: !readyToShow,
+            offstage: !playerInitialized,
             child: _createPlatformView(),
           ),
         ],
@@ -67,12 +67,17 @@ class _VlcPlayerState extends State<VlcPlayer> {
   void _onPlatformViewCreated(int id) async {
     _controller = widget.controller;
     _controller.initView(id);
-    if (_controller.hasClients) {
-      await _controller.setStreamUrl(widget.url);
 
-      setState(() {
-        readyToShow = true;
-      });
+    _controller.addListener((){
+      if(playerInitialized != _controller.initialized){
+        setState(() {
+          playerInitialized = _controller.initialized;
+        });
+      }
+    });
+
+    if (_controller.hasClients) {
+      await _controller.initialize(widget.url);
     }
   }
 

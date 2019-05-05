@@ -20,7 +20,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     imageKey = new GlobalKey();
+
     _videoViewController = new VlcPlayerController();
+    _videoViewController.addListener((){
+      setState(() {});
+    });
+
     super.initState();
   }
 
@@ -39,7 +44,7 @@ class _MyAppState extends State<MyApp> {
           children: <Widget>[
             new VlcPlayer(
               aspectRatio: 16 / 9,
-              url: "http://213.226.254.135:91/mjpg/video.mjpg",
+              url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
               controller: _videoViewController,
               placeholder: Container(
                 height: 250.0,
@@ -49,6 +54,14 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
+
+            FlatButton(
+              child: Text("Change URL"),
+              onPressed: () => _videoViewController.setStreamUrl("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
+            ),
+
+            Text(_videoViewController.currentTime.toString()),
+
             Expanded(
               child: image == null
                   ? Container()
