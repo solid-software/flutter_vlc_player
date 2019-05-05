@@ -111,11 +111,6 @@ class VlcPlayerController {
 
   int _currentTime;
   int get currentTime => _currentTime;
-  Future<void> seek(int newCurrentTime) async {
-    _methodChannel.invokeMethod("seek", {
-      "time": newCurrentTime
-    });
-  }
 
   int _totalTime;
   int get totalTime => _totalTime;
