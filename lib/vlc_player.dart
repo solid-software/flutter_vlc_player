@@ -111,8 +111,8 @@ class VlcPlayerController {
 
   int _currentTime;
   int get currentTime => _currentTime;
-  Future<void> setCurrentTime(int newCurrentTime) async {
-    _methodChannel.invokeMethod("setCurrentTime", {
+  Future<void> seek(int newCurrentTime) async {
+    _methodChannel.invokeMethod("seek", {
       "time": newCurrentTime
     });
   }
@@ -169,7 +169,6 @@ class VlcPlayerController {
     _currentTime = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event){
-      print("EVT//:" + event['name']);
       switch(event['name']){
         case 'playing':
           if(event['width'] != null) _width = event['width'];
