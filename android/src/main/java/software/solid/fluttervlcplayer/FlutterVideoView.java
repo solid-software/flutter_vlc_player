@@ -68,11 +68,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener(){
 
+            boolean wasPaused = false;
+
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
-                mediaPlayer.play();
+                if(wasPaused){
+                    mediaPlayer.play();
+                    wasPaused = false;
+                }
             }
 
             @Override
@@ -91,6 +96,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     return true;
                 }else{
                     mediaPlayer.pause();
+                    wasPaused = true;
                     vout.detachViews();
                     return true;
                 }
@@ -146,28 +152,25 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout = mediaPlayer.getVLCVout();
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
-
-                //vout.setVideoSurface(textureView.getSurfaceTexture());
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                //vout.setVideoView(textureView);
                 vout.attachViews();
-                mediaPlayer.setMedia(media);
+
                 mediaPlayer.setEventListener(this);
-                //mediaPlayer.play();
+                mediaPlayer.setMedia(media);
+                mediaPlayer.play();
+                result.success(null);
                 break;
             case "dispose":
-                mediaPlayer.stop();
-                vout.detachViews();
-                playerDisposed = true;
+                this.dispose();
                 break;
             case "changeURL":
                 if(libVLC == null) result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
-                //  mediaPlayer.stop();
+                mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
                 Media newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
                 mediaPlayer.setMedia(newMedia);
-                // mediaPlayer.play();
+                mediaPlayer.play();
 
                 result.success(null);
                 break;
@@ -223,14 +226,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     @Override
     public void onEvent(MediaPlayer.Event event) {
-        Map<String, Object> eventObject = new HashMap<>();
+        HashMap<String, Object> eventObject = new HashMap<>();
 
         switch (event.type) {
             case MediaPlayer.Event.Playing:
                 // Insert buffering=false event first:
                 eventObject.put("name", "buffering");
                 eventObject.put("value", false);
-                eventSink.success(eventObject);
+                eventSink.success(eventObject.clone());
                 eventObject.clear();
 
                 // Now send playing info:
@@ -249,16 +252,15 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("height", height);
                 eventObject.put("width", width);
                 eventObject.put("length", mediaPlayer.getLength());
-                eventSink.success(eventObject);
+                eventSink.success(eventObject.clone());
                 break;
 
             case MediaPlayer.Event.EndReached:
                 mediaPlayer.stop();
-
                 eventObject.put("name", "ended");
                 eventSink.success(eventObject);
-                eventObject.clear();
 
+                eventObject.clear();
                 eventObject.put("name", "playing");
                 eventObject.put("value", false);
                 eventSink.success(eventObject);
@@ -266,6 +268,11 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case MediaPlayer.Event.Buffering:
                 eventObject.put("name", "buffering");
                 eventObject.put("value", true);
+                eventSink.success(eventObject);
+
+                eventObject.clear();
+                eventObject.put("name", "playing");
+                eventObject.put("value", false);
                 eventSink.success(eventObject);
                 break;
 
@@ -287,7 +294,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventSink.success(eventObject);
 
                 eventObject.clear();
-
                 eventObject.put("name", "playing");
                 eventObject.put("value", false);
                 eventSink.success(eventObject);

@@ -169,6 +169,7 @@ class VlcPlayerController {
     _currentTime = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event){
+      print("EVT//:" + event['name']);
       switch(event['name']){
         case 'playing':
           if(event['width'] != null) _width = event['width'];
@@ -177,9 +178,7 @@ class VlcPlayerController {
           if(event['ratio'] != null) _aspectRatio = event['ratio'];
           _playing = event['value'];
 
-          if(!_initialized){
-            _fireEventHandlers();
-          }
+          _fireEventHandlers();
           break;
         case 'buffering':
           _buffering = event['value'];

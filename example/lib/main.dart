@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/vlc_player.dart';
-import 'package:flutter_vlc_player/vlc_player_controller.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,7 +20,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     imageKey = new GlobalKey();
 
-    _videoViewController = new VlcPlayerController();
+    _videoViewController = new VlcPlayerController(
+      onInit: (){
+        _videoViewController.play();
+      }
+    );
     _videoViewController.addListener((){
       setState(() {});
     });
