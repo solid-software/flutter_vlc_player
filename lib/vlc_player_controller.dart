@@ -50,6 +50,10 @@ class VlcPlayerController {
   void addListener(Function listener){
     _eventHandlers.add(listener);
   }
+  
+  void removeListener(Function listener){
+    _eventHandlers.remove(listener);
+  }
 
   void clearListeners(){
     _eventHandlers.clear();
