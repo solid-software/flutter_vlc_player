@@ -60,7 +60,22 @@ class _MyAppState extends State<MyApp> {
               onPressed: () => _videoViewController.setStreamUrl("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
             ),
 
-            Text(_videoViewController.currentTime.toString()),
+            FlatButton(
+              child: Text("+speed"),
+              onPressed: () => _videoViewController.setPlaybackSpeed(2.0)
+            ),
+
+            FlatButton(
+                child: Text("Normal"),
+                onPressed: () => _videoViewController.setPlaybackSpeed(1)
+            ),
+
+            FlatButton(
+              child: Text("-speed"),
+              onPressed: () => _videoViewController.setPlaybackSpeed(0.5)
+            ),
+
+            Text("current=" + _videoViewController.currentTime.toString() + ", max=" + _videoViewController.totalTime.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
 
             Expanded(
               child: image == null

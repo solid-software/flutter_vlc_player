@@ -16,7 +16,7 @@ class VlcPlayerController {
   get initialized => _initialized;
 
   int _currentTime;
-  get currentTime => _currentTime;
+  int get currentTime => _currentTime;
   Future<void> setCurrentTime(int newCurrentTime) async {
     _methodChannel.invokeMethod("setCurrentTime", {
       "time": newCurrentTime
@@ -24,12 +24,18 @@ class VlcPlayerController {
   }
 
   int _totalTime;
-  get totalTime => _totalTime;
+  int get totalTime => _totalTime;
 
   int _height;
-  get height => _height;
+  int get height => _height;
   int _width;
-  get width => _width;
+  int get width => _width;
+
+  double _aspectRatio;
+  double get aspectRatio => _aspectRatio;
+
+  double _playbackSpeed;
+  double get playbackSpeed => _playbackSpeed;
 
   VlcPlayerController(){
     _eventHandlers = new List();
@@ -63,12 +69,14 @@ class VlcPlayerController {
     _width = videoData['width'];
     _height = videoData['height'];
     _currentTime = 0;
+    _aspectRatio = videoData['aspectRatio'];
     _totalTime = videoData['length'];
 
     _eventChannel.receiveBroadcastStream().listen((event){
       switch(event['name']){
         case 'timeChanged':
           _currentTime = event['value'];
+          _playbackSpeed = event['speed'];
           _fireEventHandlers();
           break;
       }
@@ -108,15 +116,16 @@ class VlcPlayerController {
     });
   }
 
+  Future<void> seek(double time) async {
+    await _methodChannel.invokeMethod("seek", {
+      'time': time.toString()
+    });
+  }
+
   Future<void> setPlaybackSpeed(double speed) async {
     await _methodChannel.invokeMethod("setPlaybackSpeed", {
       'speed': speed.toString()
     });
-  }
-
-  Future<double> getPlaybackSpeed() async {
-    String playbackSpeedResponse = await _methodChannel.invokeMethod("getPlaybackSpeed");
-    return double.parse(playbackSpeedResponse);
   }
 
   Future<Uint8List> makeSnapshot() async {

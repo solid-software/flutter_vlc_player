@@ -170,6 +170,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 resultMap.put("height", height);
                 resultMap.put("width", width);
+                resultMap.put("aspectRatio", mediaPlayer.getAspectRatio());
                 resultMap.put("length", mediaPlayer.getLength());
 
                 result.success(resultMap);
@@ -231,8 +232,12 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(null);
                 break;
 
-            case "getPlaybackSpeed":
-                result.success(String.valueOf(mediaPlayer.getRate()));
+            case "seek":
+
+                long time = Long.parseLong((String) methodCall.argument("time"));
+                mediaPlayer.setTime(time);
+
+                result.success(null);
                 break;
         }
     }
@@ -250,6 +255,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 eventObject.put("name", "timeChanged");
                 eventObject.put("value", mediaPlayer.getTime());
+                eventObject.put("speed", mediaPlayer.getRate());
                 eventSink.success(eventObject);
                 break;
         }
