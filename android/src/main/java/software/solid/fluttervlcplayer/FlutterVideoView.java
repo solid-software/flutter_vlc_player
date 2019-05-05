@@ -154,27 +154,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 mediaPlayer.setMedia(media);
                 mediaPlayer.setEventListener(this);
                 mediaPlayer.play();
-
-
-                /* SEND INITIAL VIDEO DATA AS INITIAL RESULT */
-                Map<String, Object> resultMap = new HashMap<>();
-
-                int height = 0;
-                int width = 0;
-
-                Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
-                if (currentVideoTrack != null) {
-                    height = currentVideoTrack.height;
-                    width = currentVideoTrack.width;
-                }
-
-                resultMap.put("height", height);
-                resultMap.put("width", width);
-                resultMap.put("aspectRatio", height > 0 ? (double) width / (double) height : 0D);
-                resultMap.put("length", mediaPlayer.getLength());
-
-                result.success(resultMap);
-                /* ./SEND INITIAL VIDEO DATA */
                 break;
             case "dispose":
                 mediaPlayer.stop();
@@ -267,6 +246,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("name", "playing");
                 eventObject.put("ratio", height > 0 ? (double) width / (double) height : 0D);
                 eventObject.put("value", true);
+                eventObject.put("height", height);
+                eventObject.put("width", width);
+                eventObject.put("length", mediaPlayer.getLength());
                 eventSink.success(eventObject);
                 break;
 
@@ -292,7 +274,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 break;
 
             case MediaPlayer.Event.TimeChanged:
-
                 eventObject.put("name", "timeChanged");
                 eventObject.put("value", mediaPlayer.getTime());
                 eventObject.put("speed", mediaPlayer.getRate());

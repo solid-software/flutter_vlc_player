@@ -163,21 +163,26 @@ class VlcPlayerController {
   Future<void> _initialize(String url) async {
     if(initialized) throw new Exception("Player already initialized!");
 
-    var videoData = await _methodChannel.invokeMethod("initialize", {
+    await _methodChannel.invokeMethod("initialize", {
       'url': url
     });
-
-    _width = videoData['width'];
-    _height = videoData['height'];
     _currentTime = 0;
-    _aspectRatio = videoData['aspectRatio'];
-    _totalTime = videoData['length'];
 
     _eventChannel.receiveBroadcastStream().listen((event){
       switch(event['name']){
         case 'playing':
+          if(!_initialized){
+            _initialized = true;
+            _onInit();
+            _fireEventHandlers();
+          }
+
+          if(event['width'] != null) _width = event['width'];
+          if(event['height'] != null) _height = event['height'];
+          if(event['length'] != null) _totalTime = event['length'];
           if(event['ratio'] != null) _aspectRatio = event['ratio'];
           _playing = event['value'];
+
           _fireEventHandlers();
           break;
         case 'buffering':
@@ -192,8 +197,6 @@ class VlcPlayerController {
       }
     });
 
-    _initialized = true;
-    _onInit();
     _fireEventHandlers();
   }
 
