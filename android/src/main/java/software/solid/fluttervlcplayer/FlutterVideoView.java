@@ -114,7 +114,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     @Override
     public void dispose() {
-        mediaPlayer.stop();
+        if(mediaPlayer != null) mediaPlayer.stop();
         vout.detachViews();
         playerDisposed = true;
     }
@@ -244,8 +244,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
 
                 eventObject.put("name", "playing");
-                eventObject.put("ratio", height > 0 ? (double) width / (double) height : 0D);
                 eventObject.put("value", true);
+                eventObject.put("ratio", height > 0 ? (double) width / (double) height : 0D);
                 eventObject.put("height", height);
                 eventObject.put("width", width);
                 eventObject.put("length", mediaPlayer.getLength());

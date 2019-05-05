@@ -171,19 +171,17 @@ class VlcPlayerController {
     _eventChannel.receiveBroadcastStream().listen((event){
       switch(event['name']){
         case 'playing':
-          if(!_initialized){
-            _initialized = true;
-            _onInit();
-            _fireEventHandlers();
-          }
-
           if(event['width'] != null) _width = event['width'];
           if(event['height'] != null) _height = event['height'];
           if(event['length'] != null) _totalTime = event['length'];
           if(event['ratio'] != null) _aspectRatio = event['ratio'];
           _playing = event['value'];
 
-          _fireEventHandlers();
+          if(!_initialized){
+            _initialized = true;
+            _onInit();
+            _fireEventHandlers();
+          }
           break;
         case 'buffering':
           _buffering = event['value'];
