@@ -220,7 +220,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(null);
                 break;
 
-            case "seek":
+            case "setTime":
 
                 long time = Long.parseLong((String) methodCall.argument("time"));
                 mediaPlayer.setTime(time);

@@ -117,7 +117,7 @@ class VlcPlayerController {
   EventChannel _eventChannel;
 
   VoidCallback _onInit;
-  List<Function> _eventHandlers;
+  List<VoidCallback> _eventHandlers;
 
   /// Once the [_methodChannel] and [_eventChannel] have been registered with
   /// the Flutter platform SDK counterparts, [hasClients] is set to true.
@@ -198,11 +198,11 @@ class VlcPlayerController {
     hasClients = true;
   }
 
-  void addListener(Function listener){
+  void addListener(VoidCallback listener){
     _eventHandlers.add(listener);
   }
 
-  void removeListener(Function listener){
+  void removeListener(VoidCallback listener){
     _eventHandlers.remove(listener);
   }
 
@@ -288,8 +288,8 @@ class VlcPlayerController {
     });
   }
 
-  Future<void> seek(int time) async {
-    await _methodChannel.invokeMethod("seek", {
+  Future<void> setTime(int time) async {
+    await _methodChannel.invokeMethod("setTime", {
       'time': time.toString()
     });
   }
