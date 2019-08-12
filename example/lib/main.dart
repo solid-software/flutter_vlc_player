@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/vlc_player.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -78,8 +78,10 @@ class _MyAppState extends State<MyApp> {
               onPressed: () => _videoViewController.setPlaybackSpeed(0.5)
             ),
 
-            Text("current=" + _videoViewController.currentTime.toString() + ", max=" + _videoViewController.totalTime.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
+            Text("position=" + _videoViewController.position.inSeconds.toString() + ", duration=" + _videoViewController.duration.inSeconds.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
             Text("ratio=" + _videoViewController.aspectRatio.toString()),
+            Text("size=" + _videoViewController.size.width.toString() + "x" + _videoViewController.size.height.toString()),
+            Text("state=" + _videoViewController.playingState.toString()),
 
             Expanded(
               child: image == null

@@ -1,5 +1,6 @@
 package software.solid.fluttervlcplayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -8,6 +9,7 @@ import android.util.Base64;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import androidx.annotation.NonNull;
 import io.flutter.plugin.common.*;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
@@ -74,6 +76,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
+                textureView.forceLayout();
                 if(wasPaused){
                     mediaPlayer.play();
                     wasPaused = false;
@@ -126,14 +129,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     }
 
 
+    // Suppress WrongThread warnings from IntelliJ / Android Studio, because it looks like the advice
+    // is wrong and actually breaks the library.
+    @SuppressLint("WrongThread")
     @Override
-    public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
+    public void onMethodCall(MethodCall methodCall, @NonNull MethodChannel.Result result) {
         switch (methodCall.method) {
             case "initialize":
                 if (textureView == null) {
                     textureView = new TextureView(context);
                 }
-                String initStreamURL = methodCall.argument("url");
 
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
@@ -146,18 +151,19 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
 
                 libVLC = new LibVLC(context, options);
-                Media media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
                 mediaPlayer = new MediaPlayer(libVLC);
-                mediaPlayer.setVideoTrackEnabled(true);
+                //mediaPlayer.setVideoTrackEnabled(true);
+                mediaPlayer.setEventListener(this);
                 vout = mediaPlayer.getVLCVout();
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
 
-                mediaPlayer.setEventListener(this);
+                String initStreamURL = methodCall.argument("url");
+                Media media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
                 mediaPlayer.setMedia(media);
-                mediaPlayer.play();
+
                 result.success(null);
                 break;
             case "dispose":
@@ -170,7 +176,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 String newURL = methodCall.argument("url");
                 Media newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
                 mediaPlayer.setMedia(newMedia);
-                mediaPlayer.play();
 
                 result.success(null);
                 break;
@@ -193,6 +198,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 switch(playbackState){
                     case "play":
+                        textureView.forceLayout();
                         mediaPlayer.play();
                         break;
                     case "pause":
@@ -240,7 +246,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 int height = 0;
                 int width = 0;
 
-                Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
+                Media.VideoTrack currentVideoTrack = (Media.VideoTrack) mediaPlayer.getMedia().getTrack(
+                    mediaPlayer.getVideoTrack()
+                );
                 if (currentVideoTrack != null) {
                     height = currentVideoTrack.height;
                     width = currentVideoTrack.width;
@@ -263,9 +271,12 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.clear();
                 eventObject.put("name", "playing");
                 eventObject.put("value", false);
+                eventObject.put("reason", "EndReached");
                 eventSink.success(eventObject);
 
-            case MediaPlayer.Event.Buffering:
+            /*case MediaPlayer.Event.Opening:
+
+
                 eventObject.put("name", "buffering");
                 eventObject.put("value", true);
                 eventSink.success(eventObject);
@@ -273,8 +284,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.clear();
                 eventObject.put("name", "playing");
                 eventObject.put("value", false);
+                eventObject.put("reason", "Buffering");
                 eventSink.success(eventObject);
-                break;
+                break;*/
 
             case MediaPlayer.Event.Vout:
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
@@ -287,6 +299,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventSink.success(eventObject);
                 break;
 
+            case MediaPlayer.Event.EncounteredError:
+                System.err.println("(flutter_vlc_plugin) A VLC error occurred.");
             case MediaPlayer.Event.Paused:
             case MediaPlayer.Event.Stopped:
                 eventObject.put("name", "buffering");
@@ -294,19 +308,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventSink.success(eventObject);
 
                 eventObject.clear();
-                eventObject.put("name", "playing");
-                eventObject.put("value", false);
-                eventSink.success(eventObject);
-                break;
-
-            case MediaPlayer.Event.EncounteredError:
-                // TODO: Send error information
-                eventObject.put("name", "buffering");
-                eventObject.put("value", true);
-                eventSink.success(eventObject);
-
-                eventObject.clear();
-
                 eventObject.put("name", "playing");
                 eventObject.put("value", false);
                 eventSink.success(eventObject);
