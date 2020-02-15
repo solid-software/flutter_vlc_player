@@ -76,6 +76,9 @@ NSObject<FlutterBinaryMessenger> *_messenger;
         
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
 
+    // Player won't play if this aspect does't get set in response to the KV changing.
+
+    if (self.aspectSet) return;
     if (!self.player.isPlaying) return;
     
     [_player setDrawable:_hostedView];
@@ -84,7 +87,7 @@ NSObject<FlutterBinaryMessenger> *_messenger;
     [_player setScaleFactor:0.0];
     NSString *aspectStr = [NSString stringWithUTF8String:[_player videoAspectRatio]];
     self.result(@{@"aspectRatio" : aspectStr});
-    
+    self.aspectSet = YES;
 }
 
 
@@ -114,49 +117,11 @@ NSObject<FlutterPluginRegistrar> *_registrar;
 
 
 @implementation FlutterVlcPlayerPlugin
-VLCMediaPlayer *_player;
-FlutterResult _result;
 
 + (void)registerWithRegistrar:(nonnull NSObject<FlutterPluginRegistrar> *)registrar {
     [registrar registerViewFactory: [FLTPlayerViewFactory initWithRegistrar: registrar] withId:@"flutter_video_plugin/getVideoView"];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-    
-    NSLog(@"handleMethodCall");
-    
-    _result = result;
-    NSString* _methodName = call.method;
-    if ([_methodName isEqualToString:@"playVideo"]){
-        
-        NSString *_url = call.arguments[@"url"];
-        _player = [[VLCMediaPlayer alloc] init];
-        VLCMedia *_media = [VLCMedia mediaWithURL:[NSURL URLWithString:_url]];
-        [_player setMedia:_media];
-        [_player setPosition:0.5];
-
-      //  [_player setDrawable: _videoView];
-        [_player addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
-        [_player play];
-    } else if ([_methodName isEqualToString:@"dispose"]){
-        [_player stop];
-    }else if ([_methodName isEqualToString:@"getSnapshot"]){
-        UIView *_drawable = _player.drawable;
-        CGSize _size = _drawable.frame.size;
-
-        UIGraphicsBeginImageContextWithOptions(_size, false, 0.0);
-
-        CGRect rec = _drawable.frame;
-        [_drawable drawViewHierarchyInRect:rec afterScreenUpdates:false];
-
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
-        NSString *_byteArray = [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-
-        result(@{@"snapshot" : _byteArray});
-    }
-}
 
 
 @end

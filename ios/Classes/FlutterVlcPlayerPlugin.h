@@ -6,12 +6,18 @@
 
 @interface FLTPlayerView : NSObject<FlutterPlatformView>
 
+/// View to show video over
 @property (nonatomic, strong) UIView *hostedView;
-// Don't hate the player, hate the game.
+/// Player showing video
 @property (nonatomic, strong) VLCMediaPlayer *player;
-
+/// result to comunicate back to Flutter
 @property (nonatomic) FlutterResult result;
+/// Set to indicate that aspect has been set which is only needed once.
+@property (nonatomic, assign) BOOL aspectSet;
 
+
+/// Initialize a new instance with the channel
+/// @param channel Comuniate back to flutter
 + (instancetype)initWithChannel: (FlutterMethodChannel*) channel;
 
 @end

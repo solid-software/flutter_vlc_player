@@ -50,6 +50,19 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
+            new VlcPlayer(
+              defaultWidth: 640,
+              defaultHeight: 360,
+              url: "http://213.226.254.135:91/mjpg/video.mjpg",
+              controller: _videoViewController,
+              placeholder: Container(
+                height: 250.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[CircularProgressIndicator()],
+                ),
+              ),
+            ),
             Expanded(
               child: image == null
                   ? Container()
