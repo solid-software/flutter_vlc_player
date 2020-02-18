@@ -16,11 +16,13 @@ class _MyAppState extends State<MyApp> {
   GlobalKey imageKey;
   VlcPlayer videoView;
   VlcPlayerController _videoViewController;
+  VlcPlayerController _videoViewController2;
 
   @override
   void initState() {
     imageKey = new GlobalKey();
     _videoViewController = new VlcPlayerController();
+    _videoViewController2 = new VlcPlayerController();
     super.initState();
   }
 
@@ -54,7 +56,7 @@ class _MyAppState extends State<MyApp> {
               defaultWidth: 640,
               defaultHeight: 360,
               url: "http://213.226.254.135:91/mjpg/video.mjpg",
-              controller: _videoViewController,
+              controller: _videoViewController2,
               placeholder: Container(
                 height: 250.0,
                 child: Row(
