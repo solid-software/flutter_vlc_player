@@ -1,3 +1,6 @@
+## 1.0.0
+* Added multiple players support @kraigspear
+
 ## 0.0.2
 * Android X support added thanks to Javi Hurtado (https://github.com/ja2375)
 
