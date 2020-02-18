@@ -12,7 +12,8 @@ class VlcPlayerController {
     hasClients = true;
   }
 
-  Future<String> setStreamUrl(String url, int defaultHeight, int defaultWidth) async {
+  Future<String> setStreamUrl(
+      String url, int defaultHeight, int defaultWidth) async {
     var result = await _channel.invokeMethod("playVideo", {
       'url': url,
     });
@@ -27,9 +28,8 @@ class VlcPlayerController {
   }
 
   void dispose() {
-    if (Platform.isIOS){
+    if (Platform.isIOS) {
       _channel.invokeMethod("dispose");
     }
   }
-
 }

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class FlutterVlcPlayer {
   static const MethodChannel _channel =
-  const MethodChannel('flutter_vlc_player');
+      const MethodChannel('flutter_vlc_player');
 
   static MethodChannel get methodChannel => _channel;
 

@@ -31,7 +31,6 @@ class _VlcPlayerState extends State<VlcPlayer> {
   VlcPlayerController _controller;
   bool readyToShow = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -71,13 +70,13 @@ class _VlcPlayerState extends State<VlcPlayer> {
     _controller = widget.controller;
     _controller.initView(id);
     if (_controller.hasClients) {
-      String aspectRatioString =
-      await _controller.setStreamUrl(widget.url, widget.defaultHeight, widget.defaultWidth);
+      String aspectRatioString = await _controller.setStreamUrl(
+          widget.url, widget.defaultHeight, widget.defaultWidth);
       setState(() {
         readyToShow = true;
       });
       if (aspectRatioString != null && aspectRatioString.isNotEmpty)
-      aspectRatio = double.parse(aspectRatioString);
+        aspectRatio = double.parse(aspectRatioString);
     }
   }
 
