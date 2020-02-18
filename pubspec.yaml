@@ -5,7 +5,7 @@ author: Solid Software <hello@solid.software>
 homepage: https://github.com/solid-software/flutter_vlc_player
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
