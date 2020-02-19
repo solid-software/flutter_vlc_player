@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:flutter_vlc_player/vlc_player.dart';
+import 'package:flutter_vlc_player/vlc_player_controller.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,6 +16,7 @@ class _MyAppState extends State<MyApp> {
   GlobalKey imageKey;
   VlcPlayer videoView;
   VlcPlayerController _videoViewController;
+  VlcPlayerController _videoViewController2;
 
   @override
   void initState() {
@@ -24,6 +26,15 @@ class _MyAppState extends State<MyApp> {
       onInit: (){
         _videoViewController.play();
       }
+    );
+    _videoViewController.addListener((){
+      setState(() {});
+    });
+
+    _videoViewController2 = new VlcPlayerController(
+        onInit: (){
+          _videoViewController.play();
+        }
     );
     _videoViewController.addListener((){
       setState(() {});
@@ -49,6 +60,18 @@ class _MyAppState extends State<MyApp> {
               aspectRatio: 16 / 9,
               url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
               controller: _videoViewController,
+              placeholder: Container(
+                height: 250.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[CircularProgressIndicator()],
+                ),
+              ),
+            ),
+            new VlcPlayer(
+              aspectRatio: 16 / 9,
+              url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
+              controller: _videoViewController2,
               placeholder: Container(
                 height: 250.0,
                 child: Row(
