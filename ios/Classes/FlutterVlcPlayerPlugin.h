@@ -17,11 +17,18 @@
 
 
 /// Initialize a new instance with the channel
-/// @param channel Comuniate back to flutter
-+ (instancetype)initWithChannel: (FlutterMethodChannel*) channel;
+/// @param methodChannel Method channel for communication from flutter
+/// @param eventChannel Event channel for communication back to flutter
++ (instancetype)initWithChannels: (FlutterMethodChannel*) methodChannel andEventChannel:(FlutterEventChannel*) eventChannel;
 
 @end
 
 @interface FLTPlayerViewFactory : NSObject<FlutterPlatformViewFactory>
 + (instancetype)initWithRegistrar : (NSObject<FlutterPluginRegistrar>*)registrar;
+@end
+
+@interface FLTPlayerEventStreamHandler : NSObject<FlutterStreamHandler, VLCMediaPlayerDelegate>
+
+@property (nonatomic) FlutterEventSink eventSink;
+
 @end

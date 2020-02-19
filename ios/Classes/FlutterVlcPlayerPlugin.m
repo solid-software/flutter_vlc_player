@@ -1,8 +1,6 @@
 //
-//  FlutterVlcIosPlugin.m
-//  flutter_vlc_ios
-//
-//  Created by Vladimir Beloded on 12/26/18.
+//  FlutterVlcPlayerPlugin.m
+//  flutter_vlc_player
 //
 
 #import "FlutterVlcPlayerPlugin.h"
@@ -12,29 +10,33 @@
 
 NSObject<FlutterBinaryMessenger> *_messenger;
 
-+ (instancetype)initWithChannel: (FlutterMethodChannel*) channel
-{
++ (instancetype)initWithChannels: (FlutterMethodChannel*) methodChannel andEventChannel:(FlutterEventChannel*) eventChannel {
+
+    // Initialize hostedView and set relevant parameters.
     FLTPlayerView *instance = [[super alloc] init];
-    
     UIView *hostedView = [[UIView alloc] init];
-    
     hostedView.contentMode = UIViewContentModeScaleAspectFit;
-    hostedView.backgroundColor = [UIColor whiteColor];
+    hostedView.backgroundColor = [UIColor blackColor];
     hostedView.clipsToBounds = YES;
     hostedView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
     instance.hostedView = hostedView;
-    
-    [channel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
+
+    // Create event channel handler.
+    FLTPlayerEventStreamHandler* eventChannelHandler = [[FLTPlayerEventStreamHandler alloc] init];
+    [eventChannel setStreamHandler:eventChannelHandler];
+
+    // Set method channel handler.
+    [methodChannel setMethodCallHandler:^(FlutterMethodCall * _Nonnull call, FlutterResult  _Nonnull result) {
         
         instance.result = result;
         
-        if([call.method isEqualToString:@"playVideo"])
-        {
+        if([call.method isEqualToString:@"initialize"]) {
+
             NSString *url = call.arguments[@"url"];
             
             VLCMediaPlayer *player = [[VLCMediaPlayer alloc] init];
-            
+            player.delegate = eventChannelHandler;
+
             instance.player = player;
             
             VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
@@ -42,32 +44,88 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             player.position = 0.5;
             player.drawable = instance.hostedView;
             [player addObserver:instance forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
-            
-            [player play];
-        } else if ([call.method isEqualToString:@"dispose"])
-        {
+
+            result(nil);
+            return;
+
+        } else if ([call.method isEqualToString:@"dispose"]) {
+
+             [instance.player stop];
+             return;
+
+         } else if ([call.method isEqualToString:@"changeURL"]) {
+
+            if(instance.player == nil) {
+                result([FlutterError errorWithCode:@"VLC_NOT_INITIALIZED"
+                                        message:@"The player has not yet been initialized."
+                                        details:nil]);
+
+                return;
+            }
+
             [instance.player stop];
-        } else if ([call.method isEqualToString:@"getSnapshot"])
-        {
-           UIView *drawable =  instance.player.drawable;
-           CGSize size = drawable.frame.size;
 
-           UIGraphicsBeginImageContextWithOptions(size, false, 0.0);
+            NSString *url = call.arguments[@"url"];
+            VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+            instance.player.media = media;
 
-           CGRect rec = drawable.frame;
-           [drawable drawViewHierarchyInRect:rec afterScreenUpdates:false];
+            result(nil);
+            return;
 
-           UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-           UIGraphicsEndImageContext();
+         } else if ([call.method isEqualToString:@"getSnapshot"]) {
 
-           NSString *byteArray = [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+             UIView *drawable =  instance.player.drawable;
+             CGSize size = drawable.frame.size;
 
-           result(@{@"snapshot" : byteArray});
-        }
+             UIGraphicsBeginImageContextWithOptions(size, false, 0.0);
+
+             CGRect rec = drawable.frame;
+             [drawable drawViewHierarchyInRect:rec afterScreenUpdates:false];
+
+             UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+             UIGraphicsEndImageContext();
+
+             NSString *byteArray = [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+             result(@{@"snapshot" : byteArray});
+
+          } else if ([call.method isEqualToString:@"setPlaybackState"]) {
+
+            NSString *playbackState = call.arguments[@"playbackState"];
+
+            if([playbackState isEqualToString:@"play"]) {
+                [instance.player play];
+            } else if ([playbackState isEqualToString:@"pause"]) {
+                [instance.player pause];
+            } else if ([playbackState isEqualToString:@"stop"]) {
+                [instance.player stop];
+            }
+
+            result(nil);
+            return;
+
+          } else if ([call.method isEqualToString:@"setPlaybackSpeed"]) {
+
+            NSNumber *playbackSpeed = call.arguments[@"speed"];
+            float rate = playbackSpeed.floatValue;
+            instance.player.rate = rate;
+
+            result(nil);
+            return;
+
+          } else if ([call.method isEqualToString:@"setTime"]) {
+
+            VLCTime *time = [VLCTime timeWithNumber:call.arguments[@"time"]];
+            instance.player.time = time;
+
+            result(nil);
+            return;
+
+          }
         
     }];
     
     return instance;
+
 }
 
 - (nonnull UIView *)view {
@@ -103,13 +161,19 @@ NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 - (nonnull NSObject<FlutterPlatformView> *)createWithFrame:(CGRect)frame viewIdentifier:(int64_t)viewId arguments:(NSObject<FlutterBinaryMessenger> *)messenger {
-    NSString *_methodCallName = [NSString stringWithFormat:@"%@_%@",@"flutter_video_plugin/getVideoView", [NSString stringWithFormat:@"%lld", viewId]];
-    FlutterMethodChannel* channel = [FlutterMethodChannel
-                                      methodChannelWithName:_methodCallName
+    // Create method channel.
+    NSString *_methodChannelName = [NSString stringWithFormat:@"%@_%@",@"flutter_video_plugin/getVideoView", [NSString stringWithFormat:@"%lld", viewId]];
+    FlutterMethodChannel* methodChannel = [FlutterMethodChannel
+                                      methodChannelWithName:_methodChannelName
                                       binaryMessenger:[_registrar messenger]];
-    
-    
-    return [FLTPlayerView initWithChannel:channel];
+
+    // Create event channel.
+    NSString *_eventChannelName = [NSString stringWithFormat:@"%@_%@",@"flutter_video_plugin/getVideoEvents", [NSString stringWithFormat:@"%lld", viewId]];
+    FlutterEventChannel* eventChannel = [FlutterEventChannel
+                                      eventChannelWithName:_eventChannelName
+                                      binaryMessenger:[_registrar messenger]];
+
+    return [FLTPlayerView initWithChannels:methodChannel andEventChannel:eventChannel];
 }
 
 
@@ -122,6 +186,107 @@ NSObject<FlutterPluginRegistrar> *_registrar;
     [registrar registerViewFactory: [FLTPlayerViewFactory initWithRegistrar: registrar] withId:@"flutter_video_plugin/getVideoView"];
 }
 
+@end
 
+@implementation FLTPlayerEventStreamHandler
+
+- (FlutterError*)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventSink {
+    _eventSink = eventSink;
+    return nil;
+}
+
+- (FlutterError*)onCancelWithArguments:(id)arguments {
+    _eventSink = nil;
+    return nil;
+}
+
+- (void)mediaPlayerStateChanged:(NSNotification *)aNotification {
+
+    VLCMediaPlayer *player = aNotification.object;
+    VLCMedia *media = player.media;
+
+    NSArray* tracks = media.tracksInformation;
+    NSDictionary* track;
+
+    float ratio;
+    NSNumber* height;
+    NSNumber* width;
+
+    if(player.currentVideoTrackIndex != -1){
+        track = tracks[player.currentVideoTrackIndex];
+
+        height = [track objectForKey:@"height"];
+        width = [track objectForKey:@"width"];
+
+        if(height != nil && width != nil && height > 0) {
+            ratio = width.floatValue / height.floatValue;
+        }
+    }
+
+    switch(player.state){
+        case VLCMediaPlayerStateESAdded:
+        case VLCMediaPlayerStateBuffering:
+        case VLCMediaPlayerStateOpening:
+            return;
+
+        case VLCMediaPlayerStatePlaying:
+            _eventSink(@{
+                @"name": @"buffering",
+                @"value": @(NO)
+            });
+
+            _eventSink(@{
+                @"name": @"playing",
+                @"value": @(YES),
+                @"ratio": @(ratio),
+                @"height": height,
+                @"width": width,
+                @"length": media.length.value
+            });
+            return;
+
+        case VLCMediaPlayerStateEnded:
+            _eventSink(@{
+                @"name": @"ended"
+            });
+
+            _eventSink(@{
+                @"name": @"playing",
+                @"value": @(NO),
+                @"reason": @"EndReached"
+            });
+            return;
+
+        case VLCMediaPlayerStateError:
+            NSLog(@"(flutter_vlc_plugin) A VLC error occurred.");
+            return;
+
+        case VLCMediaPlayerStatePaused:
+        case VLCMediaPlayerStateStopped:
+            _eventSink(@{
+                @"name": @"buffering",
+                @"value": @(NO)
+            });
+
+            _eventSink(@{
+                @"name": @"playing",
+                @"value": @(NO)
+            });
+            return;
+    }
+}
+
+- (void)mediaPlayerTimeChanged:(NSNotification *)aNotification {
+
+    VLCMediaPlayer *player = aNotification.object;
+
+    _eventSink(@{
+        @"name": @"timeChanged",
+        @"value": player.time.value,
+        @"speed": @(player.rate),
+    });
+
+    return;
+}
 
 @end

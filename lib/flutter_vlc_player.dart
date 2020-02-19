@@ -39,10 +39,13 @@ class VlcPlayer extends StatefulWidget {
   _VlcPlayerState createState() => _VlcPlayerState();
 }
 
-class _VlcPlayerState extends State<VlcPlayer> {
+class _VlcPlayerState extends State<VlcPlayer> with AutomaticKeepAliveClientMixin {
   VlcPlayerController _controller;
   int videoRenderId;
   bool playerInitialized = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -87,6 +90,8 @@ class _VlcPlayerState extends State<VlcPlayer> {
     _controller.registerChannels(id);
 
     _controller.addListener((){
+      if(!mounted) return;
+
       // Whenever the initialization state of the player changes,
       // it needs to be updated. As soon as the Flutter part of this library
       // is aware of it, the controller will fire an event, so we're okay
@@ -101,6 +106,13 @@ class _VlcPlayerState extends State<VlcPlayer> {
     if (_controller.hasClients) {
       await _controller._initialize(widget.url);
     }
+  }
+
+  @override
+  void deactivate() {
+    _controller.dispose();
+    playerInitialized = false;
+    super.deactivate();
   }
 
   @override
@@ -214,7 +226,7 @@ class VlcPlayerController {
   }
 
   Future<void> _initialize(String url) async {
-    if(initialized) throw new Exception("Player already initialized!");
+    //if(initialized) throw new Exception("Player already initialized!");
 
     await _methodChannel.invokeMethod("initialize", {
       'url': url
@@ -229,7 +241,6 @@ class VlcPlayerController {
           if(event['length'] != null) _duration = event['length'];
           if(event['ratio'] != null) _aspectRatio = event['ratio'];
 
-          print(event);
           _playingState = event['value']
               ? PlayingState.PLAYING
               : PlayingState.STOPPED;
