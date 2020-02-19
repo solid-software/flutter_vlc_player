@@ -44,7 +44,6 @@ class _VlcPlayerState extends State<VlcPlayer> {
   int videoRenderId;
   bool playerInitialized = false;
 
-
   @override
   void initState() {
     super.initState();

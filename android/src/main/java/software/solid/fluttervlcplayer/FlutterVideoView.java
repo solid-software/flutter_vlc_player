@@ -74,6 +74,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                if(vout == null) return;
+
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
                 textureView.forceLayout();
@@ -98,9 +100,11 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     }
                     return true;
                 }else{
-                    mediaPlayer.pause();
-                    wasPaused = true;
-                    vout.detachViews();
+                    if(mediaPlayer != null && vout != null) {
+                        mediaPlayer.pause();
+                        wasPaused = true;
+                        vout.detachViews();
+                    }
                     return true;
                 }
             }
@@ -124,7 +128,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @Override
     public void dispose() {
         if(mediaPlayer != null) mediaPlayer.stop();
-        vout.detachViews();
+        if(vout != null) vout.detachViews();
         playerDisposed = true;
     }
 

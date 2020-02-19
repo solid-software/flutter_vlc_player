@@ -1,8 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/vlc_player.dart';
-import 'package:flutter_vlc_player/vlc_player_controller.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,15 +12,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Uint8List image;
-  GlobalKey imageKey;
-  VlcPlayer videoView;
+
   VlcPlayerController _videoViewController;
   VlcPlayerController _videoViewController2;
 
   @override
   void initState() {
-    imageKey = new GlobalKey();
-
     _videoViewController = new VlcPlayerController(
       onInit: (){
         _videoViewController.play();
@@ -33,10 +29,10 @@ class _MyAppState extends State<MyApp> {
 
     _videoViewController2 = new VlcPlayerController(
         onInit: (){
-          _videoViewController.play();
+          _videoViewController2.play();
         }
     );
-    _videoViewController.addListener((){
+    _videoViewController2.addListener((){
       setState(() {});
     });
 
@@ -54,66 +50,72 @@ class _MyAppState extends State<MyApp> {
           child: Icon(Icons.camera),
           onPressed: _createCameraImage,
         ),
-        body: Column(
-          children: <Widget>[
-            new VlcPlayer(
-              aspectRatio: 16 / 9,
-              url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
-              controller: _videoViewController,
-              placeholder: Container(
-                height: 250.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],
+        body: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              SizedBox(
+                height: 360,
+                child: new VlcPlayer(
+                  aspectRatio: 16 / 9,
+                  url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
+                  controller: _videoViewController,
+                  placeholder: Container(
+                    height: 250.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[CircularProgressIndicator()],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            new VlcPlayer(
-              aspectRatio: 16 / 9,
-              url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
-              controller: _videoViewController2,
-              placeholder: Container(
-                height: 250.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],
+
+              SizedBox(
+                height: 360,
+                child: new VlcPlayer(
+                  aspectRatio: 16 / 9,
+                  url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                  controller: _videoViewController2,
+                  placeholder: Container(
+                    height: 250.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[CircularProgressIndicator()],
+                    ),
+                  ),
                 ),
               ),
-            ),
 
-            FlatButton(
-              child: Text("Change URL"),
-              onPressed: () => _videoViewController.setStreamUrl("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
-            ),
-
-            FlatButton(
-              child: Text("+speed"),
-              onPressed: () => _videoViewController.setPlaybackSpeed(2.0)
-            ),
-
-            FlatButton(
-                child: Text("Normal"),
-                onPressed: () => _videoViewController.setPlaybackSpeed(1)
-            ),
-
-            FlatButton(
-              child: Text("-speed"),
-              onPressed: () => _videoViewController.setPlaybackSpeed(0.5)
-            ),
-
-            Text("position=" + _videoViewController.position.inSeconds.toString() + ", duration=" + _videoViewController.duration.inSeconds.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
-            Text("ratio=" + _videoViewController.aspectRatio.toString()),
-            Text("size=" + _videoViewController.size.width.toString() + "x" + _videoViewController.size.height.toString()),
-            Text("state=" + _videoViewController.playingState.toString()),
-
-            Expanded(
-              child: image == null
-                  ? Container()
-                  : Container(
-                decoration: BoxDecoration(image: DecorationImage(image: MemoryImage(image))),
+              FlatButton(
+                child: Text("Change URL"),
+                onPressed: () => _videoViewController.setStreamUrl("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
               ),
-            ),
-          ],
+
+              FlatButton(
+                  child: Text("+speed"),
+                  onPressed: () => _videoViewController.setPlaybackSpeed(2.0)
+              ),
+
+              FlatButton(
+                  child: Text("Normal"),
+                  onPressed: () => _videoViewController.setPlaybackSpeed(1)
+              ),
+
+              FlatButton(
+                  child: Text("-speed"),
+                  onPressed: () => _videoViewController.setPlaybackSpeed(0.5)
+              ),
+
+              Text("position=" + _videoViewController.position.inSeconds.toString() + ", duration=" + _videoViewController.duration.inSeconds.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
+              Text("ratio=" + _videoViewController.aspectRatio.toString()),
+              Text("size=" + _videoViewController.size.width.toString() + "x" + _videoViewController.size.height.toString()),
+              Text("state=" + _videoViewController.playingState.toString()),
+
+              image == null ? Container() : Container(
+                  decoration: BoxDecoration(image: DecorationImage(image: MemoryImage(image)))
+              ),
+            ],
+          ),
         ),
       ),
     );
