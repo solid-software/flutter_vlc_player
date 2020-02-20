@@ -9,8 +9,8 @@ A VLC-powered alternative to Flutter's video_player that supports iOS and Androi
 For iOS, you need to opt into the Flutter embedded views preview.  
 This is done by adding the following to your project's `<project root>/ios/Runner/Info.plist` file (see example for details): 
 ```xml
-    <key>io.flutter.embedded_views_preview</key>
-    <true/>
+<key>io.flutter.embedded_views_preview</key>
+<true/>
 ```
 
 If you're unable to view media loaded from an external source, you should also add the following:
@@ -165,7 +165,7 @@ VlcPlayerController({
 
   /*** METHODS ***/
   /// [url] - the URL of the stream to start playing.
-  /// This stops playback and changed the URL. Once the new URL has been loaded, the playback state will revert to
+  /// This stops playback and changes the URL. Once the new URL has been loaded, the playback state will revert to
   /// its state before the method was called. (i.e. if setStreamUrl is called whilst media is playing, once the new
   /// URL has been loaded, the new stream will begin playing.)
   Future<void> setStreamUrl(String url);
