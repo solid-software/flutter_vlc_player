@@ -99,6 +99,9 @@ unlinked_spec.ds
 **/macos/Flutter/Flutter-Release.xcconfig
 **/macos/Flutter/Flutter-Profile.xcconfig
 
+# Temporary Files
+**/._*
+
 # Coverage
 coverage/
 
