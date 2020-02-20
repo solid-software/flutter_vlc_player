@@ -29,9 +29,17 @@ class VlcPlayer extends StatefulWidget {
 
   const VlcPlayer({
     Key key,
+    /// The [VlcPlayerController] that handles interaction with the platform code.
     @required this.controller,
+    /// The aspect ratio used to display the video.
+    /// This MUST be provided, however it could simply be (parentWidth / parentHeight) - where parentWidth and
+    /// parentHeight are the width and height of the parent perhaps as defined by a LayoutBuilder.
     @required this.aspectRatio,
+    /// This is the initial URL for the content. This also must be provided but [VlcPlayerController] implements
+    /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
+    /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
+    /// This can simply be a [CircularProgressIndicator] (see the example.)
     this.placeholder,
   });
 
@@ -175,7 +183,7 @@ class VlcPlayerController {
       ? new Duration(milliseconds: _duration)
       : Duration.zero;
 
-  /// This is the size of the content as returned by LibVLC.
+  /// This is the dimensions of the content (height and width) as returned by LibVLC.
   ///
   /// Returns [Size.zero] when the size is null
   /// (i.e. the player is uninitialized.)
@@ -198,7 +206,12 @@ class VlcPlayerController {
   double _playbackSpeed;
   double get playbackSpeed => _playbackSpeed;
 
-  VlcPlayerController({ VoidCallback onInit }){
+  VlcPlayerController({
+    /// This is a callback that will be executed once the platform view has been initialized.
+    /// If you want the media to play as soon as the platform view has initialized, you could just call
+    /// [VlcPlayerController.play] in this callback. (see the example)
+    VoidCallback onInit
+  }){
     _onInit = onInit;
     _eventHandlers = new List();
   }
@@ -310,7 +323,7 @@ class VlcPlayerController {
     });
   }
 
-  Future<Uint8List> makeSnapshot() async {
+  Future<Uint8List> takeSnapshot() async {
     var result = await _methodChannel.invokeMethod("getSnapshot");
     var base64String = result['snapshot'];
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);

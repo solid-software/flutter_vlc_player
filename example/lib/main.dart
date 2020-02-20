@@ -139,7 +139,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   }
 
   void _createCameraImage() async {
-    Uint8List file = await _videoViewController.makeSnapshot();
+    Uint8List file = await _videoViewController.takeSnapshot();
     setState(() {
       image = file;
     });
