@@ -39,42 +39,80 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: <Widget>[
-            new VlcPlayer(
-              defaultWidth: 640,
-              defaultHeight: 360,
-              url: "http://213.226.254.135:91/mjpg/video.mjpg",
-              controller: _videoViewController,
-              placeholder: Container(
-                height: 250.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],
+            Stack(
+              children: <Widget>[
+                VlcPlayer(
+                  defaultWidth: 640,
+                  defaultHeight: 360,
+                  url: "http://213.226.254.135:91/mjpg/video.mjpg",
+                  controller: _videoViewController,
+                  placeholder: Container(
+                    height: 250.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[CircularProgressIndicator()],
+                    ),
+                  ),
                 ),
-              ),
+                Positioned.fill(
+                  child: GestureDetector(
+                      onTap: () {
+                        _playPause(_videoViewController);
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                      )),
+                )
+              ],
             ),
-            new VlcPlayer(
-              defaultWidth: 640,
-              defaultHeight: 360,
-              url: "http://213.226.254.135:91/mjpg/video.mjpg",
-              controller: _videoViewController2,
-              placeholder: Container(
-                height: 250.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],
+            Stack(
+              children: <Widget>[
+                VlcPlayer(
+                  defaultWidth: 640,
+                  defaultHeight: 360,
+                  url: "http://213.226.254.135:91/mjpg/video.mjpg",
+                  controller: _videoViewController2,
+                  placeholder: Container(
+                    height: 250.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[CircularProgressIndicator()],
+                    ),
+                  ),
                 ),
-              ),
+                Positioned.fill(
+                  child: GestureDetector(
+                      onTap: () {
+                        _playPause(_videoViewController2);
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                      )),
+                )
+              ],
             ),
             Expanded(
               child: image == null
                   ? Container()
                   : Container(
-                decoration: BoxDecoration(image: DecorationImage(image: MemoryImage(image))),
-              ),
+                      decoration: BoxDecoration(image: DecorationImage(image: MemoryImage(image))),
+                    ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _playPause(VlcPlayerController playerController) {
+    playerController.isPlaying().then(
+      (isPlaying) {
+        if (isPlaying) {
+          playerController.pause();
+        } else {
+          playerController.play();
+        }
+      },
     );
   }
 

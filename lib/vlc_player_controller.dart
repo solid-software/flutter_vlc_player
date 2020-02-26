@@ -12,12 +12,34 @@ class VlcPlayerController {
     hasClients = true;
   }
 
-  Future<String> setStreamUrl(
-      String url, int defaultHeight, int defaultWidth) async {
+  Future<String> setStreamUrl(String url, int defaultHeight, int defaultWidth) async {
     var result = await _channel.invokeMethod("playVideo", {
       'url': url,
     });
     return result['aspectRatio'];
+  }
+
+  Future<String> play() async {
+    var result = await _channel.invokeMethod("play");
+    return result['play'];
+  }
+
+  Future<String> pause() async {
+    var result = await _channel.invokeMethod("pause");
+    return result['pause'];
+  }
+
+  Future<bool> isPlaying() async {
+    var result = await _channel.invokeMethod("isPlaying");
+    switch (result['isPlaying']) {
+      case "YES":
+        return true;
+        break;
+      case "NO":
+        return false;
+      default:
+        return false;
+    }
   }
 
   Future<Uint8List> makeSnapshot() async {

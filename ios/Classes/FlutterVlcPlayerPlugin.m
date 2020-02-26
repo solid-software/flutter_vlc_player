@@ -44,8 +44,16 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             [player addObserver:instance forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
             
             [player play];
-        } else if ([call.method isEqualToString:@"dispose"])
-        {
+        } else if ([call.method isEqualToString:@"play"]) {
+            [instance.player play];
+            result(@{@"play" : @"palayer start play"});
+        } else if ([call.method isEqualToString:@"pause"]) {
+            [instance.player pause];
+            result(@{@"pause" : @"pause player"});
+        } else if ([call.method isEqualToString:@"isPlaying"]) {
+            NSString *byteArray = NSStringFromBOOL([instance.player isPlaying]);
+            result(@{@"isPlaying" : byteArray});
+        } else if ([call.method isEqualToString:@"dispose"]) {
             [instance.player stop];
         } else if ([call.method isEqualToString:@"getSnapshot"])
         {
@@ -68,6 +76,11 @@ NSObject<FlutterBinaryMessenger> *_messenger;
     }];
     
     return instance;
+}
+
+NSString *NSStringFromBOOL(BOOL aBool)
+{
+    return aBool ? @"YES" : @"NO";
 }
 
 - (nonnull UIView *)view {
