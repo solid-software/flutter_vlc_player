@@ -35,6 +35,7 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             
             VLCMediaPlayer *player = [[VLCMediaPlayer alloc] init];
             
+            
             instance.player = player;
             
             VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
@@ -42,14 +43,22 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             player.position = 0.5;
             player.drawable = instance.hostedView;
             [player addObserver:instance forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
-            
             [player play];
         } else if ([call.method isEqualToString:@"play"]) {
+            VLCMedia *media = instance.player.media;
+            [instance.player setMedia:(media)];
             [instance.player play];
-            result(@{@"play" : @"palayer start play"});
-        } else if ([call.method isEqualToString:@"pause"]) {
+            result(@{@"play" : @"player is playing"});
+        } else if ([call.method isEqualToString:@"playUrl"]) {
+            NSString *url = call.arguments[@"url"];
+            VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+            [instance.player setMedia:media];
+            result(@{@"playUrl" : @"new url link set"});
+        }
+        else if ([call.method isEqualToString:@"pause"]) {
             [instance.player pause];
-            result(@{@"pause" : @"pause player"});
+            [instance.player lastSnapshot];
+            result(@{@"pause" : @"player on pause"});
         } else if ([call.method isEqualToString:@"isPlaying"]) {
             NSString *byteArray = NSStringFromBOOL([instance.player isPlaying]);
             result(@{@"isPlaying" : byteArray});

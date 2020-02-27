@@ -109,6 +109,19 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 isPlayingResponse.put("isPlaying", isPlaying);
                 result.success(isPlayingResponse);
                 break;
+            case "playUrl":
+                String newLink = methodCall.argument("url");
+                ArrayList<String> newOptions = new ArrayList<>();
+                newOptions.add("--no-drop-late-frames");
+                newOptions.add("--no-skip-frames");
+                newOptions.add("--rtsp-tcp");
+                LibVLC newLibVLC = new LibVLC(context, newOptions);
+                Media newMedia = new Media(newLibVLC, Uri.parse(Uri.decode(url)));
+                mediaPlayer.setMedia(newMedia);
+                Map<String, String> playUrlResponse = new HashMap<>();
+                playUrlResponse.put("plaUrl", "new url was set");
+                result.success(playUrlResponse);
+                break;
             case "getSnapshot":
                 String imageBytes;
                 Map<String, String> response = new HashMap<>();

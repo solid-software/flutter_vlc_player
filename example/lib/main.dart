@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/vlc_player.dart';
 import 'package:flutter_vlc_player/vlc_player_controller.dart';
 
+const String mp4Link = "http://streams.videolan.org/streams/mp4/Mr_MrsSmith-h264_aac.mp4";
+const String mjpLink = "http://213.226.254.135:91/mjpg/video.mjpg";
+const String hlsLink = ""; //in future
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -44,7 +48,7 @@ class _MyAppState extends State<MyApp> {
                 VlcPlayer(
                   defaultWidth: 640,
                   defaultHeight: 360,
-                  url: "http://213.226.254.135:91/mjpg/video.mjpg",
+                  url: mp4Link,
                   controller: _videoViewController,
                   placeholder: Container(
                     height: 250.0,
@@ -70,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                 VlcPlayer(
                   defaultWidth: 640,
                   defaultHeight: 360,
-                  url: "http://213.226.254.135:91/mjpg/video.mjpg",
+                  url: mjpLink,
                   controller: _videoViewController2,
                   placeholder: Container(
                     height: 250.0,
@@ -83,7 +87,7 @@ class _MyAppState extends State<MyApp> {
                 Positioned.fill(
                   child: GestureDetector(
                       onTap: () {
-                        _playPause(_videoViewController2);
+                        _playPauseStream(_videoViewController2, urlLink: mjpLink);
                       },
                       child: Container(
                         color: Colors.transparent,
@@ -111,6 +115,18 @@ class _MyAppState extends State<MyApp> {
           playerController.pause();
         } else {
           playerController.play();
+        }
+      },
+    );
+  }
+
+  void _playPauseStream(VlcPlayerController playerController, {String urlLink}) {
+    playerController.isPlaying().then(
+      (isPlaying) {
+        if (isPlaying) {
+          playerController.pause();
+        } else {
+          playerController.playUrl(urlLink);
         }
       },
     );

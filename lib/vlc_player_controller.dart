@@ -24,6 +24,13 @@ class VlcPlayerController {
     return result['play'];
   }
 
+  Future<String> playUrl(String url) async {
+    var result = await _channel.invokeMethod("playVideo", {
+      'url': url,
+    });
+    return result['playUrl'];
+  }
+
   Future<String> pause() async {
     var result = await _channel.invokeMethod("pause");
     return result['pause'];
