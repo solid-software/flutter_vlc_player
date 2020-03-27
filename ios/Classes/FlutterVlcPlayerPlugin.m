@@ -208,9 +208,9 @@ NSObject<FlutterPluginRegistrar> *_registrar;
     NSArray* tracks = media.tracksInformation;
     NSDictionary* track;
 
-    float ratio;
-    NSNumber* height;
-    NSNumber* width;
+    float ratio = 0.0;
+    NSNumber* height = @0;
+    NSNumber* width = @0;
 
     if(player.currentVideoTrackIndex != -1){
         track = tracks[player.currentVideoTrackIndex];
@@ -241,7 +241,7 @@ NSObject<FlutterPluginRegistrar> *_registrar;
                 @"ratio": @(ratio),
                 @"height": height,
                 @"width": width,
-                @"length": media.length.value
+                @"length": media.length.value ?: @0
             });
             return;
 
