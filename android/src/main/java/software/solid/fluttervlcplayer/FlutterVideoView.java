@@ -277,21 +277,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("value", false);
                 eventObject.put("reason", "EndReached");
                 eventSink.success(eventObject);
-
-            /*case MediaPlayer.Event.Opening:
-
-
-                eventObject.put("name", "buffering");
-                eventObject.put("value", true);
-                eventSink.success(eventObject);
-
-                eventObject.clear();
-                eventObject.put("name", "playing");
-                eventObject.put("value", false);
-                eventObject.put("reason", "Buffering");
-                eventSink.success(eventObject);
-                break;*/
-
+                
             case MediaPlayer.Event.Vout:
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;
