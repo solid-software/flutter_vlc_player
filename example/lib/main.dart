@@ -11,25 +11,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: MyAppScaffold()
-    );
+    return new MaterialApp(home: MyAppScaffold());
   }
-
 }
 
 class MyAppScaffold extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => MyAppScaffoldState();
-
 }
 
 class MyAppScaffoldState extends State<MyAppScaffold> {
-
   Uint8List image;
 
   VlcPlayerController _videoViewController;
@@ -37,21 +30,17 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 
   @override
   void initState() {
-    _videoViewController = new VlcPlayerController(
-        onInit: (){
-          _videoViewController.play();
-        }
-    );
-    _videoViewController.addListener((){
+    _videoViewController = new VlcPlayerController(onInit: () {
+      _videoViewController.play();
+    });
+    _videoViewController.addListener(() {
       setState(() {});
     });
 
-    _videoViewController2 = new VlcPlayerController(
-        onInit: (){
-          _videoViewController2.play();
-        }
-    );
-    _videoViewController2.addListener((){
+    _videoViewController2 = new VlcPlayerController(onInit: () {
+      _videoViewController2.play();
+    });
+    _videoViewController2.addListener(() {
       setState(() {});
     });
 
@@ -76,7 +65,8 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               height: 360,
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
-                url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
+                url:
+                    "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
                 controller: _videoViewController,
                 placeholder: Container(
                   height: 250.0,
@@ -87,12 +77,12 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                 ),
               ),
             ),
-
             SizedBox(
               height: 360,
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
-                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                url:
+                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
                 controller: _videoViewController2,
                 placeholder: Container(
                   height: 250.0,
@@ -103,35 +93,33 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                 ),
               ),
             ),
-
             FlatButton(
               child: Text("Change URL"),
-              onPressed: () => _videoViewController.setStreamUrl("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
+              onPressed: () => _videoViewController.setStreamUrl(
+                  "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
             ),
-
             FlatButton(
                 child: Text("+speed"),
-                onPressed: () => _videoViewController.setPlaybackSpeed(2.0)
-            ),
-
+                onPressed: () => _videoViewController.setPlaybackSpeed(2.0)),
             FlatButton(
                 child: Text("Normal"),
-                onPressed: () => _videoViewController.setPlaybackSpeed(1)
-            ),
-
+                onPressed: () => _videoViewController.setPlaybackSpeed(1)),
             FlatButton(
                 child: Text("-speed"),
-                onPressed: () => _videoViewController.setPlaybackSpeed(0.5)
-            ),
-
-            Text("position=" + _videoViewController.position.inSeconds.toString() + ", duration=" + _videoViewController.duration.inSeconds.toString() + ", speed=" + _videoViewController.playbackSpeed.toString()),
+                onPressed: () => _videoViewController.setPlaybackSpeed(0.5)),
+            Text("position=" +
+                _videoViewController.position.inSeconds.toString() +
+                ", duration=" +
+                _videoViewController.duration.inSeconds.toString() +
+                ", speed=" +
+                _videoViewController.playbackSpeed.toString()),
             Text("ratio=" + _videoViewController.aspectRatio.toString()),
-            Text("size=" + _videoViewController.size.width.toString() + "x" + _videoViewController.size.height.toString()),
+            Text("size=" +
+                _videoViewController.size.width.toString() +
+                "x" +
+                _videoViewController.size.height.toString()),
             Text("state=" + _videoViewController.playingState.toString()),
-
-            image == null ? Container() : Container(
-              child: Image.memory(image)
-            ),
+            image == null ? Container() : Container(child: Image.memory(image)),
           ],
         ),
       ),
@@ -144,5 +132,4 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
       image = file;
     });
   }
-
 }
