@@ -9,9 +9,9 @@ public class FlutterVlcPlayerPlugin {
    * Plugin registration.
    */
   public static void registerWith(Registrar registrar) {
-    registrar
-            .platformViewRegistry()
-            .registerViewFactory("flutter_video_plugin/getVideoView",
-                    new FlutterVideoViewFactory(registrar.messenger()));
+    registrar.platformViewRegistry().registerViewFactory(
+            "flutter_video_plugin/getVideoView",
+            new FlutterVideoViewFactory(registrar.messenger(), registrar)
+    );
   }
 }
