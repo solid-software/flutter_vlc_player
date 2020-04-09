@@ -24,6 +24,10 @@ If you're unable to view media loaded from an external source, you should also a
 For more information, or for more granular control over your App Transport Security (ATS) restrictions, you should
 [read Apple's documentation](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity/nsallowsarbitraryloads).
 
+Make sure that following line in `<project root>/ios/Podfile` uncommented:
+
+`platform :ios, '9.0'`
+
 > NOTE: While the Flutter `video_player` is not functional on iOS Simulators, this package (`flutter_vlc_player`) **is**
 > fully functional on iOS simulators.
 
