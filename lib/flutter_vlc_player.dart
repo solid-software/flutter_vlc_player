@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/services.dart';
 
 enum PlayingState { STOPPED, BUFFERING, PLAYING }
@@ -67,6 +67,7 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
       child: Stack(
