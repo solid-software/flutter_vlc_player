@@ -346,7 +346,7 @@ class VlcPlayerController {
 
   void changeSound(int audioNumber) {
     _methodChannel
-        .invokeMethod("changesound", {'audioNumber': audioNumber.toString()});
+        .invokeMethod("changeSound", {'audioNumber': audioNumber.toString()});
   }
 
   void changeSubtitle(int subtitleNumber) {
