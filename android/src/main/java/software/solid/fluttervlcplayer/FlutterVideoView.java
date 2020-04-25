@@ -278,7 +278,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("length", mediaPlayer.getLength());
                 //add support for changing audio track and subtitle
                 eventObject.put("audioCount", mediaPlayer.getAudioTracksCount());
-                eventObject.put("activeAudioTracks", mediaPlayer.getAudioTracks());
+                eventObject.put("activeAudioTracks", mediaPlayer.getAudioTrack());
                 eventObject.put("spuCount", mediaPlayer.getSpuTracksCount());
                 eventObject.put("activeSpu", mediaPlayer.getSpuTrack());
                 eventSink.success(eventObject.clone());
