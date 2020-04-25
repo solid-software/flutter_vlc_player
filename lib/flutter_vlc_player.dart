@@ -142,6 +142,15 @@ class VlcPlayerController {
   MethodChannel _methodChannel;
   EventChannel _eventChannel;
 
+  int get audioCount => _audioCount;
+  int _audioCount = 1;
+  int get activeAudioNum => _activeAudioNum;
+  int _activeAudioNum = 1;
+  int get activeSubtitleNum => _activeSubtitleNum;
+  int _activeSubtitleNum;
+  int get subtitleCount => _subtitleCount;
+  int _subtitleCount = 0;
+
   VoidCallback _onInit;
   List<VoidCallback> _eventHandlers;
 
@@ -257,6 +266,12 @@ class VlcPlayerController {
             _size = new Size(event['width'], event['height']);
           if (event['length'] != null) _duration = event['length'];
           if (event['ratio'] != null) _aspectRatio = event['ratio'];
+          if (event['audioCount'] != null) _audioCount = event['audioCount'];
+          if (event['activeAudioTracks'] != null)
+            _activeAudioNum = event['activeAudioTracks'];
+          if (event['spuCount'] != null) _subtitleCount = event['spuCount'];
+          if (event['activeSpu'] != null)
+            _activeSubtitleNum = event['activeSpu'];
 
           _playingState =
               event['value'] ? PlayingState.PLAYING : PlayingState.STOPPED;
@@ -327,5 +342,19 @@ class VlcPlayerController {
 
   void dispose() {
     _methodChannel.invokeMethod("dispose");
+  }
+
+  void changeSound(int audioNumber) {
+    _methodChannel
+        .invokeMethod("channgesound", {'audioNumber': audioNumber.toString()});
+  }
+
+  void changeSubtitle(int subtitleNumber) {
+    _methodChannel.invokeMethod(
+        "changeSubtitle", {'subtitleNumber': subtitleNumber.toString()});
+  }
+
+  void addSubtitle(String filePath) {
+    _methodChannel.invokeMethod("addSubtitle", {'filePath': filePath});
   }
 }
