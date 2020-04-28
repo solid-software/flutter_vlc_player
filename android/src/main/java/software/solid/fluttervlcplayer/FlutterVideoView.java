@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -32,6 +33,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private MediaPlayer mediaPlayer;
     private TextureView textureView;
     private String url;
+    private Boolean isLocal;
     private IVLCVout vout;
     private MethodChannel.Result result;
     private boolean replyAlreadySubmitted = false;
@@ -67,14 +69,22 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     textureView = new TextureView(context);
                 }
                 url = methodCall.argument("url");
+                isLocal = methodCall.argument("isLocal");
 
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
                 options.add("--no-skip-frames");
-                options.add("--rtsp-tcp");
 
                 LibVLC libVLC = new LibVLC(context, options);
-                Media media = new Media(libVLC, Uri.parse(Uri.decode(url)));
+                Media media = null;
+                if (isLocal)
+                    media = new Media(libVLC, Uri.fromFile(new File(url)));
+                else {
+                    options.add("--rtsp-tcp");
+                    media = new Media(libVLC, Uri.parse(Uri.decode(url)));
+                }
+                media.setHWDecoderEnabled(true, true);
+
                 mediaPlayer = new MediaPlayer(libVLC);
                 mediaPlayer.setVideoTrackEnabled(true);
                 vout = mediaPlayer.getVLCVout();

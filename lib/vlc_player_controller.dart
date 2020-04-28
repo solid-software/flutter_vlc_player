@@ -13,9 +13,10 @@ class VlcPlayerController {
   }
 
   Future<String> setStreamUrl(
-      String url, int defaultHeight, int defaultWidth) async {
+      String url, bool isLocal, int defaultHeight, int defaultWidth) async {
     var result = await _channel.invokeMethod("playVideo", {
       'url': url,
+      'isLocal':isLocal
     });
     return result['aspectRatio'];
   }
