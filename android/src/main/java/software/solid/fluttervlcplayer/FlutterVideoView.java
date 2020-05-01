@@ -25,15 +25,25 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.EventSink;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 
-class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler, MediaPlayer.EventListener {
+class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,StreamHandler, MediaPlayer.EventListener {
     private final MethodChannel channel;
+    private final EventChannel eventChannel;
     private final Context context;
 
     private MediaPlayer mediaPlayer;
     private TextureView textureView;
     private String url;
+    private String subtitle;
     private Boolean isLocal;
+    private int duration;
+    private int position;
+    private EventSink events;
+    private Boolean isPlaying;
+    private float rate;
     private IVLCVout vout;
     private MethodChannel.Result result;
     private boolean replyAlreadySubmitted = false;
@@ -45,7 +55,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         SurfaceTexture texture = new SurfaceTexture(false);
         textureView.setSurfaceTexture(texture);
         channel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
+        eventChannel = new EventChannel(messenger, "flutter_video_plugin/event_"+id);
         channel.setMethodCallHandler(this);
+        eventChannel.setStreamHandler(this);
     }
 
     @Override
@@ -59,6 +71,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         vout.detachViews();
     }
 
+    @Override
+    public void onListen(Object arguments, EventSink events) {
+        this.events = events;
+    }
+
+    @Override
+    public void onCancel(Object arguments) {
+        this.events=null;
+    }
+
 
     @Override
     public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
@@ -70,6 +92,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
                 url = methodCall.argument("url");
                 isLocal = methodCall.argument("isLocal");
+                subtitle = methodCall.argument("subtitle");
 
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
@@ -94,6 +117,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 vout.attachViews();
                 mediaPlayer.setMedia(media);
+                if (!subtitle.isEmpty())
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, subtitle, true);
+
                 mediaPlayer.setEventListener(this);
                 mediaPlayer.play();
                 break;
@@ -122,6 +148,39 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     mediaPlayer.play();
                 }
                 break;
+            case "pause":
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                }
+                break;
+            case "play":
+                if (!mediaPlayer.isPlaying()) {
+                    mediaPlayer.play();
+                }
+                break;
+            case "isPlaying":
+                result.success(mediaPlayer.isPlaying());
+                break;
+            case "setRate":
+                rate = methodCall.argument("rate");
+                mediaPlayer.setRate(rate);
+                break;
+            case "getRate":
+                rate = mediaPlayer.getRate();
+                result.success(rate);
+                break;
+            case "getDuration":
+                duration = (int)mediaPlayer.getLength();
+                result.success(duration);
+                break;
+            case "getPosition":
+                position = (int)mediaPlayer.getTime();
+                result.success(position);
+                break;
+            case "addSubtitle":
+                subtitle = methodCall.argument("subtitle");
+                mediaPlayer.addSlave(Media.Slave.Type.Subtitle, subtitle, true);
+                break;
         }
     }
 
@@ -130,6 +189,21 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         Map<String, String> resultMap = new HashMap<>();
 
         switch (event.type) {
+            case MediaPlayer.Event.EndReached:
+                if (this.events!=null){
+                    resultMap.put("status", "end");
+					resultMap.put("value", "");
+                    events.success(resultMap);
+                }
+                break;
+            case MediaPlayer.Event.PositionChanged:
+                if (this.events!=null){
+                    float pos = event.getPositionChanged();
+                    resultMap.put("status", "pos");
+                    resultMap.put("value", Float.toString(pos));
+                    events.success(resultMap);
+                }
+                break;
             case MediaPlayer.Event.Vout:
                 String aspectRatio;
                 int height = 0;

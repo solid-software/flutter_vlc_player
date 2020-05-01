@@ -10,6 +10,7 @@ class VlcPlayer extends StatefulWidget {
   final int defaultWidth;
   final String url;
   final bool isLocal;
+  final String subtitle;
   final Widget placeholder;
   final VlcPlayerController controller;
 
@@ -19,6 +20,7 @@ class VlcPlayer extends StatefulWidget {
     @required this.defaultWidth,
     @required this.url,
     this.isLocal=false,
+    this.subtitle='',
     @required this.controller,
     this.placeholder,
   });
@@ -73,7 +75,7 @@ class _VlcPlayerState extends State<VlcPlayer> {
     _controller.initView(id);
     if (_controller.hasClients) {
       String aspectRatioString = await _controller.setStreamUrl(
-          widget.url, widget.isLocal, widget.defaultHeight, widget.defaultWidth);
+          widget.url, widget.isLocal, widget.subtitle, widget.defaultHeight, widget.defaultWidth);
       setState(() {
         readyToShow = true;
       });
