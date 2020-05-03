@@ -3,20 +3,25 @@ package software.solid.fluttervlcplayer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.util.Base64;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+
 import androidx.annotation.NonNull;
+
 import io.flutter.plugin.common.*;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
+
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.util.VLCVideoLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -39,9 +44,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     private LibVLC libVLC;
     private MediaPlayer mediaPlayer;
+    private VLCVideoLayout frameLayout;
     private TextureView textureView;
+    private TextureView subtitleView;
     private IVLCVout vout;
     private boolean playerDisposed;
+
+    private Boolean subtitleTextureValid=false;
+    private Boolean videoTextureValid=false;
 
     public FlutterVideoView(Context context, PluginRegistry.Registrar _registrar, BinaryMessenger messenger, int id) {
         this.playerDisposed = false;
@@ -53,34 +63,43 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         eventChannel = new EventChannel(messenger, "flutter_video_plugin/getVideoEvents_" + id);
 
         eventChannel.setStreamHandler(
-            new EventChannel.StreamHandler() {
-                @Override
-                public void onListen(Object o, EventChannel.EventSink sink) {
-                    eventSink.setDelegate(sink);
-                }
+                new EventChannel.StreamHandler() {
+                    @Override
+                    public void onListen(Object o, EventChannel.EventSink sink) {
+                        eventSink.setDelegate(sink);
+                    }
 
-                @Override
-                public void onCancel(Object o) {
-                    eventSink.setDelegate(null);
+                    @Override
+                    public void onCancel(Object o) {
+                        eventSink.setDelegate(null);
+                    }
                 }
-            }
         );
 
         TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
-        textureView = new TextureView(context);
+        TextureRegistry.SurfaceTextureEntry subtitleEntry = registrar.textures().createSurfaceTexture();
+        createLayout(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener(){
+        subtitleView.setSurfaceTexture(subtitleEntry.surfaceTexture());
+
+//        subtitleView.setZOrderMediaOverlay(true);
+//        subtitleView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
             boolean wasPaused = false;
 
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if(vout == null) return;
+                if (vout == null) return;
 
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                vout.attachViews();
+                videoTextureValid=true;
+
+                if (subtitleTextureValid && videoTextureValid)
+                    vout.attachViews();
                 textureView.forceLayout();
-                if(wasPaused){
+                if (wasPaused) {
                     mediaPlayer.play();
                     wasPaused = false;
                 }
@@ -93,15 +112,15 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                if(playerDisposed){
-                    if(mediaPlayer != null) {
+                if (playerDisposed) {
+                    if (mediaPlayer != null) {
                         mediaPlayer.stop();
                         mediaPlayer.release();
                         mediaPlayer = null;
                     }
                     return true;
-                }else{
-                    if(mediaPlayer != null && vout != null) {
+                } else {
+                    if (mediaPlayer != null && vout != null) {
                         mediaPlayer.pause();
                         wasPaused = true;
                         vout.detachViews();
@@ -117,19 +136,57 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
         });
 
+        subtitleView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+                if (vout == null) return;
+
+                vout.setSubtitlesSurface(new Surface(subtitleView.getSurfaceTexture()), null);
+                subtitleTextureValid=true;
+
+                if (subtitleTextureValid && videoTextureValid)
+                    vout.attachViews();
+                subtitleView.forceLayout();
+
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+
+            }
+        });
+
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
     }
 
+    private void createLayout(Context context) {
+        frameLayout = new VLCVideoLayout(context);
+        textureView = new TextureView(context);
+        subtitleView =new TextureView(context);
+        frameLayout.addView(textureView);
+        frameLayout.addView(subtitleView);
+    }
+
     @Override
     public View getView() {
-        return textureView;
+        return frameLayout;
     }
 
     @Override
     public void dispose() {
-        if(mediaPlayer != null) mediaPlayer.stop();
-        if(vout != null) vout.detachViews();
+        if (mediaPlayer != null) mediaPlayer.stop();
+        if (vout != null) vout.detachViews();
         playerDisposed = true;
     }
 
@@ -139,22 +196,22 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @SuppressLint("WrongThread")
     @Override
     public void onMethodCall(MethodCall methodCall, @NonNull MethodChannel.Result result) {
-        Boolean isLocal=false;
-        long time=0;
-        float rate= (float) 1.0;
-        int track=-1;
-        String subtitle="";
+        Boolean isLocal = false;
+        long time = 0;
+        float rate = (float) 1.0;
+        int track = -1;
+        String subtitle = "";
         switch (methodCall.method) {
             case "initialize":
-                if (textureView == null) {
-                    textureView = new TextureView(context);
+                if (frameLayout == null) {
+                    createLayout(context);
                 }
 
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
                 options.add("--no-skip-frames");
 
-                if(DISABLE_LOG_OUTPUT) {
+                if (DISABLE_LOG_OUTPUT) {
                     // Silence player log output.
                     options.add("--quiet");
                 }
@@ -167,15 +224,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+//                vout.setSubtitlesSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
 
                 String initStreamURL = methodCall.argument("url");
-                isLocal=methodCall.argument("isLocal");
-                subtitle=methodCall.argument("subtitle");
+                isLocal = methodCall.argument("isLocal");
+                subtitle = methodCall.argument("subtitle");
 
                 Media media = null;
                 if (isLocal)
-                    media=new Media(libVLC, Uri.fromFile(new File(initStreamURL)));
+                    media = new Media(libVLC, Uri.fromFile(new File(initStreamURL)));
                 else {
                     options.add("--rtsp-tcp");
                     media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
@@ -191,12 +249,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 this.dispose();
                 break;
             case "changeURL":
-                if(libVLC == null) result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
+                if (libVLC == null)
+                    result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
                 mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
                 isLocal = methodCall.argument("isLocal");
-                Media newMedia=null;
+                Media newMedia = null;
                 if (isLocal)
                     newMedia = new Media(libVLC, Uri.fromFile(new File(newURL)));
                 else
@@ -221,9 +280,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "setPlaybackState":
 
                 String playbackState = methodCall.argument("playbackState");
-                if(playbackState == null) result.success(null);
+                if (playbackState == null) result.success(null);
 
-                switch(playbackState){
+                switch (playbackState) {
                     case "play":
                         textureView.forceLayout();
                         if (!mediaPlayer.isPlaying())
@@ -231,7 +290,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                         break;
                     case "pause":
                         if (mediaPlayer.isPlaying())
-                          mediaPlayer.pause();
+                            mediaPlayer.pause();
                         break;
                     case "stop":
                         mediaPlayer.stop();
@@ -275,7 +334,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 mediaPlayer.setSpuTrack(track);
                 break;
             case "getSubtitleTrackCount":
-                track=mediaPlayer.getSpuTracksCount();
+                track = mediaPlayer.getSpuTracksCount();
                 result.success(track);
                 break;
             case "addSubtitle":
@@ -302,7 +361,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 int width = 0;
 
                 Media.VideoTrack currentVideoTrack = (Media.VideoTrack) mediaPlayer.getMedia().getTrack(
-                    mediaPlayer.getVideoTrack()
+                        mediaPlayer.getVideoTrack()
                 );
                 if (currentVideoTrack != null) {
                     height = currentVideoTrack.height;
@@ -334,7 +393,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("value", false);
                 eventObject.put("reason", "EndReached");
                 eventSink.success(eventObject);
-                
+
             case MediaPlayer.Event.Vout:
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;
