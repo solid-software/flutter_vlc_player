@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
 
 class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler, MediaPlayer.EventListener {
 
@@ -138,6 +139,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @SuppressLint("WrongThread")
     @Override
     public void onMethodCall(MethodCall methodCall, @NonNull MethodChannel.Result result) {
+        Boolean isLocal=false;
         switch (methodCall.method) {
             case "initialize":
                 if (textureView == null) {
@@ -147,7 +149,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
                 options.add("--no-skip-frames");
-                options.add("--rtsp-tcp");
 
                 if(DISABLE_LOG_OUTPUT) {
                     // Silence player log output.
@@ -165,7 +166,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout.attachViews();
 
                 String initStreamURL = methodCall.argument("url");
-                Media media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
+                isLocal=methodCall.argument("isLocal");
+
+                Media media = null;
+                if (isLocal)
+                    media=new Media(libVLC, Uri.fromFile(new File(initStreamURL)));
+                else {
+                    options.add("--rtsp-tcp");
+                    media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
+                }
+
                 mediaPlayer.setMedia(media);
 
                 result.success(null);
@@ -178,7 +188,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
-                Media newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
+                isLocal = methodCall.argument("isLocal");
+                Media newMedia=null;
+                if (isLocal)
+                    newMedia = new Media(libVLC, Uri.fromFile(new File(newURL)));
+                else
+                    newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
+                newMedia.setHWDecoderEnabled(true, true);
                 mediaPlayer.setMedia(newMedia);
 
                 result.success(null);

@@ -24,6 +24,7 @@ class Size {
 class VlcPlayer extends StatefulWidget {
   final double aspectRatio;
   final String url;
+  final bool isLocal;
   final Widget placeholder;
   final VlcPlayerController controller;
 
@@ -41,6 +42,7 @@ class VlcPlayer extends StatefulWidget {
     /// This is the initial URL for the content. This also must be provided but [VlcPlayerController] implements
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
+    this.isLocal=false,
 
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
@@ -120,7 +122,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.url);
+      await _controller._initialize(widget.url, widget.isLocal);
     }
   }
 
@@ -244,10 +246,10 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(String url) async {
+  Future<void> _initialize(String url, bool isLocal) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
-    await _methodChannel.invokeMethod("initialize", {'url': url});
+    await _methodChannel.invokeMethod("initialize", {'url': url, 'isLocal':isLocal});
     _position = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event) {
@@ -282,12 +284,12 @@ class VlcPlayerController {
     _onInit();
   }
 
-  Future<void> setStreamUrl(String url) async {
+  Future<void> setStreamUrl(String url, bool isLocal) async {
     _initialized = false;
     _fireEventHandlers();
 
     bool wasPlaying = _playingState != PlayingState.STOPPED;
-    await _methodChannel.invokeMethod("changeURL", {'url': url});
+    await _methodChannel.invokeMethod("changeURL", {'url': url, 'isLocal':isLocal});
     if (wasPlaying) play();
 
     _initialized = true;
