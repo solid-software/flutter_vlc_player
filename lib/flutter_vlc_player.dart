@@ -25,6 +25,7 @@ class VlcPlayer extends StatefulWidget {
   final double aspectRatio;
   final String url;
   final bool isLocal;
+  final String subtitle;
   final Widget placeholder;
   final VlcPlayerController controller;
 
@@ -43,6 +44,7 @@ class VlcPlayer extends StatefulWidget {
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
     this.isLocal=false,
+    this.subtitle="",
 
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
@@ -122,7 +124,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.url, widget.isLocal);
+      await _controller._initialize(widget.url, widget.isLocal, widget.subtitle);
     }
   }
 
@@ -246,10 +248,10 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(String url, bool isLocal) async {
+  Future<void> _initialize(String url, bool isLocal, String subtitle) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
-    await _methodChannel.invokeMethod("initialize", {'url': url, 'isLocal':isLocal});
+    await _methodChannel.invokeMethod("initialize", {'url': url, 'isLocal':isLocal, 'subtitle':subtitle});
     _position = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event) {
@@ -276,6 +278,10 @@ class VlcPlayerController {
           _playbackSpeed = event['speed'];
           _fireEventHandlers();
           break;
+        case 'position':
+          _position = event['value'];
+          _fireEventHandlers();
+          break;
       }
     });
 
@@ -284,12 +290,12 @@ class VlcPlayerController {
     _onInit();
   }
 
-  Future<void> setStreamUrl(String url, bool isLocal) async {
+  Future<void> setStreamUrl(String url, bool isLocal, String subtitle) async {
     _initialized = false;
     _fireEventHandlers();
 
     bool wasPlaying = _playingState != PlayingState.STOPPED;
-    await _methodChannel.invokeMethod("changeURL", {'url': url, 'isLocal':isLocal});
+    await _methodChannel.invokeMethod("changeURL", {'url': url, 'isLocal':isLocal, 'subtitle':subtitle});
     if (wasPlaying) play();
 
     _initialized = true;
