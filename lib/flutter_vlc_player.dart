@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+typedef StatusChanged<T> = void Function(String status, T value);
+
 enum PlayingState { STOPPED, BUFFERING, PLAYING }
 
 class Size {
@@ -149,6 +151,8 @@ class VlcPlayerController {
   VoidCallback _onInit;
   List<VoidCallback> _eventHandlers;
 
+  StatusChanged<dynamic> onStatusChanged=null;
+
   /// Once the [_methodChannel] and [_eventChannel] have been registered with
   /// the Flutter platform SDK counterparts, [hasClients] is set to true.
   /// At this point, the player is ready to begin playing content.
@@ -221,7 +225,9 @@ class VlcPlayerController {
       /// This is a callback that will be executed once the platform view has been initialized.
       /// If you want the media to play as soon as the platform view has initialized, you could just call
       /// [VlcPlayerController.play] in this callback. (see the example)
-      VoidCallback onInit}) {
+        VoidCallback onInit,
+        this.onStatusChanged
+      }) {
     _onInit = onInit;
     _eventHandlers = new List();
   }
@@ -283,6 +289,9 @@ class VlcPlayerController {
           _fireEventHandlers();
           break;
       }
+
+      if (this.onStatusChanged!=null)
+        this.onStatusChanged(event['name'], event['value']);
     });
 
     _initialized = true;
