@@ -311,13 +311,29 @@ class VlcPlayerController {
         .invokeMethod("setPlaybackState", {'playbackState': 'stop'});
   }
 
+  Future<bool> isPlaying() async {
+    var result = await _methodChannel.invokeMethod("isPlaying");
+    return result;
+  }
+
   Future<void> setTime(int time) async {
     await _methodChannel.invokeMethod("setTime", {'time': time.toString()});
+  }
+
+  //return ms position
+  Future<int> getTime() async {
+    var result = await _methodChannel.invokeMethod("getTime");
+    return result;
   }
 
   Future<void> setPlaybackSpeed(double speed) async {
     await _methodChannel
         .invokeMethod("setPlaybackSpeed", {'speed': speed.toString()});
+  }
+
+  Future<double> getPlaybackSpeed() async {
+    var result = await _methodChannel.invokeMethod("getPlaybackSpeed");
+    return result;
   }
 
   Future<Uint8List> takeSnapshot() async {
@@ -326,6 +342,18 @@ class VlcPlayerController {
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
   }
+
+  Future<void> setSubtitleTrack(int track) async {
+    await _methodChannel.invokeMethod("setSubtitleTrack", {
+      'track': track,
+    });
+  }
+
+  Future<int> getSubtitleTrackCount() async {
+    int cnt=await _methodChannel.invokeMethod("getSubtitleTrackCount");
+    return cnt;
+  }
+
 
   void dispose() {
     _methodChannel.invokeMethod("dispose");
