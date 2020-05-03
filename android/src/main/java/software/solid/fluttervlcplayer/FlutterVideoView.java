@@ -8,6 +8,7 @@ import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.util.Base64;
 import android.view.Surface;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 
@@ -46,12 +47,12 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private MediaPlayer mediaPlayer;
     private VLCVideoLayout frameLayout;
     private TextureView textureView;
-    private TextureView subtitleView;
+//    private TextureView subtitleView;
     private IVLCVout vout;
     private boolean playerDisposed;
 
-    private Boolean subtitleTextureValid=false;
-    private Boolean videoTextureValid=false;
+//    private Boolean subtitleTextureValid=false;
+//    private Boolean videoTextureValid=false;
 
     public FlutterVideoView(Context context, PluginRegistry.Registrar _registrar, BinaryMessenger messenger, int id) {
         this.playerDisposed = false;
@@ -76,95 +77,95 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
         );
 
-        TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
-        TextureRegistry.SurfaceTextureEntry subtitleEntry = registrar.textures().createSurfaceTexture();
+//        TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
+//        TextureRegistry.SurfaceTextureEntry subtitleEntry = registrar.textures().createSurfaceTexture();
         createLayout(context);
-        textureView.setSurfaceTexture(textureEntry.surfaceTexture());
-        subtitleView.setSurfaceTexture(subtitleEntry.surfaceTexture());
+//        textureView.setSurfaceTexture(textureEntry.surfaceTexture());
+//        subtitleView.setSurfaceTexture(subtitleEntry.surfaceTexture());
+//
+////        subtitleView.setZOrderMediaOverlay(true);
+////        subtitleView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+//
+//        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+//
+//            boolean wasPaused = false;
+//
+//            @Override
+//            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+//                if (vout == null) return;
+//
+//                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+////                videoTextureValid=true;
+////
+////                if (subtitleTextureValid && videoTextureValid)
+//                    vout.attachViews();
+//                textureView.forceLayout();
+//                if (wasPaused) {
+//                    mediaPlayer.play();
+//                    wasPaused = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+//
+//            }
+//
+//            @Override
+//            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+//                if (playerDisposed) {
+//                    if (mediaPlayer != null) {
+//                        mediaPlayer.stop();
+//                        mediaPlayer.release();
+//                        mediaPlayer = null;
+//                    }
+//                    return true;
+//                } else {
+//                    if (mediaPlayer != null && vout != null) {
+//                        mediaPlayer.pause();
+//                        wasPaused = true;
+//                        vout.detachViews();
+//                    }
+//                    return true;
+//                }
+//            }
+//
+//            @Override
+//            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+//
+//            }
+//
+//        });
 
-//        subtitleView.setZOrderMediaOverlay(true);
-//        subtitleView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-
-            boolean wasPaused = false;
-
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if (vout == null) return;
-
-                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                videoTextureValid=true;
-
-                if (subtitleTextureValid && videoTextureValid)
-                    vout.attachViews();
-                textureView.forceLayout();
-                if (wasPaused) {
-                    mediaPlayer.play();
-                    wasPaused = false;
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                if (playerDisposed) {
-                    if (mediaPlayer != null) {
-                        mediaPlayer.stop();
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
-                    return true;
-                } else {
-                    if (mediaPlayer != null && vout != null) {
-                        mediaPlayer.pause();
-                        wasPaused = true;
-                        vout.detachViews();
-                    }
-                    return true;
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-
-        });
-
-        subtitleView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-                if (vout == null) return;
-
-                vout.setSubtitlesSurface(new Surface(subtitleView.getSurfaceTexture()), null);
-                subtitleTextureValid=true;
-
-                if (subtitleTextureValid && videoTextureValid)
-                    vout.attachViews();
-                subtitleView.forceLayout();
-
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-
-            }
-        });
+//        subtitleView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+//            @Override
+//            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+//                if (vout == null) return;
+//
+//                vout.setSubtitlesSurface(new Surface(subtitleView.getSurfaceTexture()), null);
+//                subtitleTextureValid=true;
+//
+//                if (subtitleTextureValid && videoTextureValid)
+//                    vout.attachViews();
+//                subtitleView.forceLayout();
+//
+//            }
+//
+//            @Override
+//            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+//
+//            }
+//
+//            @Override
+//            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+//
+//            }
+//        });
 
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
@@ -173,9 +174,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private void createLayout(Context context) {
         frameLayout = new VLCVideoLayout(context);
         textureView = new TextureView(context);
-        subtitleView =new TextureView(context);
+//        subtitleView =new TextureView(context);
         frameLayout.addView(textureView);
-        frameLayout.addView(subtitleView);
+//        frameLayout.addView(subtitleView);
     }
 
     @Override
@@ -223,8 +224,11 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout = mediaPlayer.getVLCVout();
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
-                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-//                vout.setSubtitlesSurface(new Surface(textureView.getSurfaceTexture()), null);
+                //subtitleView.forceLayout();
+                //textureView.setFitsSystemWindows(true);
+                //vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+                vout.setVideoView(textureView);
+                //vout.setSubtitlesView(subtitleView);
                 vout.attachViews();
 
                 String initStreamURL = methodCall.argument("url");
