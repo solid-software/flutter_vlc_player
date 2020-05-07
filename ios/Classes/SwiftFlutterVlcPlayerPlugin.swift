@@ -262,8 +262,9 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
     }
     
     public func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
-        let dictionary =  args as! Dictionary<String, Double>
-        return VLCView(withFrame: CGRect(x: 0, y: 0, width: dictionary["width"] ?? 0, height: dictionary["height"] ?? 0), withRegistrar: registrar!,withId: viewId)
+        //Can pass args if necessary for intialization. For now default to empty Rect.
+        //let dictionary =  args as! Dictionary<String, Double>
+        return VLCView(withFrame: CGRect(x: 0, y: 0, width:  0, height:  0), withRegistrar: registrar!,withId: viewId)
     }
     
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
