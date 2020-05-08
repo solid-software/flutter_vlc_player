@@ -4,12 +4,12 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_vlc_player'
-  s.version          = '0.0.1'
+  s.version          = '3.0.0'
   s.summary          = 'A new flutter plugin project.'
   s.description      = <<-DESC
-A new flutter plugin project.
+  A VLC-powered alternative to Flutter video_player. Supports multiple players on one screen.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/solid-software/flutter_vlc_player'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }

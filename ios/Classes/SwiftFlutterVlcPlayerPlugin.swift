@@ -54,6 +54,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                 case .initialize:
                     
                     guard let  urlString = arguments["url"] as? String, let url = URL(string: urlString) else {
+                        
                         result(FlutterError(code: "500",
                                             message: "Url is need to initialization",
                                             details: nil)
@@ -89,8 +90,18 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                 case .changeURL:
                     self.player.stop()
-                    let url = arguments["url"] as? String
-                    let media = VLCMedia(url: URL(string: url!)!)
+                    
+                    guard let  urlString = arguments["url"] as? String, let url = URL(string: urlString) else {
+                        
+                        result(FlutterError(code: "500",
+                                            message: "Url is need to initialization",
+                                            details: nil)
+                        )
+                        return
+                    }
+                    
+                    let media = VLCMedia(url: url)
+                    
                     self.player.media = media
                     result(nil)
                     return
@@ -164,6 +175,8 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
     
     func mediaPlayerStateChanged(_ aNotification: Notification?) {
         
+        guard let eventSink = self.eventSink else { return }
+        
         let player = aNotification?.object as? VLCMediaPlayer
         let media = player?.media
         let tracks: [Any] = media?.tracksInformation ?? [""]  //[Any]
@@ -176,8 +189,8 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
         if player?.currentVideoTrackIndex != -1 {
             if (player?.currentVideoTrackIndex) != nil {
                 track =  tracks[0] as! NSDictionary
-                height = track["height"] as! Int
-                width = track["width"] as! Int
+                height = (track["height"] as? Int ) ?? 0
+                width = (track["width"] as? Int) ?? 0
                 
                 if height != 0 && width != 0  {
                     ratio = Float(width / height)
@@ -188,15 +201,16 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
         }
         
         switch player?.state {
+            
         case .esAdded, .buffering, .opening:
             return
         case .playing:
-            eventSink?([
+            eventSink([
                 "name": "buffering",
                 "value": NSNumber(value: false)
             ])
             if let value = media?.length.value {
-                eventSink?([
+                eventSink([
                     "name": "playing",
                     "value": NSNumber(value: true),
                     "ratio": NSNumber(value: ratio),
@@ -207,10 +221,10 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
             }
             return
         case .ended:
-            eventSink?([
+            eventSink([
                 "name": "ended"
             ])
-            eventSink?([
+            eventSink([
                 "name": "playing",
                 "value": NSNumber(value: false),
                 "reason": "EndReached"
@@ -220,11 +234,11 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
             print("(flutter_vlc_plugin) A VLC error occurred.")
             return
         case .paused, .stopped:
-            eventSink?([
+            eventSink([
                 "name": "buffering",
                 "value": NSNumber(value: false)
             ])
-            eventSink?([
+            eventSink([
                 "name": "playing",
                 "value": NSNumber(value: false)
             ])
@@ -273,7 +287,7 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
 }
 
 
-enum FlutterMethodCallOption :String{
+enum FlutterMethodCallOption :String {
     case initialize = "initialize"
     case setPlaybackState = "setPlaybackState"
     case dispose = "dispose"
