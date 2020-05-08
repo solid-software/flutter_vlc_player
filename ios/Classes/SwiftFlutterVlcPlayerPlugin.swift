@@ -231,8 +231,13 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
             ])
             return
         case .error:
-            print("(flutter_vlc_plugin) A VLC error occurred.")
+            eventSink(FlutterError(code: "500",
+                                   message: "Player State got an error",
+                                   details: nil)
+            )
+            
             return
+            
         case .paused, .stopped:
             eventSink([
                 "name": "buffering",
