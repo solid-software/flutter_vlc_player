@@ -28,6 +28,7 @@ class VlcPlayer extends StatefulWidget {
   final String url;
   final bool isLocal;
   final String subtitle;
+  final bool loop;
   final Widget placeholder;
   final VlcPlayerController controller;
 
@@ -47,6 +48,7 @@ class VlcPlayer extends StatefulWidget {
     @required this.url,
     this.isLocal=false,
     this.subtitle="",
+    this.loop=true,
 
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
@@ -126,7 +128,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.url, widget.isLocal, widget.subtitle);
+      await _controller._initialize(widget.url, widget.isLocal, widget.subtitle, widget.loop);
     }
   }
 
@@ -254,10 +256,10 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(String url, bool isLocal, String subtitle) async {
+  Future<void> _initialize(String url, bool isLocal, String subtitle, bool loop) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
-    await _methodChannel.invokeMethod("initialize", {'url': url, 'isLocal':isLocal, 'subtitle':subtitle});
+    await _methodChannel.invokeMethod("initialize", {'url': url, 'isLocal':isLocal, 'subtitle':subtitle, 'loop':loop});
     _position = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event) {

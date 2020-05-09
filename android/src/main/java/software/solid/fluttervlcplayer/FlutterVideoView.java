@@ -202,6 +202,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         float rate = (float) 1.0;
         int track = -1;
         String subtitle = "";
+        Boolean loop=false;
         switch (methodCall.method) {
             case "initialize":
                 if (frameLayout == null) {
@@ -219,6 +220,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     // Silence player log output.
                     options.add("--quiet");
                 }
+                String initStreamURL = methodCall.argument("url");
+                isLocal = methodCall.argument("isLocal");
+                subtitle = methodCall.argument("subtitle");
+                loop=methodCall.argument("loop");
+                if (loop)
+                    options.add("--input-repeat=65535");
+                if (!isLocal)
+                    options.add("--rtsp-tcp");
 
                 libVLC = new LibVLC(context, options);
                 mediaPlayer = new MediaPlayer(libVLC);
@@ -234,15 +243,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 //vout.setSubtitlesView(subtitleView);
                 vout.attachViews();
 
-                String initStreamURL = methodCall.argument("url");
-                isLocal = methodCall.argument("isLocal");
-                subtitle = methodCall.argument("subtitle");
-
                 Media media = null;
                 if (isLocal)
                     media = new Media(libVLC, Uri.fromFile(new File(initStreamURL)));
                 else {
-                    options.add("--rtsp-tcp");
                     media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
                 }
 
