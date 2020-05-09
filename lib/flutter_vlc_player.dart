@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 
 typedef StatusChanged<T> = void Function(String status, T value);
 
-enum PlayingState { STOPPED, BUFFERING, PLAYING }
+enum PlayingState { STOPPED, PAUSED, PLAYING }
 
 class Size {
   final int width;
@@ -268,14 +268,16 @@ class VlcPlayerController {
           if (event['length'] != null) _duration = event['length'];
           if (event['ratio'] != null) _aspectRatio = event['ratio'];
 
-          _playingState =
-              event['value'] ? PlayingState.PLAYING : PlayingState.STOPPED;
-
+          _playingState = PlayingState.PLAYING;
           _fireEventHandlers();
           break;
 
-        case 'buffering':
-          if (event['value']) _playingState = PlayingState.BUFFERING;
+        case 'paused':
+          _playingState = PlayingState.PAUSED;
+          _fireEventHandlers();
+          break;
+        case 'stopped':
+          _playingState = PlayingState.STOPPED;
           _fireEventHandlers();
           break;
 

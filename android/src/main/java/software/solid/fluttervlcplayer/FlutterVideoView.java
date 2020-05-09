@@ -211,6 +211,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 ArrayList<String> options = new ArrayList<>();
                 options.add("--no-drop-late-frames");
                 options.add("--no-skip-frames");
+//                options.add("--android-display-chroma");
+//                options.add("RV16");
+//                options.add("--vout=android_display,none");
 
                 if (DISABLE_LOG_OUTPUT) {
                     // Silence player log output.
@@ -412,14 +415,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case MediaPlayer.Event.EncounteredError:
                 System.err.println("(flutter_vlc_plugin) A VLC error occurred.");
             case MediaPlayer.Event.Paused:
-            case MediaPlayer.Event.Stopped:
-                eventObject.put("name", "buffering");
-                eventObject.put("value", false);
-                eventSink.success(eventObject);
-
                 eventObject.clear();
-                eventObject.put("name", "playing");
-                eventObject.put("value", false);
+                eventObject.put("name", "paused");
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+            case MediaPlayer.Event.Stopped:
+                eventObject.clear();
+                eventObject.put("name", "stopped");
+                eventObject.put("value", true);
                 eventSink.success(eventObject);
                 break;
         }
