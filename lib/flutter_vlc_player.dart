@@ -368,9 +368,9 @@ class VlcPlayerController {
     });
   }
 
-  Future<int> getSubtitleTrackCount() async {
-    int cnt=await _methodChannel.invokeMethod("getSubtitleTrackCount");
-    return cnt;
+  Future<List<dynamic>> getSubtitleTracks() async {
+    List<dynamic> list=await _methodChannel.invokeMethod("getSubtitleTracks");
+    return list;
   }
 
 

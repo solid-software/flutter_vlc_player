@@ -27,6 +27,7 @@ import org.videolan.libvlc.util.VLCVideoLayout;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.File;
 
@@ -47,7 +48,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private MediaPlayer mediaPlayer;
     private VLCVideoLayout frameLayout;
     private TextureView textureView;
-//    private TextureView subtitleView;
+    //    private TextureView subtitleView;
     private IVLCVout vout;
     private boolean playerDisposed;
 
@@ -202,7 +203,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         float rate = (float) 1.0;
         int track = -1;
         String subtitle = "";
-        Boolean loop=false;
+        Boolean loop = false;
         switch (methodCall.method) {
             case "initialize":
                 if (frameLayout == null) {
@@ -223,7 +224,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 String initStreamURL = methodCall.argument("url");
                 isLocal = methodCall.argument("isLocal");
                 subtitle = methodCall.argument("subtitle");
-                loop=methodCall.argument("loop");
+                loop = methodCall.argument("loop");
                 if (loop)
                     options.add("--input-repeat=65535");
                 if (!isLocal)
@@ -344,9 +345,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 track = methodCall.argument("track");
                 mediaPlayer.setSpuTrack(track);
                 break;
-            case "getSubtitleTrackCount":
-                track = mediaPlayer.getSpuTracksCount();
-                result.success(track);
+            case "getSubtitleTracks":
+                MediaPlayer.TrackDescription[] tracks = mediaPlayer.getSpuTracks();
+                List<Integer> list = new ArrayList<Integer>();
+                for (MediaPlayer.TrackDescription t : tracks) {
+                    if (t.id >= 0)
+                        list.add(t.id);
+                }
+                result.success(list);
                 break;
             case "addSubtitle":
                 subtitle = methodCall.argument("subtitle");
