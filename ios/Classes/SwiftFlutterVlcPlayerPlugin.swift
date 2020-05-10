@@ -199,7 +199,7 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
             }
             
         }
-        
+                
         switch player?.state {
             
         case .esAdded, .buffering, .opening:
