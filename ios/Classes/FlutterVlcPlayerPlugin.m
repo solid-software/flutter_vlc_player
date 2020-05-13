@@ -33,13 +33,27 @@ NSObject<FlutterBinaryMessenger> *_messenger;
         if([call.method isEqualToString:@"initialize"]) {
 
             NSString *url = call.arguments[@"url"];
-            
-            VLCMediaPlayer *player = [[VLCMediaPlayer alloc] init];
+            bool isLocal = call.arguments[@"isLocal"];
+            NSString *subtitle = call.arguments[@"subtitle"];
+            bool loop = call.arguments[@"loop"];
+            NSMutableArray *options= [[NSMutableArray alloc] init];
+            if (!isLocal)
+               [options addObject:@"--rtsp-tcp"];
+            if (loop)
+               [options addObject:@"--input-repeat=65535"];
+            VLCMediaPlayer *player = [[VLCMediaPlayer alloc] initWithOptions:options];
             player.delegate = eventChannelHandler;
 
             instance.player = player;
             
-            VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+            VLCMedia *media = nil;
+            if (isLocal)
+                media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+            else
+                media = [VLCMedia mediaWithPath:url];
+            //add subtitle
+            if ([subtitle length] > 0)
+                [player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
             player.media = media;
             player.position = 0.5;
             player.drawable = instance.hostedView;
@@ -93,11 +107,14 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             NSString *playbackState = call.arguments[@"playbackState"];
 
             if([playbackState isEqualToString:@"play"]) {
-                [instance.player play];
+                if (![instance.player isPlaying])
+                    [instance.player play];
             } else if ([playbackState isEqualToString:@"pause"]) {
-                [instance.player pause];
+                if ([instance.player isPlaying])
+                    [instance.player pause];
             } else if ([playbackState isEqualToString:@"stop"]) {
-                [instance.player stop];
+                if ([instance.player isPlaying])
+                    [instance.player stop];
             }
 
             result(nil);
@@ -112,7 +129,14 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             result(nil);
             return;
 
-          } else if ([call.method isEqualToString:@"setTime"]) {
+          } else if ([call.method isEqualToString:@"getPlaybackSpeed"]) {
+
+            float rate= instance.player.rate;
+
+            result([NSNumber numberWithDouble:rate]);
+            return;
+
+           }else if ([call.method isEqualToString:@"setTime"]) {
 
             VLCTime *time = [VLCTime timeWithNumber:call.arguments[@"time"]];
             instance.player.time = time;
@@ -120,7 +144,46 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             result(nil);
             return;
 
-          }
+          } else if ([call.method isEqualToString:@"getTime"]) {
+
+            int value= instance.player.time.intValue;
+
+            result([NSNumber numberWithInt:value]);
+            return;
+
+          } else if ([call.method isEqualToString:@"getDuration"]) {
+
+            int value= instance.player.media.length.intValue;
+
+            result([NSNumber numberWithInt:value]);
+            return;
+
+          }else if ([call.method isEqualToString:@"isPlaying"]) {
+
+           bool value= [instance.player isPlaying];
+
+           result([NSNumber numberWithBool:value]);
+           return;
+
+         }else if ([call.method isEqualToString:@"setSubtitleTrack"]) {
+
+           int track = call.arguments[@"track"];
+           instance.player.currentVideoSubTitleIndex = track;
+
+           return;
+         }else if ([call.method isEqualToString:@"getSubtitleTracks"]) {
+
+             NSArray *videoSubTitlesNames = instance.player.videoSubTitlesNames;
+
+             result(videoSubTitlesNames);
+             return;
+         }else if ([call.method isEqualToString:@"addSubtitle"]) {
+
+             NSString* subtitle = call.arguments[@"subtitle"];
+             [instance.player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
+
+             return;
+         }
         
     }];
     
@@ -231,11 +294,6 @@ NSObject<FlutterPluginRegistrar> *_registrar;
 
         case VLCMediaPlayerStatePlaying:
             _eventSink(@{
-                @"name": @"buffering",
-                @"value": @(NO)
-            });
-
-            _eventSink(@{
                 @"name": @"playing",
                 @"value": @(YES),
                 @"ratio": @(ratio),
@@ -262,16 +320,17 @@ NSObject<FlutterPluginRegistrar> *_registrar;
             return;
 
         case VLCMediaPlayerStatePaused:
+            _eventSink(@{
+                @"name": @"paused",
+                @"value": @(YES)
+            });
+            return;
         case VLCMediaPlayerStateStopped:
             _eventSink(@{
-                @"name": @"buffering",
-                @"value": @(NO)
+                @"name": @"stopped",
+                @"value": @(YES)
             });
 
-            _eventSink(@{
-                @"name": @"playing",
-                @"value": @(NO)
-            });
             return;
     }
 }
@@ -282,6 +341,12 @@ NSObject<FlutterPluginRegistrar> *_registrar;
 
     _eventSink(@{
         @"name": @"timeChanged",
+        @"value": player.time.value,
+        @"speed": @(player.rate),
+    });
+
+    _eventSink(@{
+        @"name": @"position",
         @"value": player.time.value,
         @"speed": @(player.rate),
     });
