@@ -48,9 +48,10 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             
             VLCMedia *media = nil;
             if (isLocal)
-                media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
-            else
                 media = [VLCMedia mediaWithPath:url];
+            else
+                media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+
             //add subtitle
             if ([subtitle length] > 0)
                 [player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
@@ -167,15 +168,21 @@ NSObject<FlutterBinaryMessenger> *_messenger;
 
          }else if ([call.method isEqualToString:@"setSubtitleTrack"]) {
 
-           int track = call.arguments[@"track"];
+           NSNumber* value=call.arguments[@"track"];
+           int track = value.intValue;
            instance.player.currentVideoSubTitleIndex = track;
 
            return;
          }else if ([call.method isEqualToString:@"getSubtitleTracks"]) {
 
-             NSArray *videoSubTitlesNames = instance.player.videoSubTitlesNames;
+             NSArray *videoSubTitlesNames = instance.player.videoTrackIndexes;
+             NSMutableArray *subtitles=[NSMutableArray array];
+             for (NSNumber* n in videoSubTitlesNames){
+                if (n.intValue>=0)
+                    [subtitles addObject:n];
+             }
 
-             result(videoSubTitlesNames);
+             result(subtitles);
              return;
          }else if ([call.method isEqualToString:@"addSubtitle"]) {
 
