@@ -350,12 +350,14 @@ NSObject<FlutterPluginRegistrar> *_registrar;
         @"name": @"timeChanged",
         @"value": player.time.value,
         @"speed": @(player.rate),
+        @"length": player.media.length.value ?: @0
     });
 
     _eventSink(@{
         @"name": @"position",
         @"value": player.time.value,
         @"speed": @(player.rate),
+        @"length": player.media.length.value ?: @0
     });
 
     return;

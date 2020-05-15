@@ -285,6 +285,8 @@ class VlcPlayerController {
 
         case 'timeChanged':
           _position = event['value'];
+          if (event['length']!=null)
+            _duration = event['length'];
           _playbackSpeed = event['speed'];
           _fireEventHandlers();
           break;
