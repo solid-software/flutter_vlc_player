@@ -175,9 +175,9 @@ NSObject<FlutterBinaryMessenger> *_messenger;
            return;
          }else if ([call.method isEqualToString:@"getSubtitleTracks"]) {
 
-             NSArray *videoSubTitlesNames = instance.player.videoTrackIndexes;
+             NSArray *videoSubTitlesIndexes = instance.player.videoSubTitlesIndexes;
              NSMutableArray *subtitles=[NSMutableArray array];
-             for (NSNumber* n in videoSubTitlesNames){
+             for (NSNumber* n in videoSubTitlesIndexes){
                 if (n.intValue>=0)
                     [subtitles addObject:n];
              }
