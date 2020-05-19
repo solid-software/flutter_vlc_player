@@ -1,3 +1,6 @@
+## 3.0.0
+* Migrated to Swift.
+
 ## 2.0.0
 * Improved structure (see example for braking changes), add aspect ratio and payback controls 
 support thanks to John Harker (https://github.com/NBTX) and Mitch Ross (https://github.com/mitchross).
