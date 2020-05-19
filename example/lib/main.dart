@@ -27,6 +27,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 
   VlcPlayerController _videoViewController;
   VlcPlayerController _videoViewController2;
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -94,6 +95,12 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               ),
             ),
             FlatButton(
+              child: isPlaying ?  Icon(Icons.pause) : Icon(Icons.play_arrow) ,
+              onPressed: () =>  {
+                playOrPauseVideo()
+              }
+            ),
+            FlatButton(
               child: Text("Change URL"),
               onPressed: () => _videoViewController.setStreamUrl(
                   "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_2160p_60fps_normal.mp4"),
@@ -124,6 +131,23 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
         ),
       ),
     );
+  }
+
+  void playOrPauseVideo() {
+    String state = _videoViewController.playingState.toString();
+    
+    if  ( state == "PlayingState.PLAYING" ){
+      _videoViewController.pause();
+     setState(() {
+       isPlaying = false;
+     });
+    } else {
+      _videoViewController.play();
+     setState(() {
+        isPlaying = true;
+     });
+    }
+  
   }
 
   void _createCameraImage() async {
