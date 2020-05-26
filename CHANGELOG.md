@@ -1,3 +1,7 @@
+## 3.0.1
+* Fix a bug on Android with URL parsing. See (https://github.com/solid-software/flutter_vlc_player/issues/52),
+credits to pharshdev (https://github.com/pharshdev) and Mitch Ross (https://github.com/mitchross)
+
 ## 3.0.0
 * Migrated to Swift, thanks to Mitch Ross (https://github.com/mitchross), 
 Amadeu Cavalcante (https://github.com/amadeu01) and pharshdev (https://github.com/pharshdev).
