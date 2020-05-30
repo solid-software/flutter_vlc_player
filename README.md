@@ -112,6 +112,12 @@ const VlcPlayer({
     /// This is the initial URL for the content. This also must be provided but [VlcPlayerController] implements
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
+    /// whether the url is a local file instead of network stream url
+    this.isLocal=false,
+    /// external subtitle file 
+    this.subtitle="",
+    /// True: loop the playback forever
+    this.loop=true,
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
     this.placeholder,
@@ -140,7 +146,7 @@ VlcPlayerController({
   /// Returns the current state of the player.
   /// Valid states:
   /// - PlayingState.PLAYING
-  /// - PlayingState.BUFFERING
+  /// - PlayingState.PAUSED
   /// - PlayingState.STOPPED
   /// - null (When the player is uninitialized)
   PlayingState playingState;
@@ -190,6 +196,21 @@ VlcPlayerController({
 
   /// Returns binary data for a snapshot of the media at the current frame.
   Future<Uint8List> takeSnapshot();
+  
+  /// Return subtitle track index list
+  Future<List<dynamic>> getSubtitleTracks();
+  
+  /// [track] switch subtitle track by track index 
+  Future<void> setSubtitleTrack(int track);
+  
+  /// Return player speed
+  Future<double> getPlaybackSpeed();
+  
+  /// Return player current postion in milliseconds
+  Future<int> getTime();
+   
+  /// Return true if player is playing
+  Future<bool> isPlaying();
 
   /// Disposes the platform view and unloads the VLC player.
   void dispose();
