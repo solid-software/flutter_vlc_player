@@ -81,7 +81,17 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             [instance.player stop];
 
             NSString *url = call.arguments[@"url"];
-            VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+            bool isLocal = call.arguments[@"isLocal"];
+            NSString *subtitle = call.arguments[@"subtitle"];
+            VLCMedia *media = nil;
+            if (isLocal)
+                media = [VLCMedia mediaWithPath:url];
+            else
+                media = [VLCMedia mediaWithURL:[NSURL URLWithString:url]];
+
+            //add subtitle
+            if ([subtitle length] > 0)
+                [instance.player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
             instance.player.media = media;
 
             result(nil);
