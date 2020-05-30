@@ -70,20 +70,19 @@ NSObject<FlutterBinaryMessenger> *_messenger;
 
          } else if ([call.method isEqualToString:@"changeURL"]) {
 
+            if(instance.player == nil) {
+                result([FlutterError errorWithCode:@"VLC_NOT_INITIALIZED"
+                                        message:@"The player has not yet been initialized."
+                                        details:nil]);
+
+                return;
+            }
+
+            [instance.player stop];
+
             NSString *url = call.arguments[@"url"];
             bool isLocal = call.arguments[@"isLocal"];
             NSString *subtitle = call.arguments[@"subtitle"];
-            bool loop = true;//call.arguments[@"loop"];
-            NSMutableArray *options= [[NSMutableArray alloc] init];
-            if (!isLocal)
-               [options addObject:@"--rtsp-tcp"];
-            if (loop)
-               [options addObject:@"--input-repeat=65535"];
-            VLCMediaPlayer *player = [[VLCMediaPlayer alloc] initWithOptions:options];
-            player.delegate = eventChannelHandler;
-
-            instance.player = player;
-            
             VLCMedia *media = nil;
             if (isLocal)
                 media = [VLCMedia mediaWithPath:url];
@@ -92,11 +91,8 @@ NSObject<FlutterBinaryMessenger> *_messenger;
 
             //add subtitle
             if ([subtitle length] > 0)
-                [player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
-            player.media = media;
-            player.position = 0.5;
-            player.drawable = instance.hostedView;
-            [player addObserver:instance forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+                [instance.player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
+            instance.player.media = media;
 
             result(nil);
             return;
