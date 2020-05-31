@@ -309,9 +309,9 @@ class VlcPlayerController {
     _initialized = false;
     _fireEventHandlers();
 
-    bool wasPlaying = _playingState != PlayingState.STOPPED;
+    //bool wasPlaying = _playingState != PlayingState.STOPPED;
     await _methodChannel.invokeMethod("changeURL", {'url': url, 'isLocal':isLocal, 'subtitle':subtitle});
-    if (wasPlaying) play();
+    //if (wasPlaying) play();
 
     _initialized = true;
     _fireEventHandlers();

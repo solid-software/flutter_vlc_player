@@ -78,7 +78,9 @@ NSObject<FlutterBinaryMessenger> *_messenger;
                 return;
             }
 
-            [instance.player stop];
+            bool isplaying=[instance.player isPlaying];
+            if (isplaying)
+                [instance.player stop];
 
             NSString *url = call.arguments[@"url"];
             bool isLocal = call.arguments[@"isLocal"];
@@ -93,6 +95,8 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             if ([subtitle length] > 0)
                 [instance.player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
             instance.player.media = media;
+             if (isplaying)
+                 [instance.player play];
 
             result(nil);
             return;
@@ -218,7 +222,7 @@ NSObject<FlutterBinaryMessenger> *_messenger;
 
     if (self.aspectSet) return;
     if (!self.player.isPlaying) return;
-    
+
     [_player setDrawable:_hostedView];
     [_player setVideoAspectRatio:"0.7"];
     [_player setCurrentVideoTrackIndex:0];
@@ -302,7 +306,8 @@ NSObject<FlutterPluginRegistrar> *_registrar;
             ratio = width.floatValue / height.floatValue;
         }
     }
-
+    
+    
     switch(player.state){
         case VLCMediaPlayerStateESAdded:
         case VLCMediaPlayerStateBuffering:
