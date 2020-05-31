@@ -217,7 +217,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 if (libVLC == null)
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
-                mediaPlayer.stop();
+                bool playing=mediaPlayer.isPlaying();
+                if (playing)
+                    mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
                 isLocal = methodCall.argument("isLocal");
                 Media newMedia = null;
@@ -227,6 +229,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
                 newMedia.setHWDecoderEnabled(true, true);
                 mediaPlayer.setMedia(newMedia);
+                if (playing)
+                    mediaPlayer.play();
 
                 result.success(null);
                 break;
