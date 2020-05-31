@@ -160,6 +160,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         int track = -1;
         String subtitle = "";
         Boolean loop = false;
+		Boolean playing = false;
         switch (methodCall.method) {
             case "initialize":
                 if (frameLayout == null) {
@@ -217,7 +218,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 if (libVLC == null)
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
-                bool playing=mediaPlayer.isPlaying();
+                playing=mediaPlayer.isPlaying();
                 if (playing)
                     mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
