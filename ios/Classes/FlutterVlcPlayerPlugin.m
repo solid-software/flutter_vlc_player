@@ -95,8 +95,8 @@ NSObject<FlutterBinaryMessenger> *_messenger;
             if ([subtitle length] > 0)
                 [instance.player addPlaybackSlave:[NSURL URLWithString:subtitle] type:VLCMediaPlaybackSlaveTypeSubtitle enforce:true];
             instance.player.media = media;
-             if (isplaying)
-                 [instance.player play];
+             //if (isplaying)
+            [instance.player play];
 
             result(nil);
             return;
@@ -326,6 +326,7 @@ NSObject<FlutterPluginRegistrar> *_registrar;
             return;
 
         case VLCMediaPlayerStateEnded:
+            [player stop];
             _eventSink(@{
                 @"name": @"ended"
             });
