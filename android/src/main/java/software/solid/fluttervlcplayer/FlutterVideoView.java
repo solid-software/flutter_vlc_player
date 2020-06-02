@@ -230,8 +230,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
                 newMedia.setHWDecoderEnabled(true, true);
                 mediaPlayer.setMedia(newMedia);
-                if (playing)
-                    mediaPlayer.play();
+                //if (playing)
+                mediaPlayer.play();
 
                 result.success(null);
                 break;
