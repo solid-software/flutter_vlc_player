@@ -359,7 +359,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.clear();
                 break;
             case MediaPlayer.Event.EndReached:
-                mediaPlayer.stop();
+                //mediaPlayer.stop();
                 eventObject.put("name", "ended");
                 eventSink.success(eventObject);
 
