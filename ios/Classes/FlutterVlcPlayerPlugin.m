@@ -33,9 +33,9 @@ NSObject<FlutterBinaryMessenger> *_messenger;
         if([call.method isEqualToString:@"initialize"]) {
 
             NSString *url = call.arguments[@"url"];
-            bool isLocal = call.arguments[@"isLocal"];
+            bool isLocal = [call.arguments[@"isLocal"] boolValue];
             NSString *subtitle = call.arguments[@"subtitle"];
-            bool loop = call.arguments[@"loop"];
+            bool loop = [call.arguments[@"loop"] boolValue];
             NSMutableArray *options= [[NSMutableArray alloc] init];
             if (!isLocal)
                [options addObject:@"--rtsp-tcp"];
@@ -83,7 +83,7 @@ NSObject<FlutterBinaryMessenger> *_messenger;
                 [instance.player stop];
 
             NSString *url = call.arguments[@"url"];
-            bool isLocal = call.arguments[@"isLocal"];
+            bool isLocal = [call.arguments[@"isLocal"] boolValue];
             NSString *subtitle = call.arguments[@"subtitle"];
             VLCMedia *media = nil;
             if (isLocal)
@@ -328,7 +328,7 @@ NSObject<FlutterPluginRegistrar> *_registrar;
         case VLCMediaPlayerStateEnded:
             [player stop];
             _eventSink(@{
-                @"name": @"ended"
+                @"name": @"ended",
             });
 
             _eventSink(@{
