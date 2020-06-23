@@ -9,10 +9,13 @@ import android.util.Base64;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+
 import androidx.annotation.NonNull;
+
 import io.flutter.plugin.common.*;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
+
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -27,6 +30,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     // Silences player log output.
     private static final boolean DISABLE_LOG_OUTPUT = true;
+    private static final int HW_ACCELERATION_AUTOMATIC = -1;
+    private static final int HW_ACCELERATION_DISABLED = 0;
+    private static final int HW_ACCELERATION_DECODING = 1;
+    private static final int HW_ACCELERATION_FULL = 2;
 
     final PluginRegistry.Registrar registrar;
     private final MethodChannel methodChannel;
@@ -52,34 +59,34 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         eventChannel = new EventChannel(messenger, "flutter_video_plugin/getVideoEvents_" + id);
 
         eventChannel.setStreamHandler(
-            new EventChannel.StreamHandler() {
-                @Override
-                public void onListen(Object o, EventChannel.EventSink sink) {
-                    eventSink.setDelegate(sink);
-                }
+                new EventChannel.StreamHandler() {
+                    @Override
+                    public void onListen(Object o, EventChannel.EventSink sink) {
+                        eventSink.setDelegate(sink);
+                    }
 
-                @Override
-                public void onCancel(Object o) {
-                    eventSink.setDelegate(null);
+                    @Override
+                    public void onCancel(Object o) {
+                        eventSink.setDelegate(null);
+                    }
                 }
-            }
         );
 
         TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
         textureView = new TextureView(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener(){
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
             boolean wasPaused = false;
 
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if(vout == null) return;
+                if (vout == null) return;
 
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
                 vout.attachViews();
                 textureView.forceLayout();
-                if(wasPaused){
+                if (wasPaused) {
                     mediaPlayer.play();
                     wasPaused = false;
                 }
@@ -92,15 +99,15 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                if(playerDisposed){
-                    if(mediaPlayer != null) {
+                if (playerDisposed) {
+                    if (mediaPlayer != null) {
                         mediaPlayer.stop();
                         mediaPlayer.release();
                         mediaPlayer = null;
                     }
                     return true;
-                }else{
-                    if(mediaPlayer != null && vout != null) {
+                } else {
+                    if (mediaPlayer != null && vout != null) {
                         mediaPlayer.pause();
                         wasPaused = true;
                         vout.detachViews();
@@ -127,8 +134,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     @Override
     public void dispose() {
-        if(mediaPlayer != null) mediaPlayer.stop();
-        if(vout != null) vout.detachViews();
+        if (mediaPlayer != null) mediaPlayer.stop();
+        if (vout != null) vout.detachViews();
         playerDisposed = true;
     }
 
@@ -167,21 +174,40 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 String initStreamURL = methodCall.argument("url");
                 Media media = new Media(libVLC, Uri.parse(initStreamURL));
-                mediaPlayer.setMedia(media);
 
+                int hardwareAcceleration = Integer.parseInt((String) methodCall.argument("hwAcc"));
+                if (hardwareAcceleration != HW_ACCELERATION_AUTOMATIC) {
+                    if (hardwareAcceleration == HW_ACCELERATION_DISABLED) {
+                        System.out.println("HW_ACCELERATION Disabled");
+                        media.setHWDecoderEnabled(false, false);
+                    } else if (hardwareAcceleration == HW_ACCELERATION_FULL || hardwareAcceleration == HW_ACCELERATION_DECODING) {
+                        media.setHWDecoderEnabled(true, true);
+                        if (hardwareAcceleration == HW_ACCELERATION_DECODING) {
+                            System.out.println("HW_ACCELERATION Decoding");
+                            media.addOption(":no-mediacodec-dr");
+                            media.addOption(":no-omxil-dr");
+                        } else {
+                            System.out.println("HW_ACCELERATION FULL");
+                        }
+                    }
+                } else {
+                    System.out.println("HW_ACCELERATION Automatic");
+                }
+                media.addOption(":input-fast-seek");
+                mediaPlayer.setMedia(media);
                 result.success(null);
                 break;
             case "dispose":
                 this.dispose();
                 break;
             case "changeURL":
-                if(libVLC == null) result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
+                if (libVLC == null)
+                    result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
                 mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
                 Media newMedia = new Media(libVLC, Uri.parse(newURL));
                 mediaPlayer.setMedia(newMedia);
-
                 result.success(null);
                 break;
             case "getSnapshot":
@@ -199,9 +225,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "setPlaybackState":
 
                 String playbackState = methodCall.argument("playbackState");
-                if(playbackState == null) result.success(null);
+                if (playbackState == null) result.success(null);
 
-                switch(playbackState){
+                switch (playbackState) {
                     case "play":
                         textureView.forceLayout();
                         mediaPlayer.play();
@@ -252,7 +278,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 int width = 0;
 
                 Media.VideoTrack currentVideoTrack = (Media.VideoTrack) mediaPlayer.getMedia().getTrack(
-                    mediaPlayer.getVideoTrack()
+                        mediaPlayer.getVideoTrack()
                 );
                 if (currentVideoTrack != null) {
                     height = currentVideoTrack.height;
@@ -278,7 +304,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("value", false);
                 eventObject.put("reason", "EndReached");
                 eventSink.success(eventObject);
-                
+
             case MediaPlayer.Event.Vout:
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;

@@ -9,6 +9,27 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 enum PlayingState { STOPPED, BUFFERING, PLAYING }
+enum HwAcc { AUTO, DISABLED, DECODING, FULL }
+
+int getHwAcc({@required HwAcc hwAcc}) {
+  switch (hwAcc) {
+    case HwAcc.AUTO:
+      return -1;
+      break;
+    case HwAcc.DISABLED:
+      return 0;
+      break;
+    case HwAcc.DECODING:
+      return 1;
+      break;
+    case HwAcc.FULL:
+      return 2;
+      break;
+    default:
+      return -1;
+      break;
+  }
+}
 
 class Size {
   final int width;
@@ -23,6 +44,7 @@ class Size {
 
 class VlcPlayer extends StatefulWidget {
   final double aspectRatio;
+  final HwAcc hwAcc;
   final List<String> options;
   final String url;
   final Widget placeholder;
@@ -42,6 +64,9 @@ class VlcPlayer extends StatefulWidget {
     /// This is the initial URL for the content. This also must be provided but [VlcPlayerController] implements
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
+
+    /// Set acceleration mode for player. Default is Auto.
+    this.hwAcc,
 
     /// Adds options to vlc. For more [https://wiki.videolan.org/VLC_command-line_help] If nothing is provided,
     /// vlc will run without any options set.
@@ -125,7 +150,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.options, widget.url);
+      await _controller._initialize(widget.hwAcc, widget.options, widget.url);
     }
   }
 
@@ -249,11 +274,15 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(List<String> options, String url) async {
+  Future<void> _initialize(
+      HwAcc hwAcc, List<String> options, String url) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
-    await _methodChannel
-        .invokeMethod("initialize", {'url': url, 'options': options ?? []});
+    await _methodChannel.invokeMethod("initialize", {
+      'url': url,
+      'hw_acc': getHwAcc(hwAcc: hwAcc),
+      'options': options ?? []
+    });
     _position = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event) {
