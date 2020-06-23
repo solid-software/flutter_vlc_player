@@ -144,15 +144,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     textureView = new TextureView(context);
                 }
 
-                ArrayList<String> options = new ArrayList<>();
-                options.add("--no-drop-late-frames");
-                options.add("--no-skip-frames");
-                options.add("--rtsp-tcp");
+                ArrayList<String> options = methodCall.argument("options");
+                // options.add("--no-drop-late-frames");
+                // options.add("--no-skip-frames");
+                // options.add("--rtsp-tcp");
 
-                if(DISABLE_LOG_OUTPUT) {
-                    // Silence player log output.
-                    options.add("--quiet");
-                }
+                // if(DISABLE_LOG_OUTPUT) {
+                //     // Silence player log output.
+                //     options.add("--quiet");
+                // }
+                System.out.println("Adding VLC options: " + options);
 
                 libVLC = new LibVLC(context, options);
                 mediaPlayer = new MediaPlayer(libVLC);
