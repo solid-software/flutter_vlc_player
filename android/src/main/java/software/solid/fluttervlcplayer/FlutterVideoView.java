@@ -152,15 +152,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
 
                 ArrayList<String> options = methodCall.argument("options");
-                // options.add("--no-drop-late-frames");
-                // options.add("--no-skip-frames");
-                // options.add("--rtsp-tcp");
-
-                // if(DISABLE_LOG_OUTPUT) {
-                //     // Silence player log output.
-                //     options.add("--quiet");
-                // }
-                System.out.println("Adding VLC options: " + options);
 
                 libVLC = new LibVLC(context, options);
                 mediaPlayer = new MediaPlayer(libVLC);
@@ -175,24 +166,18 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 String initStreamURL = methodCall.argument("url");
                 Media media = new Media(libVLC, Uri.parse(initStreamURL));
 
-                int hardwareAcceleration = Integer.parseInt((String) methodCall.argument("hwAcc"));
-                if (hardwareAcceleration != HW_ACCELERATION_AUTOMATIC) {
+                int hardwareAcceleration = methodCall.argument("hwAcc");
+                if (hardwareAcceleration != HW_ACCELERATION_AUTOMATIC) 
                     if (hardwareAcceleration == HW_ACCELERATION_DISABLED) {
-                        System.out.println("HW_ACCELERATION Disabled");
                         media.setHWDecoderEnabled(false, false);
                     } else if (hardwareAcceleration == HW_ACCELERATION_FULL || hardwareAcceleration == HW_ACCELERATION_DECODING) {
                         media.setHWDecoderEnabled(true, true);
                         if (hardwareAcceleration == HW_ACCELERATION_DECODING) {
-                            System.out.println("HW_ACCELERATION Decoding");
                             media.addOption(":no-mediacodec-dr");
                             media.addOption(":no-omxil-dr");
-                        } else {
-                            System.out.println("HW_ACCELERATION FULL");
-                        }
+                        } 
                     }
-                } else {
-                    System.out.println("HW_ACCELERATION Automatic");
-                }
+
                 media.addOption(":input-fast-seek");
                 mediaPlayer.setMedia(media);
                 result.success(null);

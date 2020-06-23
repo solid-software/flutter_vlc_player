@@ -76,6 +76,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                   '--no-skip-frames',
                   '--rtsp-tcp'
                 ],
+                hwAcc: HwAcc.DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
                 placeholder: Container(
                   height: 250.0,
                   child: Row(

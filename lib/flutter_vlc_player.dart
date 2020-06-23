@@ -65,7 +65,7 @@ class VlcPlayer extends StatefulWidget {
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
 
-    /// Set acceleration mode for player. Default is Auto.
+    /// Set hardware acceleration for player. Default is Automatic.
     this.hwAcc,
 
     /// Adds options to vlc. For more [https://wiki.videolan.org/VLC_command-line_help] If nothing is provided,
@@ -280,7 +280,7 @@ class VlcPlayerController {
 
     await _methodChannel.invokeMethod("initialize", {
       'url': url,
-      'hw_acc': getHwAcc(hwAcc: hwAcc),
+      'hwAcc': getHwAcc(hwAcc: hwAcc),
       'options': options ?? []
     });
     _position = 0;
