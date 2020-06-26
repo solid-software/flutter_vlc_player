@@ -5,6 +5,19 @@ A VLC-powered alternative to Flutter's video_player that supports iOS and Androi
 
 ## Installation
 
+### Version 3.0 Upgrade For Existing Apps
+For migration to version 3, the project is based in swift. Your existing project will need to migratate
+
+    Delete existing ios folder from root of flutter project.
+    Run this command flutter create -i swift .
+
+This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
+
+Change your project to use 9.0
+# Uncomment this line to define a global platform for your project
+ platform :ios, '9.0'
+
+
 ### iOS
 For iOS, you need to opt into the Flutter embedded views preview.  
 This is done by adding the following to your project's `<project root>/ios/Runner/Info.plist` file (see example for details): 

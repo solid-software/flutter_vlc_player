@@ -1,3 +1,15 @@
+## 3.0.2
+* Updates MobileVLC to fix a bug on ios with HLS Streaming on VLCKit itself. See (https://code.videolan.org/videolan/VLCKit/-/issues/368),
+credits to Mitch Ross (https://github.com/mitchross)
+
+## 3.0.1
+* Fix a bug on Android with URL parsing. See (https://github.com/solid-software/flutter_vlc_player/issues/52),
+credits to pharshdev (https://github.com/pharshdev) and Mitch Ross (https://github.com/mitchross)
+
+## 3.0.0
+* Migrated to Swift, thanks to Mitch Ross (https://github.com/mitchross), 
+Amadeu Cavalcante (https://github.com/amadeu01) and pharshdev (https://github.com/pharshdev).
+
 ## 2.0.0
 * Improved structure (see example for braking changes), add aspect ratio and payback controls 
 support thanks to John Harker (https://github.com/NBTX) and Mitch Ross (https://github.com/mitchross).

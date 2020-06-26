@@ -165,7 +165,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 vout.attachViews();
 
                 String initStreamURL = methodCall.argument("url");
-                Media media = new Media(libVLC, Uri.parse(Uri.decode(initStreamURL)));
+                Media media = new Media(libVLC, Uri.parse(initStreamURL));
                 mediaPlayer.setMedia(media);
 
                 result.success(null);
@@ -178,7 +178,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
-                Media newMedia = new Media(libVLC, Uri.parse(Uri.decode(newURL)));
+                Media newMedia = new Media(libVLC, Uri.parse(newURL));
                 mediaPlayer.setMedia(newMedia);
 
                 result.success(null);
