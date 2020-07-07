@@ -134,9 +134,12 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .setTime:
-                    
-                    let time = VLCTime(number: arguments["time"] as? NSNumber)
+                    let setTimeInMillisecondsAsString = arguments["time"] as? String
+                    let newTime = NSNumber(value:(setTimeInMillisecondsAsString! as NSString).doubleValue)
+                    let time = VLCTime(number: newTime )
                     self.player.time = time
+                   
+
                     result(nil)
                     return
                     
