@@ -119,10 +119,8 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               onChanged: (progress) {
                 setState(() {
                   sliderValue = progress.floor().toDouble();
-                  print('set state: $sliderValue');
                 });
-                print('set time:  $sliderValue');
-                //conver to Milliseconds since VLC requires MS to set time
+                //convert to Milliseconds since VLC requires MS to set time
                 _videoViewController2.setTime(sliderValue.toInt() * 1000);
               },
             ),
