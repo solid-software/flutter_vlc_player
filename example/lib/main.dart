@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -28,6 +29,8 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   VlcPlayerController _videoViewController;
   VlcPlayerController _videoViewController2;
   bool isPlaying = true;
+  double sliderValue = 0.0;
+  double currentPlayerTime = 0;
 
   @override
   void initState() {
@@ -43,6 +46,18 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
     });
     _videoViewController2.addListener(() {
       setState(() {});
+    });
+
+    Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      String state = _videoViewController2.playingState.toString();
+      if (this.mounted) {
+        setState(() {
+          if (state == "PlayingState.PLAYING" &&
+              sliderValue < _videoViewController2.duration.inSeconds) {
+            sliderValue = _videoViewController2.position.inSeconds.toDouble();
+          }
+        });
+      }
     });
 
     super.initState();
@@ -94,12 +109,24 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                 ),
               ),
             ),
-            FlatButton(
-              child: isPlaying ?  Icon(Icons.pause) : Icon(Icons.play_arrow) ,
-              onPressed: () =>  {
-                playOrPauseVideo()
-              }
+            Slider(
+              activeColor: Colors.white,
+              value: sliderValue,
+              min: 0.0,
+              max: _videoViewController2.duration == null
+                  ? 1.0
+                  : _videoViewController2.duration.inSeconds.toDouble(),
+              onChanged: (progress) {
+                setState(() {
+                  sliderValue = progress.floor().toDouble();
+                });
+                //convert to Milliseconds since VLC requires MS to set time
+                _videoViewController2.setTime(sliderValue.toInt() * 1000);
+              },
             ),
+            FlatButton(
+                child: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+                onPressed: () => {playOrPauseVideo()}),
             FlatButton(
               child: Text("Change URL"),
               onPressed: () => _videoViewController.setStreamUrl(
@@ -134,20 +161,19 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   }
 
   void playOrPauseVideo() {
-    String state = _videoViewController.playingState.toString();
-    
-    if  ( state == "PlayingState.PLAYING" ){
-      _videoViewController.pause();
-     setState(() {
-       isPlaying = false;
-     });
+    String state = _videoViewController2.playingState.toString();
+
+    if (state == "PlayingState.PLAYING") {
+      _videoViewController2.pause();
+      setState(() {
+        isPlaying = false;
+      });
     } else {
-      _videoViewController.play();
-     setState(() {
+      _videoViewController2.play();
+      setState(() {
         isPlaying = true;
-     });
+      });
     }
-  
   }
 
   void _createCameraImage() async {
