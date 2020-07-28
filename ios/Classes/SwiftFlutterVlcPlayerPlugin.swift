@@ -121,7 +121,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                     let byteArray = (image ?? UIImage()).pngData()
                     
                     result([
-                        "snapshot": byteArray
+                        "snapshot": byteArray?.base64EncodedString()
                     ])
                     return
                     
@@ -147,6 +147,8 @@ public class VLCView: NSObject, FlutterPlatformView {
                     result(FlutterMethodNotImplemented)
                     return
                 }
+            } else {
+                print("no arguments")
             }
             
         })
