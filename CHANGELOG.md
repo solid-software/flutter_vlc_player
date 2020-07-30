@@ -1,5 +1,9 @@
+## 3.0.3
+* Updates MobileVLC to fix a bug on iOS with Seek Time. See (https://github.com/solid-software/flutter_vlc_player/issues/72). Also adds seek bar to example player for demonstration purposes.
+credits to Mitch Ross (https://github.com/mitchross)
+
 ## 3.0.2
-* Updates MobileVLC to fix a bug on ios with HLS Streaming on VLCKit itself. See (https://code.videolan.org/videolan/VLCKit/-/issues/368),
+* Updates MobileVLC to fix a bug on iOS with HLS Streaming on VLCKit itself. See (https://code.videolan.org/videolan/VLCKit/-/issues/368),
 credits to Mitch Ross (https://github.com/mitchross)
 
 ## 3.0.1

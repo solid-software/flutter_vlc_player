@@ -118,6 +118,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     if (Platform.isIOS) {
       return UiKitView(
           viewType: "flutter_video_plugin/getVideoView",
+          hitTestBehavior: PlatformViewHitTestBehavior.transparent,
           onPlatformViewCreated: _onPlatformViewCreated);
     } else if (Platform.isAndroid) {
       return AndroidView(
