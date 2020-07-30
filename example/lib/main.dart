@@ -82,7 +82,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
                 url:
-                    "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
+                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",  
                 controller: _videoViewController,
                 // Play with vlc options
                 options: [
@@ -106,7 +106,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
                 url:
-                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                    "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
                 controller: _videoViewController2,
                 placeholder: Container(
                   height: 250.0,

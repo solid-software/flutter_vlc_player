@@ -13,9 +13,6 @@ enum HwAcc { AUTO, DISABLED, DECODING, FULL }
 
 int getHwAcc({@required HwAcc hwAcc}) {
   switch (hwAcc) {
-    case HwAcc.AUTO:
-      return -1;
-      break;
     case HwAcc.DISABLED:
       return 0;
       break;
@@ -25,6 +22,7 @@ int getHwAcc({@required HwAcc hwAcc}) {
     case HwAcc.FULL:
       return 2;
       break;
+    case HwAcc.AUTO:
     default:
       return -1;
       break;
@@ -151,7 +149,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.hwAcc, widget.options, widget.url);
+      await _controller._initialize( widget.url,widget.hwAcc, widget.options,);
     }
   }
 
@@ -276,7 +274,7 @@ class VlcPlayerController {
   }
 
   Future<void> _initialize(
-      HwAcc hwAcc, List<String> options, String url) async {
+       String url,[HwAcc hwAcc, List<String> options]) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
     await _methodChannel.invokeMethod("initialize", {
