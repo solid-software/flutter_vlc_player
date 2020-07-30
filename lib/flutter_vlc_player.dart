@@ -9,6 +9,25 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 enum PlayingState { STOPPED, BUFFERING, PLAYING }
+enum HwAcc { AUTO, DISABLED, DECODING, FULL }
+
+int getHwAcc({@required HwAcc hwAcc}) {
+  switch (hwAcc) {
+    case HwAcc.DISABLED:
+      return 0;
+      break;
+    case HwAcc.DECODING:
+      return 1;
+      break;
+    case HwAcc.FULL:
+      return 2;
+      break;
+    case HwAcc.AUTO:
+    default:
+      return -1;
+      break;
+  }
+}
 
 class Size {
   final int width;
@@ -23,6 +42,8 @@ class Size {
 
 class VlcPlayer extends StatefulWidget {
   final double aspectRatio;
+  final HwAcc hwAcc;
+  final List<String> options;
   final String url;
   final Widget placeholder;
   final VlcPlayerController controller;
@@ -41,6 +62,13 @@ class VlcPlayer extends StatefulWidget {
     /// This is the initial URL for the content. This also must be provided but [VlcPlayerController] implements
     /// [VlcPlayerController.setStreamUrl] method so this can be changed at any time.
     @required this.url,
+
+    /// Set hardware acceleration for player. Default is Automatic.
+    this.hwAcc,
+
+    /// Adds options to vlc. For more [https://wiki.videolan.org/VLC_command-line_help] If nothing is provided,
+    /// vlc will run without any options set.
+    this.options,
 
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
@@ -121,7 +149,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize(widget.url);
+      await _controller._initialize( widget.url,widget.hwAcc, widget.options,);
     }
   }
 
@@ -245,10 +273,15 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(String url) async {
+  Future<void> _initialize(
+       String url,[HwAcc hwAcc, List<String> options]) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
-    await _methodChannel.invokeMethod("initialize", {'url': url});
+    await _methodChannel.invokeMethod("initialize", {
+      'url': url,
+      'hwAcc': getHwAcc(hwAcc: hwAcc),
+      'options': options ?? []
+    });
     _position = 0;
 
     _eventChannel.receiveBroadcastStream().listen((event) {

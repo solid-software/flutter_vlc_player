@@ -1,3 +1,7 @@
+## 3.0.4
+* Updates MobileVLC to allow for options as flags and hardware acceleration/
+credits to pharshdev (https://github.com/pharshdev) and Mitch Ross (https://github.com/mitchross)
+
 ## 3.0.3
 * Updates MobileVLC to fix a bug on iOS with Seek Time. See (https://github.com/solid-software/flutter_vlc_player/issues/72). Also adds seek bar to example player for demonstration purposes.
 credits to Mitch Ross (https://github.com/mitchross)
