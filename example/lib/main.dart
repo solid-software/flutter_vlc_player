@@ -31,6 +31,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   bool isPlaying = true;
   double sliderValue = 0.0;
   double currentPlayerTime = 0;
+  double volumeValue = 100;
 
   @override
   void initState() {
@@ -82,7 +83,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
                 url:
-                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",  
+                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
                 controller: _videoViewController,
                 // Play with vlc options
                 options: [
@@ -91,7 +92,8 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                   '--no-skip-frames',
                   '--rtsp-tcp'
                 ],
-                hwAcc: HwAcc.DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
+                hwAcc: HwAcc
+                    .DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
                 placeholder: Container(
                   height: 250.0,
                   child: Row(
@@ -117,6 +119,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                 ),
               ),
             ),
+            Text("Seek"),
             Slider(
               activeColor: Colors.white,
               value: sliderValue,
@@ -135,6 +138,18 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
             FlatButton(
                 child: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
                 onPressed: () => {playOrPauseVideo()}),
+            Text("Volume Level"),
+            Slider(
+              min: 0,
+              max: 100,
+              value: volumeValue,
+              onChanged: (value) {
+                setState(() {
+                  volumeValue = value;
+                });
+                _videoViewController2.setVolume(volumeValue.toInt());
+              },
+            ),
             FlatButton(
               child: Text("Change URL"),
               onPressed: () => _videoViewController.setStreamUrl(
