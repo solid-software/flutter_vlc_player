@@ -1,3 +1,7 @@
+## 3.0.5
+* Updates MobileVLC to allow for changing of volume. Example Updated Also.
+credits to  Mitch Ross (https://github.com/mitchross)
+
 ## 3.0.4
 * Updates MobileVLC to allow for options as flags and hardware acceleration/
 credits to pharshdev (https://github.com/pharshdev) and Mitch Ross (https://github.com/mitchross)
