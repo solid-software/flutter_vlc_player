@@ -243,6 +243,15 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 result.success(null);
                 break;
+
+            case "setVolume":
+                int volume = 100;
+                volume =  methodCall.argument("volume");
+                mediaPlayer.setVolume(volume);
+                result.success(null);
+                break;
+
+
         }
     }
 
