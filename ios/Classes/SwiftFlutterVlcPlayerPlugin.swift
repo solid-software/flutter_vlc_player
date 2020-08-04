@@ -138,8 +138,12 @@ public class VLCView: NSObject, FlutterPlatformView {
                     let newTime = NSNumber(value:(setTimeInMillisecondsAsString! as NSString).doubleValue)
                     let time = VLCTime(number: newTime )
                     self.player.time = time
-                   
-
+                    result(nil)
+                    return
+                    
+                case .setVolume:
+                    let setVolume = arguments["volume"] as? Int32
+                    self.player.audio.volume = setVolume ?? 100
                     result(nil)
                     return
                     
@@ -202,7 +206,7 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
             }
             
         }
-                
+        
         switch player?.state {
             
         case .esAdded, .buffering, .opening:
@@ -303,4 +307,5 @@ enum FlutterMethodCallOption :String {
     case getSnapshot = "getSnapshot"
     case setPlaybackSpeed = "setPlaybackSpeed"
     case setTime = "setTime"
+    case setVolume = "setVolume"
 }
