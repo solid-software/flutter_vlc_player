@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -27,6 +28,10 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 
   VlcPlayerController _videoViewController;
   VlcPlayerController _videoViewController2;
+  bool isPlaying = true;
+  double sliderValue = 0.0;
+  double currentPlayerTime = 0;
+  double volumeValue = 100;
 
   @override
   void initState() {
@@ -42,6 +47,18 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
     });
     _videoViewController2.addListener(() {
       setState(() {});
+    });
+
+    Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      String state = _videoViewController2.playingState.toString();
+      if (this.mounted) {
+        setState(() {
+          if (state == "PlayingState.PLAYING" &&
+              sliderValue < _videoViewController2.duration.inSeconds) {
+            sliderValue = _videoViewController2.position.inSeconds.toDouble();
+          }
+        });
+      }
     });
 
     super.initState();
@@ -66,8 +83,17 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
                 url:
-                    "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
+                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
                 controller: _videoViewController,
+                // Play with vlc options
+                options: [
+                  '--quiet',
+                  '--no-drop-late-frames',
+                  '--no-skip-frames',
+                  '--rtsp-tcp'
+                ],
+                hwAcc: HwAcc
+                    .DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
                 placeholder: Container(
                   height: 250.0,
                   child: Row(
@@ -82,7 +108,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
                 url:
-                    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                    "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
                 controller: _videoViewController2,
                 placeholder: Container(
                   height: 250.0,
@@ -92,6 +118,37 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                   ),
                 ),
               ),
+            ),
+            Text("Seek"),
+            Slider(
+              activeColor: Colors.white,
+              value: sliderValue,
+              min: 0.0,
+              max: _videoViewController2.duration == null
+                  ? 1.0
+                  : _videoViewController2.duration.inSeconds.toDouble(),
+              onChanged: (progress) {
+                setState(() {
+                  sliderValue = progress.floor().toDouble();
+                });
+                //convert to Milliseconds since VLC requires MS to set time
+                _videoViewController2.setTime(sliderValue.toInt() * 1000);
+              },
+            ),
+            FlatButton(
+                child: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+                onPressed: () => {playOrPauseVideo()}),
+            Text("Volume Level"),
+            Slider(
+              min: 0,
+              max: 100,
+              value: volumeValue,
+              onChanged: (value) {
+                setState(() {
+                  volumeValue = value;
+                });
+                _videoViewController2.setVolume(volumeValue.toInt());
+              },
             ),
             FlatButton(
               child: Text("Change URL"),
@@ -124,6 +181,22 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
         ),
       ),
     );
+  }
+
+  void playOrPauseVideo() {
+    String state = _videoViewController2.playingState.toString();
+
+    if (state == "PlayingState.PLAYING") {
+      _videoViewController2.pause();
+      setState(() {
+        isPlaying = false;
+      });
+    } else {
+      _videoViewController2.play();
+      setState(() {
+        isPlaying = true;
+      });
+    }
   }
 
   void _createCameraImage() async {
