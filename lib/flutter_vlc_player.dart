@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-enum PlayingState { STOPPED, BUFFERING, PLAYING }
+enum PlayingState { STOPPED, BUFFERING, PLAYING, ERROR }
 enum HwAcc { AUTO, DISABLED, DECODING, FULL }
 
 int getHwAcc({@required HwAcc hwAcc}) {
@@ -309,6 +309,9 @@ class VlcPlayerController {
           _fireEventHandlers();
           break;
       }
+    }).onError((e){
+      _playingState = PlayingState.ERROR;
+      _fireEventHandlers();
     });
 
     _initialized = true;

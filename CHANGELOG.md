@@ -1,3 +1,7 @@
+## 3.0.6
+* Updates MobileVLC to allow for handling of vlc error.
+credits to Alireza Setayesh (https://github.com/alr2413)
+
 ## 3.0.5
 * Updates MobileVLC to allow for changing of volume. Example Updated Also.
 credits to  Mitch Ross (https://github.com/mitchross)
