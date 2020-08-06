@@ -356,13 +356,28 @@ class VlcPlayerController {
     await _methodChannel.invokeMethod("setTime", {'time': time.toString()});
   }
 
+  Future<int> getTime() async {
+    var result = await _methodChannel.invokeMethod("getTime");
+    return result;
+  }
+
   Future<void> setVolume(int volume) async {
     await _methodChannel.invokeMethod("setVolume", {'volume': volume});
+  }
+
+  Future<int> getVolume() async {
+    var result = await _methodChannel.invokeMethod("getVolume");
+    return result;
   }
 
   Future<void> setPlaybackSpeed(double speed) async {
     await _methodChannel
         .invokeMethod("setPlaybackSpeed", {'speed': speed.toString()});
+  }
+
+  Future<double> getPlaybackSpeed() async {
+    var result = await _methodChannel.invokeMethod("getPlaybackSpeed");
+    return result;
   }
 
   Future<Uint8List> takeSnapshot() async {

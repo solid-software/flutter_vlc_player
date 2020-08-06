@@ -126,13 +126,17 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .setPlaybackSpeed:
-                    
                     let playbackSpeed = arguments["speed"] as? String
                     let rate = (playbackSpeed! as NSString).floatValue
                     self.player.rate = rate
                     result(nil)
                     return
-                    
+
+                case .getPlaybackSpeed:
+                    let playbackSpeed = self.player.rate
+                    result(playbackSpeed)
+                    return
+
                 case .setTime:
                     let setTimeInMillisecondsAsString = arguments["time"] as? String
                     let newTime = NSNumber(value:(setTimeInMillisecondsAsString! as NSString).doubleValue)
@@ -140,13 +144,23 @@ public class VLCView: NSObject, FlutterPlatformView {
                     self.player.time = time
                     result(nil)
                     return
+
+                case .getTime:
+                    let time = self.player.time
+                    result(time)
+                    return
                     
                 case .setVolume:
                     let setVolume = arguments["volume"] as? Int32
                     self.player.audio.volume = setVolume ?? 100
                     result(nil)
                     return
-                    
+
+                case .getVolume:
+                    let getVolume = self.player.audio.volume
+                    result(getVolume)
+                    return
+
                 default:
                     result(FlutterMethodNotImplemented)
                     return
@@ -209,8 +223,16 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
         
         switch player?.state {
             
-        case .esAdded, .buffering, .opening:
+        case .esAdded, .buffering:
             return
+
+        case .opening:
+            eventSink([
+                "name": "buffering",
+                "value": NSNumber(value: true)
+            ])
+            return
+
         case .playing:
             eventSink([
                 "name": "buffering",
@@ -306,6 +328,9 @@ enum FlutterMethodCallOption :String {
     case changeURL = "changeURL"
     case getSnapshot = "getSnapshot"
     case setPlaybackSpeed = "setPlaybackSpeed"
+    case getPlaybackSpeed = "getPlaybackSpeed"
     case setTime = "setTime"
+    case getTime = "getTime"
     case setVolume = "setVolume"
+    case getVolume = "getVolume"
 }

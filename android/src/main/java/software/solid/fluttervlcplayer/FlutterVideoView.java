@@ -29,7 +29,7 @@ import java.util.Map;
 class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler, MediaPlayer.EventListener {
 
     // Silences player log output.
-    private static final boolean DISABLE_LOG_OUTPUT = true;
+//    private static final boolean DISABLE_LOG_OUTPUT = true;
     private static final int HW_ACCELERATION_AUTOMATIC = -1;
     private static final int HW_ACCELERATION_DISABLED = 0;
     private static final int HW_ACCELERATION_DECODING = 1;
@@ -236,12 +236,22 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(null);
                 break;
 
+            case "getPlaybackSpeed":
+                playbackSpeed = mediaPlayer.getRate();
+                result.success(playbackSpeed);
+                break;
+
             case "setTime":
 
                 long time = Long.parseLong((String) methodCall.argument("time"));
                 mediaPlayer.setTime(time);
 
                 result.success(null);
+                break;
+
+            case "getTime":
+                time = mediaPlayer.getTime();
+                result.success(time);
                 break;
 
             case "setVolume":
@@ -251,6 +261,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(null);
                 break;
 
+            case "getVolume":
+                volume = mediaPlayer.getVolume();
+                result.success(volume);
+                break;
 
         }
     }
@@ -260,6 +274,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         HashMap<String, Object> eventObject = new HashMap<>();
 
         switch (event.type) {
+
+            case MediaPlayer.Event.Opening:
+                eventObject.put("name", "buffering");
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+                break;
+
             case MediaPlayer.Event.Playing:
                 // Insert buffering=false event first:
                 eventObject.put("name", "buffering");
