@@ -148,7 +148,8 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                 }
             } else {
-                print("no arguments")
+                result(FlutterMethodNotImplemented)
+                return
             }
             
         })
