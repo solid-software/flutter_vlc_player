@@ -366,7 +366,7 @@ class VlcPlayerController {
   }
 
   Future<Uint8List> takeSnapshot() async {
-    var result = await _methodChannel.invokeMethod("getSnapshot");
+    var result = await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
     var base64String = result['snapshot'];
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
