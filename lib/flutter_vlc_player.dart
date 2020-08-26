@@ -177,10 +177,13 @@ class VlcPlayerController {
 
   int get audioCount => _audioCount;
   int _audioCount = 1;
+
   int get activeAudioNum => _activeAudioNum;
   int _activeAudioNum = 1;
+
   int get activeSubtitleNum => _activeSubtitleNum;
   int _activeSubtitleNum;
+
   int get subtitleCount => _subtitleCount;
   int _subtitleCount = 0;
 
@@ -381,7 +384,8 @@ class VlcPlayerController {
   }
 
   Future<Uint8List> takeSnapshot() async {
-    var result = await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
+    var result =
+        await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
     var base64String = result['snapshot'];
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
