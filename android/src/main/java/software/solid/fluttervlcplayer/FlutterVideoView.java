@@ -329,6 +329,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
             case MediaPlayer.Event.EncounteredError:
                 System.err.println("(flutter_vlc_plugin) A VLC error occurred.");
+                eventSink.error("error", "A VLC error occurred.", null);
+                break;
+                
             case MediaPlayer.Event.Paused:
             case MediaPlayer.Event.Stopped:
                 eventObject.put("name", "buffering");

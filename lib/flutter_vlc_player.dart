@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-enum PlayingState { STOPPED, BUFFERING, PLAYING }
+enum PlayingState { STOPPED, BUFFERING, PLAYING, ERROR }
 enum HwAcc { AUTO, DISABLED, DECODING, FULL }
 
 int getHwAcc({@required HwAcc hwAcc}) {
@@ -149,7 +149,11 @@ class _VlcPlayerState extends State<VlcPlayer>
     // Once the controller has clients registered, we're good to register
     // with LibVLC on the platform side.
     if (_controller.hasClients) {
-      await _controller._initialize( widget.url,widget.hwAcc, widget.options,);
+      await _controller._initialize(
+        widget.url,
+        widget.hwAcc,
+        widget.options,
+      );
     }
   }
 
@@ -240,6 +244,7 @@ class VlcPlayerController {
   /// widget, which is simply used for an [AspectRatio] wrapper around the
   /// content.
   double _aspectRatio;
+
   double get aspectRatio => _aspectRatio;
 
   /// This is the playback speed as returned by LibVLC. Whilst playback speed
@@ -247,6 +252,7 @@ class VlcPlayerController {
   /// returned by the library, it will be the speed that LibVLC is actually
   /// trying to process the content at.
   double _playbackSpeed;
+
   double get playbackSpeed => _playbackSpeed;
 
   VlcPlayerController(
@@ -282,8 +288,8 @@ class VlcPlayerController {
     _eventHandlers.forEach((handler) => handler());
   }
 
-  Future<void> _initialize(
-       String url,[HwAcc hwAcc, List<String> options]) async {
+  Future<void> _initialize(String url,
+      [HwAcc hwAcc, List<String> options]) async {
     //if(initialized) throw new Exception("Player already initialized!");
 
     await _methodChannel.invokeMethod("initialize", {
@@ -324,6 +330,9 @@ class VlcPlayerController {
           _fireEventHandlers();
           break;
       }
+    }).onError((e) {
+      _playingState = PlayingState.ERROR;
+      _fireEventHandlers();
     });
 
     _initialized = true;
@@ -372,7 +381,7 @@ class VlcPlayerController {
   }
 
   Future<Uint8List> takeSnapshot() async {
-    var result = await _methodChannel.invokeMethod("getSnapshot");
+    var result = await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
     var base64String = result['snapshot'];
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
