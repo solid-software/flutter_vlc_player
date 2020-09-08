@@ -3,12 +3,19 @@ package software.solid.fluttervlcplayer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
@@ -20,16 +27,21 @@ import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.RendererDiscoverer;
+import org.videolan.libvlc.RendererItem;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.lang.Math;
+import java.io.File;
 
 class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler, MediaPlayer.EventListener {
 
     // Silences player log output.
-//    private static final boolean DISABLE_LOG_OUTPUT = true;
+    private static final String TAG = "Flutter VLC";
     private static final int HW_ACCELERATION_AUTOMATIC = -1;
     private static final int HW_ACCELERATION_DISABLED = 0;
     private static final int HW_ACCELERATION_DECODING = 1;
@@ -47,7 +59,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private MediaPlayer mediaPlayer;
     private TextureView textureView;
     private IVLCVout vout;
+    private RendererDiscoverer rendererDiscoverer;
+    private List<RendererItem> rendererItems;
     private boolean playerDisposed;
+
+    /**
+     * HACK: handler to call updateVideoSurfaces as soon as a video output
+     * is created. It is currently mandatory to have the video being displayed
+     * instead of a black screen.
+     */
+    Handler mHandler = new Handler(Looper.getMainLooper());
 
     public FlutterVideoView(Context context, PluginRegistry.Registrar _registrar, BinaryMessenger messenger, int id) {
         this.playerDisposed = false;
@@ -77,19 +98,33 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
-            boolean wasPaused = false;
+            boolean wasPlaying = false;
+
+            private final Runnable mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (vout == null) return;
+                    vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+//                    vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
+//                    ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) textureView.getLayoutParams();
+//                    lp.width = 300;
+//                    lp.height = 300;
+//                    textureView.setLayoutParams(lp);
+//                    textureView.invalidate();
+                    vout.attachViews();
+                    textureView.forceLayout();
+//                    if (wasPlaying)
+                    {
+                        mediaPlayer.play();
+                        wasPlaying = false;
+                    }
+                }
+            };
 
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if (vout == null) return;
-
-                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                vout.attachViews();
-                textureView.forceLayout();
-                if (wasPaused) {
-                    mediaPlayer.play();
-                    wasPaused = false;
-                }
+                mHandler.removeCallbacks(mRunnable);
+                mHandler.postDelayed(mRunnable, 1000);
             }
 
             @Override
@@ -103,13 +138,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
                         mediaPlayer.release();
+                        libVLC.release();
+                        libVLC = null;
                         mediaPlayer = null;
+                        vout = null;
                     }
                     return true;
                 } else {
                     if (mediaPlayer != null && vout != null) {
+                        wasPlaying = mediaPlayer.isPlaying();
                         mediaPlayer.pause();
-                        wasPaused = true;
                         vout.detachViews();
                     }
                     return true;
@@ -123,9 +161,117 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
         });
 
+        textureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+
+                }
+            }
+        });
+
+        textureView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        break;
+                }
+                return true;
+            }
+        });
+
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
     }
+
+//    private void changeSurfaceSize(int width, int height) {
+//        int screenWidth = width;
+//        int screenHeight = height;
+//        mVideoWidth = width;
+//        mVideoHeight = height;
+//        mVideoVisibleWidth = width;
+//        mVideoVisibleHeight = height;
+//
+//        if (mMediaPlayer != null) {
+//            final IVLCVout vlcVout = mMediaPlayer.getVLCVout();
+//            vlcVout.setWindowSize(screenWidth, screenHeight);
+//        }
+//
+//        double displayWidth = screenWidth, displayHeight = screenHeight;
+//
+//        if (screenWidth < screenHeight) {
+//            displayWidth = screenHeight;
+//            displayHeight = screenWidth;
+//        }
+//
+//        // sanity check
+//        if (displayWidth * displayHeight <= 1 || mVideoWidth * mVideoHeight <= 1) {
+//            return;
+//        }
+//
+//        // compute the aspect ratio
+//        double aspectRatio, visibleWidth;
+//        if (mSarDen == mSarNum) {
+//            /* No indication about the density, assuming 1:1 */
+//            visibleWidth = mVideoVisibleWidth;
+//            aspectRatio = (double) mVideoVisibleWidth / (double) mVideoVisibleHeight;
+//        } else {
+//            /* Use the specified aspect ratio */
+//            visibleWidth = mVideoVisibleWidth * (double) mSarNum / mSarDen;
+//            aspectRatio = visibleWidth / mVideoVisibleHeight;
+//        }
+//
+//        // compute the display aspect ratio
+//        double displayAspectRatio = displayWidth / displayHeight;
+//
+//        counter++;
+//
+//        switch (mCurrentSize) {
+//            case SURFACE_BEST_FIT:
+//                if (counter > 2) if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
+//                else displayWidth = displayHeight * aspectRatio;
+//                break;
+//            case SURFACE_FIT_HORIZONTAL:
+//                displayHeight = displayWidth / aspectRatio;
+//                break;
+//            case SURFACE_FIT_VERTICAL:
+//                displayWidth = displayHeight * aspectRatio;
+//                break;
+//            case SURFACE_FILL:
+//                break;
+//            case SURFACE_16_9:
+//                aspectRatio = 16.0 / 9.0;
+//                if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
+//                else displayWidth = displayHeight * aspectRatio;
+//                break;
+//            case SURFACE_4_3:
+//                aspectRatio = 4.0 / 3.0;
+//                if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
+//                else displayWidth = displayHeight * aspectRatio;
+//                break;
+//            case SURFACE_ORIGINAL:
+//                displayHeight = mVideoVisibleHeight;
+//                displayWidth = visibleWidth;
+//                break;
+//        }
+//
+//        // set display size
+//        int finalWidth = (int) Math.ceil(displayWidth * mVideoWidth / mVideoVisibleWidth);
+//        int finalHeight = (int) Math.ceil(displayHeight * mVideoHeight / mVideoVisibleHeight);
+//
+//        SurfaceHolder holder = mSurface.getHolder();
+//        holder.setFixedSize(finalWidth, finalHeight);
+//
+//        ViewGroup.LayoutParams lp = mSurface.getLayoutParams();
+//        lp.width = finalWidth;
+//        lp.height = finalHeight;
+//        mSurface.setLayoutParams(lp);
+//        mSurface.invalidate();
+//    }
 
     @Override
     public View getView() {
@@ -134,8 +280,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     @Override
     public void dispose() {
-        if (mediaPlayer != null) mediaPlayer.stop();
-        if (vout != null) vout.detachViews();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.setEventListener(null);
+        }
+        if (vout != null) {
+            vout.detachViews();
+        }
         playerDisposed = true;
     }
 
@@ -145,29 +296,54 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @SuppressLint("WrongThread")
     @Override
     public void onMethodCall(MethodCall methodCall, @NonNull MethodChannel.Result result) {
+
+        boolean autoplay = true;
+        boolean isLocalMedia = false;
+        String subtitle = "";
+        boolean isLocalSubtitle = false;
+        boolean loop = false;
+
         switch (methodCall.method) {
             case "initialize":
                 if (textureView == null) {
                     textureView = new TextureView(context);
                 }
-
+                //
                 ArrayList<String> options = methodCall.argument("options");
-
+                autoplay = methodCall.argument("autoplay");
+                isLocalMedia = methodCall.argument("isLocalMedia");
+                subtitle = methodCall.argument("subtitle");
+                isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                loop = methodCall.argument("loop");
+                if (loop)
+                    options.add("--input-repeat=65535");
+                //
                 libVLC = new LibVLC(context, options);
                 mediaPlayer = new MediaPlayer(libVLC);
-                //mediaPlayer.setVideoTrackEnabled(true);
+                mediaPlayer.setVideoTrackEnabled(true);
                 mediaPlayer.setEventListener(this);
                 vout = mediaPlayer.getVLCVout();
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+//                vout.addCallback(new IVLCVout.Callback() {
+//                    @Override
+//                    public void onSurfacesCreated(IVLCVout vout) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSurfacesDestroyed(IVLCVout vout) {
+//
+//                    }
+//                });
                 vout.attachViews();
-
+                //
                 String initStreamURL = methodCall.argument("url");
-                Media media = new Media(libVLC, Uri.parse(initStreamURL));
-
+                Media media = new Media(libVLC, getStreamUri(initStreamURL, isLocalMedia));
+                //
                 int hardwareAcceleration = methodCall.argument("hwAcc");
-                if (hardwareAcceleration != HW_ACCELERATION_AUTOMATIC) 
+                if (hardwareAcceleration != HW_ACCELERATION_AUTOMATIC)
                     if (hardwareAcceleration == HW_ACCELERATION_DISABLED) {
                         media.setHWDecoderEnabled(false, false);
                     } else if (hardwareAcceleration == HW_ACCELERATION_FULL || hardwareAcceleration == HW_ACCELERATION_DECODING) {
@@ -175,26 +351,53 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                         if (hardwareAcceleration == HW_ACCELERATION_DECODING) {
                             media.addOption(":no-mediacodec-dr");
                             media.addOption(":no-omxil-dr");
-                        } 
+                        }
                     }
-
+                //
                 media.addOption(":input-fast-seek");
                 mediaPlayer.setMedia(media);
+                if (!subtitle.isEmpty())
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
+                //
+                media.release();
+                //
+//                if (autoplay)
+                mediaPlayer.play();
+//                else
+//                    mediaPlayer.stop();
+                //
                 result.success(null);
                 break;
+
             case "dispose":
                 this.dispose();
                 break;
+
             case "changeURL":
                 if (libVLC == null)
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
-                mediaPlayer.stop();
+                boolean isPlaying = mediaPlayer.isPlaying();
+                if (isPlaying)
+                    mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
-                Media newMedia = new Media(libVLC, Uri.parse(newURL));
+                isLocalMedia = methodCall.argument("isLocalMedia");
+                subtitle = methodCall.argument("subtitle");
+                isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                //
+                Media newMedia = new Media(libVLC, getStreamUri(newURL, isLocalMedia));
                 mediaPlayer.setMedia(newMedia);
+                if (!subtitle.isEmpty())
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
+                //
+                newMedia.release();
+                //
+//                if (isPlaying)
+                mediaPlayer.play();
+                //
                 result.success(null);
                 break;
+
             case "getSnapshot":
                 String imageBytes;
                 Map<String, String> response = new HashMap<>();
@@ -207,32 +410,35 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
                 result.success(response);
                 break;
-            case "setPlaybackState":
 
+            case "setPlaybackState":
                 String playbackState = methodCall.argument("playbackState");
                 if (playbackState == null) result.success(null);
 
                 switch (playbackState) {
                     case "play":
                         textureView.forceLayout();
-                        mediaPlayer.play();
+                        if (!mediaPlayer.isPlaying())
+                            mediaPlayer.play();
                         break;
                     case "pause":
-                        mediaPlayer.pause();
+                        if (mediaPlayer.isPlaying())
+                            mediaPlayer.pause();
                         break;
                     case "stop":
                         mediaPlayer.stop();
                         break;
                 }
-
                 result.success(null);
                 break;
 
-            case "setPlaybackSpeed":
+            case "isPlaying":
+                result.success(mediaPlayer.isPlaying());
+                break;
 
+            case "setPlaybackSpeed":
                 float playbackSpeed = Float.parseFloat((String) methodCall.argument("speed"));
                 mediaPlayer.setRate(playbackSpeed);
-
                 result.success(null);
                 break;
 
@@ -242,10 +448,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 break;
 
             case "setTime":
-
                 long time = Long.parseLong((String) methodCall.argument("time"));
                 mediaPlayer.setTime(time);
-
                 result.success(null);
                 break;
 
@@ -254,9 +458,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(time);
                 break;
 
+            case "getDuration":
+                long duration = mediaPlayer.getLength();
+                result.success(duration);
+                break;
+
             case "setVolume":
-                int volume = 100;
-                volume =  methodCall.argument("volume");
+                int volume = methodCall.argument("volume");
+                volume = Math.max(0, Math.min(100, volume));
                 mediaPlayer.setVolume(volume);
                 result.success(null);
                 break;
@@ -266,6 +475,153 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 result.success(volume);
                 break;
 
+            case "getSpuTracksCount":
+                result.success(mediaPlayer.getSpuTracksCount());
+                break;
+
+            case "getSpuTracks":
+                MediaPlayer.TrackDescription[] spuTracks = mediaPlayer.getSpuTracks();
+                Map<Integer, String> subtitles = new HashMap<>();
+                if (spuTracks != null)
+                    for (MediaPlayer.TrackDescription trackDescription : spuTracks) {
+                        if (trackDescription.id >= 0)
+                            subtitles.put(trackDescription.id, trackDescription.name);
+                    }
+                result.success(subtitles);
+                break;
+
+            case "setSpuTrack":
+                int spuTrackNumber = methodCall.argument("spuTrackNumber");
+                mediaPlayer.setSpuTrack(spuTrackNumber);
+                result.success(null);
+                break;
+
+            case "getSpuTrack":
+                result.success(mediaPlayer.getSpuTrack());
+                break;
+
+            case "setSpuDelay":
+                long spuDelay = Long.parseLong((String) methodCall.argument("delay"));
+                mediaPlayer.setSpuDelay(spuDelay);
+                result.success(null);
+                break;
+
+            case "getSpuDelay":
+                spuDelay = mediaPlayer.getSpuDelay();
+                result.success(spuDelay);
+                break;
+
+            case "addSubtitleTrack":
+                subtitle = methodCall.argument("subtitlePath");
+                isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                if (!subtitle.isEmpty())
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
+                result.success(null);
+                break;
+
+            case "getAudioTracksCount":
+                result.success(mediaPlayer.getAudioTracksCount());
+                break;
+
+            case "getAudioTracks":
+                MediaPlayer.TrackDescription[] audioTracks = mediaPlayer.getAudioTracks();
+                Map<Integer, String> audios = new HashMap<>();
+                if (audioTracks != null)
+                    for (MediaPlayer.TrackDescription trackDescription : audioTracks) {
+                        if (trackDescription.id >= 0)
+                            audios.put(trackDescription.id, trackDescription.name);
+                    }
+                result.success(audios);
+                break;
+
+            case "getAudioTrack":
+                result.success(mediaPlayer.getAudioTrack());
+                break;
+
+            case "setAudioTrack":
+                int audioTrackNumber = methodCall.argument("audioTrackNumber");
+                mediaPlayer.setAudioTrack(audioTrackNumber);
+                result.success(null);
+                break;
+
+            case "setAudioDelay":
+                long audioDelay = Long.parseLong((String) methodCall.argument("delay"));
+                mediaPlayer.setAudioDelay(audioDelay);
+                result.success(null);
+                break;
+
+            case "getAudioDelay":
+                audioDelay = mediaPlayer.getAudioDelay();
+                result.success(audioDelay);
+                break;
+
+            case "getVideoTracksCount":
+                result.success(mediaPlayer.getVideoTracksCount());
+                break;
+
+            case "getVideoTracks":
+                MediaPlayer.TrackDescription[] videoTracks = mediaPlayer.getVideoTracks();
+                Map<Integer, String> videos = new HashMap<>();
+                if (videoTracks != null)
+                    for (MediaPlayer.TrackDescription trackDescription : videoTracks) {
+                        if (trackDescription.id >= 0)
+                            videos.put(trackDescription.id, trackDescription.name);
+                    }
+                result.success(videos);
+                break;
+
+            case "getCurrentVideoTrack":
+                result.success(mediaPlayer.getCurrentVideoTrack());
+                break;
+
+            case "getVideoTrack":
+                result.success(mediaPlayer.getVideoTrack());
+                break;
+
+            case "setVideoScale":
+                float videoScale = Float.parseFloat((String) methodCall.argument("scale"));
+                mediaPlayer.setScale(videoScale);
+                result.success(null);
+                break;
+
+            case "getVideoScale":
+                result.success(mediaPlayer.getScale());
+                break;
+
+            case "setVideoAspectRatio":
+                String aspect = methodCall.argument("aspect");
+                mediaPlayer.setAspectRatio(aspect);
+                result.success(null);
+                break;
+
+            case "getVideoAspectRatio":
+                result.success(mediaPlayer.getAspectRatio());
+                break;
+
+            case "startCastDiscovery":
+                startCastsDiscovery();
+                result.success(null);
+                break;
+
+            case "stopCastDiscovery":
+                stopCastsDiscovery();
+                result.success(null);
+                break;
+
+            case "getCastDevices":
+                Map<String, String> casts = new HashMap<>();
+                if (rendererItems != null)
+                    for (RendererItem item : rendererItems) {
+                        casts.put(item.name, item.displayName);
+                    }
+                result.success(casts);
+                break;
+
+            case "startCasting":
+                String castDevice = methodCall.argument("castDevice");
+                startCasting(castDevice);
+                result.success(null);
+                break;
         }
     }
 
@@ -306,6 +662,12 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("height", height);
                 eventObject.put("width", width);
                 eventObject.put("length", mediaPlayer.getLength());
+                // add support for changing audio tracks and subtitles
+                eventObject.put("audioTracksCount", mediaPlayer.getAudioTracksCount());
+                eventObject.put("activeAudioTrack", mediaPlayer.getAudioTrack());
+                eventObject.put("spuTracksCount", mediaPlayer.getSpuTracksCount());
+                eventObject.put("activeSpuTrack", mediaPlayer.getSpuTrack());
+                //
                 eventSink.success(eventObject.clone());
                 break;
 
@@ -321,6 +683,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventSink.success(eventObject);
 
             case MediaPlayer.Event.Vout:
+                Log.i(TAG, "MediaPlayer.Event.Vout");
+                Log.i(TAG, String.valueOf(vout.areViewsAttached()));
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;
 
@@ -335,18 +699,109 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 System.err.println("(flutter_vlc_plugin) A VLC error occurred.");
                 eventSink.error("error", "A VLC error occurred.", null);
                 break;
-                
-            case MediaPlayer.Event.Paused:
-            case MediaPlayer.Event.Stopped:
-                eventObject.put("name", "buffering");
-                eventObject.put("value", false);
-                eventSink.success(eventObject);
 
+            case MediaPlayer.Event.Paused:
                 eventObject.clear();
-                eventObject.put("name", "playing");
-                eventObject.put("value", false);
+                eventObject.put("name", "paused");
+                eventObject.put("value", true);
+                eventSink.success(eventObject);
+                break;
+
+            case MediaPlayer.Event.Stopped:
+                eventObject.clear();
+                eventObject.put("name", "stopped");
+                eventObject.put("value", true);
                 eventSink.success(eventObject);
                 break;
         }
+    }
+
+    private Uri getStreamUri(String streamPath, boolean isLocal) {
+        return isLocal ? Uri.fromFile(new File(streamPath)) : Uri.parse(streamPath);
+    }
+
+    private void startCastsDiscovery() {
+        if (libVLC == null)
+            return;
+
+        // create list of renderer items
+        rendererItems = new ArrayList<>();
+
+        // create a renderer discoverer
+        rendererDiscoverer = new RendererDiscoverer(libVLC, "microdns");
+
+        // register callback when a new renderer is found
+        rendererDiscoverer.setEventListener(new RendererDiscoverer.EventListener() {
+            @Override
+            public void onEvent(RendererDiscoverer.Event event) {
+                HashMap<String, Object> eventObject = new HashMap<>();
+                //
+                RendererItem item = event.getItem();
+                switch (event.type) {
+
+                    case RendererDiscoverer.Event.ItemAdded:
+                        rendererItems.add(item);
+                        //
+                        eventObject.put("name", "castItemAdded");
+                        eventObject.put("value", item.name);
+                        eventObject.put("displayName", item.displayName);
+                        eventSink.success(eventObject);
+                        break;
+
+                    case RendererDiscoverer.Event.ItemDeleted:
+                        rendererItems.remove(item);
+                        //
+                        eventObject.put("name", "castItemDeleted");
+                        eventObject.put("value", item.name);
+                        eventObject.put("displayName", item.displayName);
+                        eventSink.success(eventObject);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+
+        // start discovery on the local network
+        rendererDiscoverer.start();
+    }
+
+    private void stopCastsDiscovery() {
+        if (rendererDiscoverer != null) {
+            rendererDiscoverer.stop();
+            rendererDiscoverer.setEventListener(null);
+            rendererDiscoverer = null;
+            //
+            rendererItems.clear();
+            rendererItems = null;
+            // return back to locally
+            mediaPlayer.pause();
+            mediaPlayer.setRenderer(null);
+            mediaPlayer.play();
+        }
+    }
+
+    private void startCasting(String castDevice) {
+        if ((libVLC == null) || (mediaPlayer == null))
+            return;
+        //
+        boolean isPlaying = mediaPlayer.isPlaying();
+        if (isPlaying)
+            mediaPlayer.pause();
+        //
+        // set the first discovered renderer item (chromecast) on the mediaplayer
+        // if you set it to null, it will start to render normally (i.e. locally) again
+        RendererItem castItem = null;
+        for (RendererItem item : rendererItems) {
+            if (item.name.equals(castDevice)) {
+                castItem = item;
+                break;
+            }
+        }
+        mediaPlayer.setRenderer(castItem);
+
+        // start the playback
+        mediaPlayer.play();
     }
 }
