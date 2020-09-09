@@ -3,13 +3,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cryptoutils/cryptoutils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 enum PlayingState { STOPPED, PAUSED, BUFFERING, PLAYING, ERROR }
 enum HwAcc { AUTO, DISABLED, DECODING, FULL }
+enum CastStatus { DEVICE_ADDED, DEVICE_DELETED }
+
+typedef CastCallback = void Function(CastStatus, String, String);
 
 int getHwAcc({@required HwAcc hwAcc}) {
   switch (hwAcc) {
@@ -45,6 +48,7 @@ class VlcPlayer extends StatefulWidget {
   final bool isLocalMedia;
   final String subtitle;
   final bool isLocalSubtitle;
+  final bool isSubtitleSelected;
   final bool loop;
   final Widget placeholder;
   final VlcPlayerController controller;
@@ -82,6 +86,9 @@ class VlcPlayer extends StatefulWidget {
 
     /// Set true if the provided subtitle is local file
     this.isLocalSubtitle,
+
+    /// Set true if the provided subtitle is selected by default
+    this.isSubtitleSelected,
 
     /// Loop the playback forever
     this.loop,
@@ -197,6 +204,7 @@ class VlcPlayerController {
   EventChannel _eventChannel;
 
   VoidCallback _onInit;
+  CastCallback _onCastHandler;
   List<VoidCallback> _eventHandlers;
 
   /// Once the [_methodChannel] and [_eventChannel] have been registered with
@@ -270,7 +278,7 @@ class VlcPlayerController {
   /// This is the number of audio tracks embedded in the video
   int _audioTracksCount = 1;
 
-  int get audioTracksCount => _audioTracksCount;
+  int get audioTracksCount => _audioTracksCount - 1;
 
   /// this is the id of active audio track
   int _activeAudioTrack = 1;
@@ -293,8 +301,10 @@ class VlcPlayerController {
       /// This is a callback that will be executed once the platform view has been initialized.
       /// If you want the media to play as soon as the platform view has initialized, you could just call
       /// [VlcPlayerController.play] in this callback. (see the example)
-      VoidCallback onInit}) {
+      VoidCallback onInit,
+      CastCallback onCastHandler}) {
     _onInit = onInit;
+    _onCastHandler = onCastHandler;
     _eventHandlers = new List();
   }
 
@@ -328,6 +338,7 @@ class VlcPlayerController {
     bool isLocalMedia,
     String subtitle,
     bool isLocalSubtitle,
+    bool isSubtitleSelected,
     bool loop,
   }) async {
     //if(initialized) throw new Exception("Player already initialized!");
@@ -340,6 +351,7 @@ class VlcPlayerController {
       'isLocalMedia': isLocalMedia ?? false,
       'subtitle': subtitle ?? '',
       'isLocalSubtitle': isLocalSubtitle ?? false,
+      'isSubtitleSelected': isSubtitleSelected ?? true,
       'loop': loop ?? false,
     });
     _position = 0;
@@ -388,15 +400,15 @@ class VlcPlayerController {
           break;
 
         case 'castItemAdded':
-          event['value'];
-          event['displayName'];
-          _fireEventHandlers();
+          if (_onCastHandler != null)
+            _onCastHandler(
+                CastStatus.DEVICE_ADDED, event['value'], event['displayName']);
           break;
 
         case 'castItemDeleted':
-          event['value'];
-          event['displayName'];
-          _fireEventHandlers();
+          if (_onCastHandler != null)
+            _onCastHandler(CastStatus.DEVICE_DELETED, event['value'],
+                event['displayName']);
           break;
       }
     }).onError((e) {
@@ -410,7 +422,10 @@ class VlcPlayerController {
   }
 
   Future<void> setStreamUrl(String url,
-      {bool isLocalMedia, String subtitle, bool isLocalSubtitle}) async {
+      {bool isLocalMedia,
+      String subtitle,
+      bool isLocalSubtitle,
+      bool isSubtitleSelected}) async {
     _initialized = false;
     _fireEventHandlers();
 
@@ -420,6 +435,7 @@ class VlcPlayerController {
       'isLocalMedia': isLocalMedia ?? false,
       'subtitle': subtitle ?? '',
       'isLocalSubtitle': isLocalSubtitle ?? false,
+      'isSubtitleSelected': isSubtitleSelected ?? true,
     });
     if (wasPlaying) play();
 
@@ -522,10 +538,11 @@ class VlcPlayerController {
   }
 
   Future<void> addSubtitleTrack(String subtitlePath,
-      {bool isLocalSubtitle}) async {
+      {bool isLocalSubtitle, bool isSubtitleSelected}) async {
     await _methodChannel.invokeMethod("addSubtitleTrack", {
       'subtitlePath': subtitlePath,
       'isLocalSubtitle': isLocalSubtitle ?? false,
+      'isSubtitleSelected': isSubtitleSelected ?? true,
     });
   }
 

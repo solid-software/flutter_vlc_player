@@ -26,10 +26,10 @@ class MyAppScaffold extends StatefulWidget {
 class MyAppScaffoldState extends State<MyAppScaffold> {
   Uint8List image;
 
-//  String initUrl = "http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4";
-//  String initUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
   String initUrl =
-      "http://dl3.tvto.ga/Series/Cable%20Girls/S01/CableGirls%20S01E01%20480p%20TagName%20Exclusive.mkv";
+      "http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4";
+
+//  String initUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
 //  String initUrl = "/storage/emulated/0/Download/Test.mp4";
 //  String initUrl = "/sdcard/Download/Test.mp4";
   String initUrl2 =
@@ -37,8 +37,6 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 
   String changeUrl =
       "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
-//  String changeUrl =
-//      "http://dl3.tvto.ga/Series/Cable%20Girls/S01/CableGirls%20S01E01%20720p%20TagName%20Exclusive.mkv";
 
   VlcPlayerController _videoViewController;
   VlcPlayerController _videoViewController2;
@@ -46,7 +44,6 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   double sliderValue = 0.0;
   double currentPlayerTime = 0;
   double volumeValue = 100;
-  bool isFullScreen = false;
 
   @override
   void initState() {
@@ -89,39 +86,36 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
         child: Icon(Icons.camera),
         onPressed: _createCameraImage,
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          SizedBox(
-            height: 250,
-            child: new VlcPlayer(
-              aspectRatio: 16 / 9,
-              url: initUrl,
-              isLocalMedia: false,
-              subtitle:
-                  'https://moviebaz24.com/uploads/subtitles/Cable_Girls/Cable.Girls.S01E01.Chapter.1.Dreams.srt',
-              isLocalSubtitle: false,
-              controller: _videoViewController,
-              // Play with vlc options
-              options: [
-                '--quiet',
+      body: Builder(builder: (context) {
+        return ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            SizedBox(
+              height: 250,
+              child: new VlcPlayer(
+                aspectRatio: 16 / 9,
+                url: initUrl,
+                isLocalMedia: false,
+                controller: _videoViewController,
+                // Play with vlc options
+                options: [
+                  '--quiet',
 //                '-vvv',
-                '--no-drop-late-frames',
-                '--no-skip-frames',
-                '--rtsp-tcp',
-              ],
-              autoplay: false,
-              hwAcc: HwAcc.DISABLED,
-              // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
-              placeholder: Container(
-                height: 250.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],
+                  '--no-drop-late-frames',
+                  '--no-skip-frames',
+                  '--rtsp-tcp',
+                ],
+                hwAcc: HwAcc.DISABLED,
+                // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
+                placeholder: Container(
+                  height: 250.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[CircularProgressIndicator()],
+                  ),
                 ),
               ),
             ),
-          ),
 //            SizedBox(
 //              height: 360,
 //              child: new VlcPlayer(
@@ -137,137 +131,144 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 //                ),
 //              ),
 //            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text("Seek"),
-              Slider(
-                activeColor: Colors.red,
-                value: sliderValue,
-                min: 0.0,
-                max: _videoViewController.duration == null
-                    ? 1.0
-                    : _videoViewController.duration.inSeconds.toDouble(),
-                onChanged: (progress) {
-                  setState(() {
-                    sliderValue = progress.floor().toDouble();
-                  });
-                  //convert to Milliseconds since VLC requires MS to set time
-                  _videoViewController.setTime(sliderValue.toInt() * 1000);
-                },
-              ),
-            ],
-          ),
-          Divider(height: 1),
-          FlatButton(
-              child: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-              onPressed: () => {playOrPauseVideo()}),
-          Divider(height: 1),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text("Volume Level"),
-              Slider(
-                min: 0,
-                max: 100,
-                value: volumeValue,
-                onChanged: (value) {
-                  setState(() {
-                    volumeValue = value;
-                  });
-                  _videoViewController.setVolume(volumeValue.toInt());
-                },
-              ),
-            ],
-          ),
-          Divider(height: 1),
-          Row(
-            children: [
-              FlatButton(
-                child: Text("Change URL"),
-                onPressed: () => _videoViewController.setStreamUrl(changeUrl),
-              ),
-              FlatButton(
-                  child: Text("+speed"),
-                  onPressed: () => _videoViewController.setPlaybackSpeed(2.0)),
-              FlatButton(
-                  child: Text("Normal"),
-                  onPressed: () => _videoViewController.setPlaybackSpeed(1)),
-              FlatButton(
-                  child: Text("-speed"),
-                  onPressed: () => _videoViewController.setPlaybackSpeed(0.5)),
-            ],
-          ),
-          Divider(height: 1),
-          Container(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Text("position=" +
-                    _videoViewController.position.inSeconds.toString() +
-                    ", duration=" +
-                    _videoViewController.duration.inSeconds.toString() +
-                    ", speed=" +
-                    _videoViewController.playbackSpeed.toString()),
-                Text("ratio=" + _videoViewController.aspectRatio.toString()),
-                Text("size=" +
-                    _videoViewController.size.width.toString() +
-                    "x" +
-                    _videoViewController.size.height.toString()),
-                Text("state=" + _videoViewController.playingState.toString()),
+                Text("Seek"),
+                Slider(
+                  activeColor: Colors.red,
+                  value: sliderValue,
+                  min: 0.0,
+                  max: _videoViewController.duration == null
+                      ? 1.0
+                      : _videoViewController.duration.inSeconds.toDouble(),
+                  onChanged: (progress) {
+                    setState(() {
+                      sliderValue = progress.floor().toDouble();
+                    });
+                    //convert to Milliseconds since VLC requires MS to set time
+                    _videoViewController.setTime(sliderValue.toInt() * 1000);
+                  },
+                ),
               ],
             ),
-          ),
-          Divider(height: 1),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                child: Text('Get Subtitle Tracks'),
-                onPressed: () {
-                  _getSubtitleTracks();
-                },
+            Divider(height: 1),
+            FlatButton(
+                child: isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+                onPressed: () => {playOrPauseVideo()}),
+            Divider(height: 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text("Volume Level"),
+                Slider(
+                  min: 0,
+                  max: 100,
+                  value: volumeValue,
+                  onChanged: (value) {
+                    setState(() {
+                      volumeValue = value;
+                    });
+                    _videoViewController.setVolume(volumeValue.toInt());
+                  },
+                ),
+              ],
+            ),
+            Divider(height: 1),
+            Row(
+              children: [
+                FlatButton(
+                  child: Text("Change URL"),
+                  onPressed: () => _videoViewController.setStreamUrl(changeUrl),
+                ),
+                FlatButton(
+                    child: Text("+speed"),
+                    onPressed: () =>
+                        _videoViewController.setPlaybackSpeed(2.0)),
+                FlatButton(
+                    child: Text("Normal"),
+                    onPressed: () => _videoViewController.setPlaybackSpeed(1)),
+                FlatButton(
+                    child: Text("-speed"),
+                    onPressed: () =>
+                        _videoViewController.setPlaybackSpeed(0.5)),
+              ],
+            ),
+            Divider(height: 1),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text("position=" +
+                      _videoViewController.position.inSeconds.toString() +
+                      ", duration=" +
+                      _videoViewController.duration.inSeconds.toString() +
+                      ", speed=" +
+                      _videoViewController.playbackSpeed.toString()),
+                  Text("ratio=" + _videoViewController.aspectRatio.toString()),
+                  Text("size=" +
+                      _videoViewController.size.width.toString() +
+                      "x" +
+                      _videoViewController.size.height.toString()),
+                  Text("state=" + _videoViewController.playingState.toString()),
+                ],
               ),
-              FlatButton(
-                child: Text('Get Audio Tracks'),
-                onPressed: () {
-                  _getAudioTracks();
-                },
-              )
-            ],
-          ),
-          Divider(height: 1),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                child: Text('Start Cast'),
-                onPressed: () async {
-                  await _videoViewController.startCastDiscovery();
-                },
-              ),
-              FlatButton(
-                child: Text('Get Cast Devices'),
-                onPressed: () {
-                  _getCastDevices();
-                },
-              ),
-              FlatButton(
-                child: Text('Stop Cast'),
-                onPressed: () async {
-                  await _videoViewController.stopCastDiscovery();
-                },
-              )
-            ],
-          ),
-          Divider(height: 1),
-          image == null ? Container() : Container(child: Image.memory(image)),
-        ],
-      ),
+            ),
+            Divider(height: 1),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton(
+                  child: Text('Get Subtitle Tracks'),
+                  onPressed: () {
+                    _getSubtitleTracks();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Get Audio Tracks'),
+                  onPressed: () {
+                    _getAudioTracks();
+                  },
+                )
+              ],
+            ),
+            Divider(height: 1),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton(
+                  child: Text('Start Cast'),
+                  onPressed: () async {
+                    await _videoViewController.startCastDiscovery();
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text("Cast Started")));
+                  },
+                ),
+                FlatButton(
+                  child: Text('Get Cast Devices'),
+                  onPressed: () {
+                    _getCastDevices();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Stop Cast'),
+                  onPressed: () async {
+                    await _videoViewController.stopCastDiscovery();
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text("Cast Stopped")));
+                  },
+                )
+              ],
+            ),
+            Divider(height: 1),
+            image == null ? Container() : Container(child: Image.memory(image)),
+          ],
+        );
+      }),
     );
   }
 

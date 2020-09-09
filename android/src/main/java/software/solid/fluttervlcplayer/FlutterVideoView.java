@@ -62,6 +62,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private RendererDiscoverer rendererDiscoverer;
     private List<RendererItem> rendererItems;
     private boolean playerDisposed;
+    private boolean autoplay = true;
+    private boolean firstRun = true;
 
     /**
      * HACK: handler to call updateVideoSurfaces as soon as a video output
@@ -137,6 +139,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 if (playerDisposed) {
                     if (mediaPlayer != null) {
                         mediaPlayer.stop();
+                        mediaPlayer.setEventListener(null);
+                        mediaPlayer.getVLCVout().detachViews();
                         mediaPlayer.release();
                         libVLC.release();
                         libVLC = null;
@@ -161,6 +165,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
         });
 
+        /*
         textureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -182,7 +187,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
                 return true;
             }
-        });
+        });*/
 
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
@@ -285,6 +290,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             mediaPlayer.setEventListener(null);
         }
         if (vout != null) {
+//            vout.removeCallback(this);
             vout.detachViews();
         }
         playerDisposed = true;
@@ -297,10 +303,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @Override
     public void onMethodCall(MethodCall methodCall, @NonNull MethodChannel.Result result) {
 
-        boolean autoplay = true;
         boolean isLocalMedia = false;
         String subtitle = "";
         boolean isLocalSubtitle = false;
+        boolean isSubtitleSelected = true;
         boolean loop = false;
 
         switch (methodCall.method) {
@@ -314,6 +320,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 isLocalMedia = methodCall.argument("isLocalMedia");
                 subtitle = methodCall.argument("subtitle");
                 isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                isSubtitleSelected = methodCall.argument("isSubtitleSelected");
                 loop = methodCall.argument("loop");
                 if (loop)
                     options.add("--input-repeat=65535");
@@ -357,15 +364,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 media.addOption(":input-fast-seek");
                 mediaPlayer.setMedia(media);
                 if (!subtitle.isEmpty())
-                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), isSubtitleSelected);
                 //
                 media.release();
-                //
-//                if (autoplay)
-                mediaPlayer.play();
-//                else
-//                    mediaPlayer.stop();
-                //
                 result.success(null);
                 break;
 
@@ -378,23 +379,20 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
 
                 boolean isPlaying = mediaPlayer.isPlaying();
-                if (isPlaying)
-                    mediaPlayer.stop();
+                mediaPlayer.stop();
                 String newURL = methodCall.argument("url");
                 isLocalMedia = methodCall.argument("isLocalMedia");
                 subtitle = methodCall.argument("subtitle");
                 isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                isSubtitleSelected = methodCall.argument("isSubtitleSelected");
                 //
                 Media newMedia = new Media(libVLC, getStreamUri(newURL, isLocalMedia));
                 mediaPlayer.setMedia(newMedia);
                 if (!subtitle.isEmpty())
-                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
-                //
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), isSubtitleSelected);
                 newMedia.release();
-                //
-//                if (isPlaying)
-                mediaPlayer.play();
-                //
+                if (isPlaying)
+                    mediaPlayer.play();
                 result.success(null);
                 break;
 
@@ -417,6 +415,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
                 switch (playbackState) {
                     case "play":
+                        firstRun = false;
                         textureView.forceLayout();
                         if (!mediaPlayer.isPlaying())
                             mediaPlayer.play();
@@ -514,8 +513,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "addSubtitleTrack":
                 subtitle = methodCall.argument("subtitlePath");
                 isLocalSubtitle = methodCall.argument("isLocalSubtitle");
+                isSubtitleSelected = methodCall.argument("isSubtitleSelected");
                 if (!subtitle.isEmpty())
-                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), true);
+                    mediaPlayer.addSlave(Media.Slave.Type.Subtitle, getStreamUri(subtitle, isLocalSubtitle), isSubtitleSelected);
                 result.success(null);
                 break;
 
@@ -628,7 +628,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     @Override
     public void onEvent(MediaPlayer.Event event) {
         HashMap<String, Object> eventObject = new HashMap<>();
-
         switch (event.type) {
 
             case MediaPlayer.Event.Opening:
@@ -669,6 +668,9 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventObject.put("activeSpuTrack", mediaPlayer.getSpuTrack());
                 //
                 eventSink.success(eventObject.clone());
+                //
+                if (firstRun && !autoplay)
+                    mediaPlayer.pause();
                 break;
 
             case MediaPlayer.Event.EndReached:
@@ -683,11 +685,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 eventSink.success(eventObject);
 
             case MediaPlayer.Event.Vout:
-                Log.i(TAG, "MediaPlayer.Event.Vout");
-                Log.i(TAG, String.valueOf(vout.areViewsAttached()));
                 vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
                 break;
 
+            case MediaPlayer.Event.Buffering:
             case MediaPlayer.Event.TimeChanged:
                 eventObject.put("name", "timeChanged");
                 eventObject.put("value", mediaPlayer.getTime());
@@ -775,10 +776,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             //
             rendererItems.clear();
             rendererItems = null;
+            //
             // return back to locally
-            mediaPlayer.pause();
-            mediaPlayer.setRenderer(null);
-            mediaPlayer.play();
+            if (mediaPlayer != null) {
+                mediaPlayer.pause();
+                mediaPlayer.setRenderer(null);
+                mediaPlayer.play();
+            }
         }
     }
 

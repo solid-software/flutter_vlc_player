@@ -115,7 +115,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                     let byteArray = (image ?? UIImage()).pngData()
 
                     result([
-                        "snapshot": byteArray,
+                        "snapshot": byteArray?.base64EncodedString()
                     ])
                     return
 
@@ -209,7 +209,8 @@ public class VLCView: NSObject, FlutterPlatformView {
                         return
                     }
                     let isLocalSubtitle = arguments("isLocalSubtitle") as? Bool
-                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: true)
+                    let isSubtitleSelected = arguments("isSubtitleSelected") as? Bool
+                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: isSubtitleSelected)
                     // if isLocalSubtitle {
                     //     self.player.openVideoSubTitlesFromFile(subtitle)
                     // }
@@ -473,42 +474,42 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
 }
 
 enum FlutterMethodCallOption: String {
-    case initialize
-    case dispose
-    case changeURL
-    case getSnapshot
-    case setPlaybackState
-    case isPlaying
-    case setPlaybackSpeed
-    case getPlaybackSpeed
-    case setTime
-    case getTime
-    case getDuration
-    case setVolume
-    case getVolume
-    case getSpuTracksCount
-    case getSpuTracks
-    case setSpuTrack
-    case getSpuTrack
-    case setSpuDelay
-    case getSpuDelay
-    case addSubtitleTrack
-    case getAudioTracksCount
-    case getAudioTracks
-    case getAudioTrack
-    case setAudioTrack
-    case setAudioDelay
-    case getAudioDelay
-    case getVideoTracksCount
-    case getVideoTracks
-    case getCurrentVideoTrack
-    case getVideoTrack
-    case setVideoScale
-    case getVideoScale
-    case setVideoAspectRatio
-    case getVideoAspectRatio
-    case startCastDiscovery
-    case stopCastDiscovery
-    case getCastDevices
-    case startCasting
+    case initialize = "initialize"
+    case dispose = "dispose"
+    case changeURL = "changeURL"
+    case getSnapshot = "getSnapshot"
+    case setPlaybackState = "setPlaybackState"
+    case isPlaying = "isPlaying"
+    case setPlaybackSpeed = "setPlaybackSpeed"
+    case getPlaybackSpeed = "getPlaybackSpeed"
+    case setTime = "setTime"
+    case getTime = "getTime"
+    case getDuration = "getDuration"
+    case setVolume = "setVolume"
+    case getVolume = "getVolume"
+    case getSpuTracksCount = "getSpuTracksCount"
+    case getSpuTracks = "getSpuTracks"
+    case setSpuTrack = "setSpuTrack"
+    case getSpuTrack = "getSpuTrack"
+    case setSpuDelay = "setSpuDelay"
+    case getSpuDelay = "getSpuDelay"
+    case addSubtitleTrack = "addSubtitleTrack"
+    case getAudioTracksCount = "getAudioTracksCount"
+    case getAudioTracks = "getAudioTracks"
+    case getAudioTrack = "getAudioTrack"
+    case setAudioTrack = "setAudioTrack"
+    case setAudioDelay = "setAudioDelay"
+    case getAudioDelay = "getAudioDelay"
+    case getVideoTracksCount = "getVideoTracksCount"
+    case getVideoTracks = "getVideoTracks"
+    case getCurrentVideoTrack = "getCurrentVideoTrack"
+    case getVideoTrack = "getVideoTrack"
+    case setVideoScale = "setVideoScale"
+    case getVideoScale = "getVideoScale"
+    case setVideoAspectRatio = "setVideoAspectRatio"
+    case getVideoAspectRatio = "getVideoAspectRatio"
+    case startCastDiscovery = "startCastDiscovery"
+    case stopCastDiscovery = "stopCastDiscovery"
+    case getCastDevices = "getCastDevices"
+    case startCasting = "startCasting"
 }
