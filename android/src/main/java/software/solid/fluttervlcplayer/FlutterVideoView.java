@@ -23,7 +23,7 @@ import io.flutter.plugin.common.*;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
 
-import org.videolan.libvlc.IVLCVout;
+import org.videolan.libvlc.interfaces.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
