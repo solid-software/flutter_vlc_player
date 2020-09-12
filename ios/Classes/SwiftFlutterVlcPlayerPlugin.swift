@@ -121,7 +121,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                     let byteArray = (image ?? UIImage()).pngData()
                     
                     result([
-                        "snapshot": byteArray
+                        "snapshot": byteArray?.base64EncodedString()
                     ])
                     return
                     
@@ -147,10 +147,39 @@ public class VLCView: NSObject, FlutterPlatformView {
                     result(nil)
                     return
                     
+                case .changeSound:
+                    let audioNumber = arguments["audioNumber"] as? String ?? ""
+                    let audioNumberInt = Int32(audioNumber) ?? 0
+                    self.player.audioChannel = audioNumberInt
+                    return
+                
+                case .changeSubtitle:
+                    let subtitleNumber = arguments["subtitleNumber"] as? String ?? ""
+                    let subtitleInt = Int32(subtitleNumber) ?? 0
+
+                    self.player.currentVideoSubTitleIndex = subtitleInt
+                    return
+                
+                case .addSubtitle:
+                
+                    guard let  urlString = arguments["filePath"] as? String, let url = URL(string: urlString) else {
+                        
+                        result(FlutterError(code: "500",
+                                            message: "subtitle file path failed",
+                                            details: nil)
+                        )
+                        return
+                    }
+                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: true)
+                    return
+                    
                 default:
                     result(FlutterMethodNotImplemented)
                     return
                 }
+            } else {
+                result(FlutterMethodNotImplemented)
+                return
             }
             
         })
@@ -193,6 +222,13 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
         var height = 0
         var width =  0
         
+        //subtitle
+        let audioCount =  player?.numberOfAudioTracks ?? 0
+        let activeAudioTracks =  player?.audioChannel ?? 0
+        let spuCount =  player?.numberOfSubtitlesTracks ?? 0
+        let activeSpu = player?.currentVideoSubTitleIndex ?? 0
+        
+        
         if player?.currentVideoTrackIndex != -1 {
             if (player?.currentVideoTrackIndex) != nil {
                 track =  tracks[0] as! NSDictionary
@@ -223,7 +259,12 @@ class VLCPlayerEventStreamHandler:NSObject, FlutterStreamHandler, VLCMediaPlayer
                     "ratio": NSNumber(value: ratio),
                     "height": height,
                     "width": width,
-                    "length": value
+                    "length": value,
+                    "audioCount": audioCount,
+                    "activeAudioTracks": activeAudioTracks,
+                    "spuCount": spuCount,
+                    "activeSpu": activeSpu
+                    
                 ])
             }
             return
@@ -308,4 +349,7 @@ enum FlutterMethodCallOption :String {
     case setPlaybackSpeed = "setPlaybackSpeed"
     case setTime = "setTime"
     case setVolume = "setVolume"
+    case changeSound = "changeSound"
+    case changeSubtitle = "changeSubtitle"
+    case addSubtitle = "addSubtitle"
 }
