@@ -373,7 +373,18 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "dispose":
                 this.dispose();
                 break;
-
+            case "changeSound":
+                int audioNumber = Integer.parseInt((String) methodCall.argument("audioNumber"));
+                mediaPlayer.setAudioTrack(audioNumber);
+                break;
+            case "changeSubtitle":
+                int subtitleNumber = Integer.parseInt((String) methodCall.argument("subtitleNumber"));
+                mediaPlayer.setSpuTrack(subtitleNumber);
+                break;
+            case "addSubtitle":
+                String filePath =(String) methodCall.argument("filePath");
+                mediaPlayer.addSlave(0,filePath,true);
+                break;
             case "changeURL":
                 if (libVLC == null)
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);

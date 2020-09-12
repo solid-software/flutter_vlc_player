@@ -39,7 +39,7 @@ public class VLCView: NSObject, FlutterPlatformView {
 
             guard let self = self else { return }
 
-            if let arguments = call.arguments as? [String: Any] {
+            if let arguments = call.arguments as? Dictionary<String,Any> {
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
 
@@ -140,12 +140,12 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .getTime:
-                    let time = (self.player.time ! as VLCTime).intValue
+                    let time = self.player.time.value
                     result(time)
                     return
 
                 case .getDuration:
-                    let length = (self.player.length ! as VLCTime).intValue
+                    let length = self.player.media.length
                     result(length)
                     return
 
@@ -165,20 +165,23 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .getSpuTracks:
-                    let spuTrackNames = self.player.videoSubTitlesNames
-                    let spuTrackIndexes = self.player.videoSubTitlesIndexes
+                    let spuTrackNames = self.player.videoSubTitlesNames as! [String]
+                    let spuTrackIndexes = self.player.videoSubTitlesIndexes as! [Int32]
                     var subtitles: [Int: String] = [:]
-                    if spuTrackIndexes != nil {
-                        for index in spuTrackIndexes.indices {
-                            subtitles.put(spuTrackIndexes[index], spuTrackNames[index])
-                        }
+                    
+                    var i = 0;
+                    for index in spuTrackIndexes {
+                        let name = spuTrackNames[i]
+                        subtitles[Int(index)] = name
+                        i = i+1
                     }
                     result(subtitles)
                     return
+                
 
                 case .setSpuTrack:
-                    let spuTrackNumber = arguments("spuTrackNumber") as? Int ?? 0
-                    self.player.currentVideoSubTitleIndex = spuTrackNumber
+                    let spuTrackNumber = arguments["spuTrackNumber"] as? Int ?? 0
+                    self.player.currentVideoSubTitleIndex = Int32(spuTrackNumber)
                     result(nil)
                     return
 
@@ -188,9 +191,9 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .setSpuDelay:
-                    let spuDelayAsString = arguments("delay") as? String
+                    let spuDelayAsString = arguments["delay"] as? String
                     let souDelay = NSNumber(value: (spuDelayAsString! as NSString).integerValue)
-                    self.player.currentVideoSubTitleDelay = souDelay
+                    self.player.currentVideoSubTitleDelay = Int(truncating: souDelay)
                     result(nil)
                     return
 
@@ -208,9 +211,9 @@ public class VLCView: NSObject, FlutterPlatformView {
                         )
                         return
                     }
-                    let isLocalSubtitle = arguments("isLocalSubtitle") as? Bool
-                    let isSubtitleSelected = arguments("isSubtitleSelected") as? Bool
-                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: isSubtitleSelected)
+                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool
+                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool
+                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: isSubtitleSelected ?? false)
                     // if isLocalSubtitle {
                     //     self.player.openVideoSubTitlesFromFile(subtitle)
                     // }
@@ -222,40 +225,43 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .getAudioTracks:
-                    let audioTrackNames = self.player.audioTrackNames
-                    let audioTrackIndexes = self.player.audioTrackIndexes
+                    let audioTrackNames = self.player.audioTrackNames as! [String]
+                    let audioTrackIndexes = self.player.audioTrackIndexes as! [Int32]
                     var audios: [Int: String] = [:]
-                    if audioTrackIndexes != nil {
-                        for index in audioTrackIndexes.indices {
-                            audios.put(audioTrackIndexes[index], audioTrackNames[index])
-                        }
+                    
+                    
+                    var i = 0;
+                    for index in audioTrackIndexes {
+                        let name = audioTrackNames[i]
+                        audios[Int(index)] = name
+                        i = i+1
                     }
                     result(audios)
+                    
                     return
 
                 case .getAudioTrack:
                     let audioTrackNumber = self.player.currentAudioTrackIndex
                     result(audioTrackNumber)
                     return
-                    return
 
                 case .setAudioTrack:
-                    let audioTrackNumber = arguments("audioTrackNumber") as? Int ?? 0
-                    self.player.currentAudioTrackIndex = audioTrackNumber
+                    let audioTrackNumber = arguments["audioTrackNumber"] as? Int ?? 0
+                    self.player.currentAudioTrackIndex = Int32(audioTrackNumber)
                     // self.player.audioChannel = audioTrackNumber
                     result(nil)
                     return
 
                 case .setAudioDelay:
-                    let audioDelayAsString = arguments("delay") as? String
+                    let audioDelayAsString = arguments["delay"] as? String
                     let audioDelay = NSNumber(value: (audioDelayAsString! as NSString).integerValue)
-                    self.player.currentAudioPlaybackDelay = audioDelay
+                    self.player.currentAudioPlaybackDelay = Int(truncating: audioDelay)
                     result(nil)
                     return
 
                 case .getAudioDelay:
                     let audioDelay = self.player.currentAudioPlaybackDelay
-                    result(souDelay)
+                    result(audioDelay)
                     return
 
                 case .getVideoTracksCount:
@@ -263,20 +269,21 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .getVideoTracks:
-                    let videoTracksNames = self.player.videoTrackNames
-                    let videoTracksIndexes = self.player.videoTrackIndexes
+                    let videoTracksNames = self.player.videoTrackNames as! [String]
+                    let videoTracksIndexes = self.player.videoTrackIndexes as! [Int32]
                     var videos: [Int: String] = [:]
-                    if videoTracksIndexes != nil {
-                        for index in videoTracksIndexes.indices {
-                            videos.put(videoTracksIndexes[index], videoTracksNames[index])
-                        }
-                    }
+                    var i = 0
+                    for index in videoTracksIndexes {
+                        let name = videoTracksNames[i]
+                        videos[Int(index)] = name
+                               i = i+1
+                           }
                     result(videos)
                     return
 
                 case .getCurrentVideoTrack:
-                    let videoTracks = self.player.videoTracks
-                    let videoTrackIndex = self.player.currentVideoTrackIndex
+//                    let videoTracks = self.player.videoTracks
+//                    let videoTrackIndex = self.player.currentVideoTrackIndex
                     // todo: look for videoTrackIndex in videoTracks array
                     result(nil)
                     return
@@ -298,8 +305,10 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
 
                 case .setVideoAspectRatio:
-                    let aspectRatio = arguments["aspect"] as? String
-                    self.player.setVideoAspectRatio(aspectRatio)
+                
+                    let aspectRatio = arguments["aspect"] as? NSString
+                    let aspectRatioConverted = UnsafeMutablePointer<Int8>(mutating: (aspectRatio)?.utf8String!)
+                    self.player.videoAspectRatio  = aspectRatioConverted
                     result(nil)
                     return
 
@@ -323,6 +332,9 @@ public class VLCView: NSObject, FlutterPlatformView {
                     result(FlutterMethodNotImplemented)
                     return
                 }
+            } else {
+                result(FlutterMethodNotImplemented)
+                return
             }
         }
 
