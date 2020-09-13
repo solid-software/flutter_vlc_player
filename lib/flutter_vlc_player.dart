@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:wasm';
 
 import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/foundation.dart';
@@ -517,13 +518,17 @@ class VlcPlayerController {
   }
 
   Future<int> getSpuTracksCount() async {
-    var result = await _methodChannel.invokeMethod("getSpuTracksCount");
+    var result = await _methodChannel.invokeMethod("getSpuTracksCount", {
+      'getSpuTracksCount':'getSpuTracksCount',
+    });
     return result;
   }
 
   Future<Map<dynamic, dynamic>> getSpuTracks() async {
     Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getSpuTracks");
+        await _methodChannel.invokeMethod("getSpuTracks", {
+          'getSpuTracks':'getSpuTracks',
+        });
     return list;
   }
 
@@ -534,7 +539,9 @@ class VlcPlayerController {
   }
 
   Future<int> getSpuTrack() async {
-    var result = await _methodChannel.invokeMethod("getSpuTrack");
+    var result = await _methodChannel.invokeMethod("getSpuTrack",{
+       'getSpuTrack':'getSpuTrack',
+    });
     return result;
   }
 
@@ -559,13 +566,18 @@ class VlcPlayerController {
   }
 
   Future<int> getAudioTracksCount() async {
-    var result = await _methodChannel.invokeMethod("getAudioTracksCount");
+    var result = await _methodChannel.invokeMethod("getAudioTracksCount",
+    {
+      'getAudioTracksCount':'getAudioTracksCount'
+    });
     return result;
   }
 
   Future<Map<dynamic, dynamic>> getAudioTracks() async {
     Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getAudioTracks");
+        await _methodChannel.invokeMethod("getAudioTracks", {
+          'getAudioTracks': 'getAudiotracks'
+        });
     return list;
   }
 
