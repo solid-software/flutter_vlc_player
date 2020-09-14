@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:wasm';
 
 import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/foundation.dart';
@@ -513,8 +512,8 @@ class VlcPlayerController {
   Future<Map<dynamic, dynamic>> getSpuTracks() async {
     Map<dynamic, dynamic> list =
         await _methodChannel.invokeMethod("getSpuTracks", {
-          'getSpuTracks':'getSpuTracks',
-        });
+      'getSpuTracks': 'getSpuTracks',
+    });
     return list;
   }
 
@@ -550,18 +549,14 @@ class VlcPlayerController {
   }
 
   Future<int> getAudioTracksCount() async {
-    var result = await _methodChannel.invokeMethod("getAudioTracksCount",
-    {
-      'getAudioTracksCount':'getAudioTracksCount'
-    });
+    var result = await _methodChannel.invokeMethod(
+        "getAudioTracksCount", {'getAudioTracksCount': 'getAudioTracksCount'});
     return result;
   }
 
   Future<Map<dynamic, dynamic>> getAudioTracks() async {
-    Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getAudioTracks", {
-          'getAudioTracks': 'getAudiotracks'
-        });
+    Map<dynamic, dynamic> list = await _methodChannel
+        .invokeMethod("getAudioTracks", {'getAudioTracks': 'getAudiotracks'});
     return list;
   }
 

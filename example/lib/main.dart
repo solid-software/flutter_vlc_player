@@ -236,33 +236,51 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               ],
             ),
             Divider(height: 1),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FlatButton(
-                  child: Text('Start Cast'),
-                  onPressed: () async {
-                    await _videoViewController.startCastDiscovery();
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text("Cast Started")));
-                  },
-                ),
-                FlatButton(
-                  child: Text('Get Cast Devices'),
-                  onPressed: () {
-                    _getCastDevices();
-                  },
-                ),
-                FlatButton(
-                  child: Text('Stop Cast'),
-                  onPressed: () async {
-                    await _videoViewController.stopCastDiscovery();
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text("Cast Stopped")));
-                  },
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: FlatButton(
+                      color: Colors.greenAccent,
+                      padding: EdgeInsets.all(5),
+                      child: Text('Start Discovery'),
+                      onPressed: () async {
+                        await _videoViewController.startCastDiscovery();
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Cast Discovery Started")));
+                      },
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: FlatButton(
+                      color: Colors.blueAccent,
+                      padding: EdgeInsets.all(5),
+                      child: Text('Get Cast Devices'),
+                      onPressed: () {
+                        _getCastDevices();
+                      },
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: FlatButton(
+                      color: Colors.redAccent,
+                      padding: EdgeInsets.all(5),
+                      child: Text('Stop Discovery'),
+                      onPressed: () async {
+                        await _videoViewController.stopCastDiscovery();
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Cast Discovery Stopped")));
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             Divider(height: 1),
             image == null ? Container() : Container(child: Image.memory(image)),

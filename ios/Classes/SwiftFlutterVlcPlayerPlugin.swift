@@ -23,6 +23,11 @@ public class VLCView: NSObject, FlutterPlatformView {
     private var player: VLCMediaPlayer
     private var eventChannelHandler: VLCPlayerEventStreamHandler
     private var aspectSet = false
+    //
+    private static var HW_ACCELERATION_AUTOMATIC = -1
+    private static var HW_ACCELERATION_DISABLED = 0
+    private static var HW_ACCELERATION_DECODING = 1
+    private static var HW_ACCELERATION_FULL = 2
     
     public init(withFrame _: CGRect, withRegistrar registrar: FlutterPluginRegistrar, withId id: Int64) {
         self.registrar = registrar
@@ -39,37 +44,57 @@ public class VLCView: NSObject, FlutterPlatformView {
             
             guard let self = self else { return }
             
-            if let arguments = call.arguments as?[String:Any] {
+            if let arguments = call.arguments as? [String: Any] {
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
                     
-                    guard let urlString = arguments["url"] as? String, let url = URL(string: urlString) else {
-                        result(FlutterError(code: "500",
-                                            message: "Url is need to initialization",
-                                            details: nil)
-                        )
-                        return
+                    var options = arguments["options"] as? [String] ?? []
+//                    let autoplay = arguments["autoplay"] as? Bool ?? true
+//                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
+                    let subtitleString = arguments["subtitle"] as? String ?? ""
+//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
+                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
+                    let loop = arguments["loop"] as? Bool ?? false
+                    if loop {
+                        options.append("--input-repeat=65535")
                     }
                     
+                    guard let urlString = arguments["url"] as? String,
+                        let url = URL(string: urlString)
+                        else {
+                            result(FlutterError(code: "500",
+                                                message: "Url is need to initialization",
+                                                details: nil)
+                            )
+                            return
+                    }
                     let media = VLCMedia(url: url)
+                    
+                    for option in options {
+                        media.addOption(option)
+                    }
+                    let hardwareAcceleration = arguments["hwAcc"] as? Int32 ?? -1
+                    if hardwareAcceleration != VLCView.HW_ACCELERATION_AUTOMATIC {
+                        if hardwareAcceleration == VLCView.HW_ACCELERATION_DISABLED {
+                            media.addOption("--codec=avcodec")
+                        } else if hardwareAcceleration == VLCView.HW_ACCELERATION_FULL || hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
+                            media.addOption("--codec=all")
+                            if hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
+                                media.addOption(":no-mediacodec-dr")
+                                media.addOption(":no-omxil-dr")
+                            }
+                        }
+                    }
+                    media.addOption(":input-fast-seek")
                     
                     self.player.media = media
                     self.player.position = 0.5
                     self.player.drawable = self.hostedView
                     self.player.delegate = self.eventChannelHandler
                     
-                    result(nil)
-                    return
-                    
-                case .setPlaybackState:
-                    let playbackState = arguments["playbackState"] as? String
-                    
-                    if playbackState == "play" {
-                        self.player.play()
-                    } else if playbackState == "pause" {
-                        self.player.pause()
-                    } else if playbackState == "stop" {
-                        self.player.stop()
+                    if !subtitleString.isEmpty{
+                        let subtitleUrl = URL(string: subtitleString)
+                        self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
                     }
                     
                     result(nil)
@@ -79,24 +104,32 @@ public class VLCView: NSObject, FlutterPlatformView {
                     self.player.stop()
                     return
                     
-                case .isPlaying:
-                    result(self.player.isPlaying)
-                    return
-                    
                 case .changeURL:
+                    let isPlaying = self.player.isPlaying
                     self.player.stop()
                     
                     guard let urlString = arguments["url"] as? String, let url = URL(string: urlString) else {
                         result(FlutterError(code: "500",
-                                            message: "Url is need to initialization",
+                                            message: "Url is need for initialization",
                                             details: nil)
                         )
                         return
                     }
+//                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
+                    let subtitleString = arguments["subtitle"] as? String ?? ""
+//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
+                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
                     
                     let media = VLCMedia(url: url)
-                    
                     self.player.media = media
+                    if !subtitleString.isEmpty
+                    {
+                        let subtitleUrl = URL(string: subtitleString)
+                        self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
+                    }
+                    if isPlaying{
+                        self.player.play()
+                    }
                     result(nil)
                     return
                     
@@ -115,8 +148,27 @@ public class VLCView: NSObject, FlutterPlatformView {
                     let byteArray = (image ?? UIImage()).pngData()
                     
                     result([
-                        "snapshot": byteArray?.base64EncodedString()
+                        "snapshot": byteArray?.base64EncodedString(),
                     ])
+                    return
+                    
+                case .setPlaybackState:
+                    let playbackState = arguments["playbackState"] as? String
+                    
+                    if playbackState == "play" {
+                        self.player.play()
+                    } else if playbackState == "pause" {
+                        self.player.pause()
+                    } else if playbackState == "stop" {
+                        self.player.stop()
+                    }
+                    
+                    result(nil)
+                    return
+                    
+                    
+                case .isPlaying:
+                    result(self.player.isPlaying)
                     return
                     
                 case .setPlaybackSpeed:
@@ -140,18 +192,19 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .getTime:
-                    let time = self.player.time.value
+                    let time = self.player.time.value.intValue
                     result(time)
                     return
                     
                 case .getDuration:
-                    let length = self.player.media.length
+                    let length = self.player.media.length.intValue
                     result(length)
                     return
                     
                 case .setVolume:
-                    let setVolume = arguments["volume"] as? Int32
-                    self.player.audio.volume = setVolume ?? 100
+                    var setVolume = arguments["volume"] as? Int32 ?? 100
+                    setVolume = max(0, min(100, setVolume))
+                    self.player.audio.volume = setVolume
                     result(nil)
                     return
                     
@@ -165,12 +218,9 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .getSpuTracks:
-
                     let subtitles = self.player.subtitles()
-                    
                     result(subtitles)
                     return
-                    
                     
                 case .setSpuTrack:
                     let spuTrackNumber = arguments["spuTrackNumber"] as? Int ?? 0
@@ -185,31 +235,31 @@ public class VLCView: NSObject, FlutterPlatformView {
                     
                 case .setSpuDelay:
                     let spuDelayAsString = arguments["delay"] as? String
-                    let souDelay = NSNumber(value: (spuDelayAsString! as NSString).integerValue)
-                    self.player.currentVideoSubTitleDelay = Int(truncating: souDelay)
+                    let spuDelay = NSNumber(value: (spuDelayAsString! as NSString).integerValue)
+                    self.player.currentVideoSubTitleDelay = Int(truncating: spuDelay)
                     result(nil)
                     return
                     
                 case .getSpuDelay:
-                    let souDelay = self.player.currentVideoSubTitleDelay
-                    result(souDelay)
+                    let spuDelay = self.player.currentVideoSubTitleDelay
+                    result(spuDelay)
                     return
                     
                 case .addSubtitleTrack:
-                    guard let  urlString = arguments["subtitlePath"] as? String, let url = URL(string: urlString) else {
-                        
+//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool
+                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
+                    guard let subtitleString = arguments["subtitlePath"] as? String,
+                        let subtitleUrl = URL(string: subtitleString) else {
                         result(FlutterError(code: "500",
                                             message: "subtitle file path failed",
                                             details: nil)
                         )
                         return
                     }
-                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool
-                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool
-                    self.player.addPlaybackSlave(url, type: .subtitle, enforce: isSubtitleSelected ?? false)
-                    // if isLocalSubtitle {
-                    //     self.player.openVideoSubTitlesFromFile(subtitle)
-                    // }
+                    self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
+//                     if isLocalSubtitle {
+//                         self.player.openVideoSubTitlesFromFile(subtitle)
+//                     }
                     result(nil)
                     return
                     
@@ -256,9 +306,11 @@ public class VLCView: NSObject, FlutterPlatformView {
                     var videos: [Int: String] = [:]
                     var i = 0
                     for index in videoTracksIndexes {
-                        let name = videoTracksNames[i]
-                        videos[Int(index)] = name
-                        i = i+1
+                        if index >= 0 {
+                            let name = videoTracksNames[i]
+                            videos[Int(index)] = name
+                        }
+                        i = i + 1
                     }
                     result(videos)
                     return
@@ -266,7 +318,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                 case .getCurrentVideoTrack:
                     //                    let videoTracks = self.player.videoTracks
                     //                    let videoTrackIndex = self.player.currentVideoTrackIndex
-                    // todo: look for videoTrackIndex in videoTracks array
+                    // TODO: look for videoTrackIndex in videoTracks array
                     result(nil)
                     return
                     
@@ -287,10 +339,9 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .setVideoAspectRatio:
-                    
                     let aspectRatio = arguments["aspect"] as? NSString
                     let aspectRatioConverted = UnsafeMutablePointer<Int8>(mutating: (aspectRatio)?.utf8String!)
-                    self.player.videoAspectRatio  = aspectRatioConverted
+                    self.player.videoAspectRatio = aspectRatioConverted
                     result(nil)
                     return
                     
@@ -350,9 +401,9 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         var height = 0
         var width = 0
         
-        let audioTracksCount =  player?.numberOfAudioTracks ?? 0
-        let activeAudioTrack =  player?.audioChannel ?? 0
-        let spuTracksCount =  player?.numberOfSubtitlesTracks ?? 0
+        let audioTracksCount = player?.numberOfAudioTracks ?? 0
+        let activeAudioTrack = player?.currentAudioTrackIndex ?? 0
+        let spuTracksCount = player?.numberOfSubtitlesTracks ?? 0
         let activeSpuTrack = player?.currentVideoSubTitleIndex ?? 0
         
         if player?.currentVideoTrackIndex != -1 {
@@ -367,8 +418,11 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
             }
         }
         
+        let rate = player?.rate ?? 1
+        let time = player?.time?.value?.intValue ?? 0
+        
         switch player?.state {
-        case .esAdded, .buffering:
+        case .esAdded:
             return
             
         case .opening:
@@ -408,6 +462,15 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
                 "reason": "EndReached",
             ])
             return
+            
+        case .buffering:
+            eventSink([
+                "name": "timeChanged",
+                "value": NSNumber(value: time),
+                "speed": NSNumber(value: rate),
+            ])
+            return
+            
         case .error:
             eventSink(FlutterError(code: "500",
                                    message: "Player State got an error",
@@ -448,7 +511,6 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
     }
 }
 
-
 public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
     private var registrar: FlutterPluginRegistrar?
     
@@ -469,94 +531,88 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
 }
 
 enum FlutterMethodCallOption: String {
-    case initialize = "initialize"
-    case dispose = "dispose"
-    case changeURL = "changeURL"
-    case getSnapshot = "getSnapshot"
-    case setPlaybackState = "setPlaybackState"
-    case isPlaying = "isPlaying"
-    case setPlaybackSpeed = "setPlaybackSpeed"
-    case getPlaybackSpeed = "getPlaybackSpeed"
-    case setTime = "setTime"
-    case getTime = "getTime"
-    case getDuration = "getDuration"
-    case setVolume = "setVolume"
-    case getVolume = "getVolume"
-    case getSpuTracksCount = "getSpuTracksCount"
-    case getSpuTracks = "getSpuTracks"
-    case setSpuTrack = "setSpuTrack"
-    case getSpuTrack = "getSpuTrack"
-    case setSpuDelay = "setSpuDelay"
-    case getSpuDelay = "getSpuDelay"
-    case addSubtitleTrack = "addSubtitleTrack"
-    case getAudioTracksCount = "getAudioTracksCount"
-    case getAudioTracks = "getAudioTracks"
-    case getAudioTrack = "getAudioTrack"
-    case setAudioTrack = "setAudioTrack"
-    case setAudioDelay = "setAudioDelay"
-    case getAudioDelay = "getAudioDelay"
-    case getVideoTracksCount = "getVideoTracksCount"
-    case getVideoTracks = "getVideoTracks"
-    case getCurrentVideoTrack = "getCurrentVideoTrack"
-    case getVideoTrack = "getVideoTrack"
-    case setVideoScale = "setVideoScale"
-    case getVideoScale = "getVideoScale"
-    case setVideoAspectRatio = "setVideoAspectRatio"
-    case getVideoAspectRatio = "getVideoAspectRatio"
-    case startCastDiscovery = "startCastDiscovery"
-    case stopCastDiscovery = "stopCastDiscovery"
-    case getCastDevices = "getCastDevices"
-    case startCasting = "startCasting"
+    case initialize
+    case dispose
+    case changeURL
+    case getSnapshot
+    case setPlaybackState
+    case isPlaying
+    case setPlaybackSpeed
+    case getPlaybackSpeed
+    case setTime
+    case getTime
+    case getDuration
+    case setVolume
+    case getVolume
+    case getSpuTracksCount
+    case getSpuTracks
+    case setSpuTrack
+    case getSpuTrack
+    case setSpuDelay
+    case getSpuDelay
+    case addSubtitleTrack
+    case getAudioTracksCount
+    case getAudioTracks
+    case getAudioTrack
+    case setAudioTrack
+    case setAudioDelay
+    case getAudioDelay
+    case getVideoTracksCount
+    case getVideoTracks
+    case getCurrentVideoTrack
+    case getVideoTrack
+    case setVideoScale
+    case getVideoScale
+    case setVideoAspectRatio
+    case getVideoAspectRatio
+    case startCastDiscovery
+    case stopCastDiscovery
+    case getCastDevices
+    case startCasting
 }
 
-
-extension VLCMediaPlayer
-{
-
-    
-    func subtitles() -> [ Int: String] {
+extension VLCMediaPlayer {
+    func subtitles() -> [Int: String] {
         guard let indexs = videoSubTitlesIndexes as? [Int],
-              let names = videoSubTitlesNames as? [String],
-              indexs.count == names.count else {
-            return [:]
+            let names = videoSubTitlesNames as? [String],
+            indexs.count == names.count
+            else {
+                return [:]
         }
-        
         
         var subtitles: [Int: String] = [:]
         
-        var i = 0;
+        var i = 0
         for index in indexs {
-            let name = names[i]
-            subtitles[Int(index)] = name
-            i = i+1
+            if index >= 0 {
+                let name = names[i]
+                subtitles[Int(index)] = name
+            }
+            i = i + 1
         }
         
         return subtitles
     }
     
-    
-    func audioTracks() -> [Int:String] {
+    func audioTracks() -> [Int: String] {
         guard let indexs = audioTrackIndexes as? [Int],
-              let names = audioTrackNames as? [String],
-              indexs.count == names.count else {
-            return [:]
+            let names = audioTrackNames as? [String],
+            indexs.count == names.count
+            else {
+                return [:]
         }
         
+        var audios: [Int: String] = [:]
         
-        var subtitles: [Int: String] = [:]
-        
-        var i = 0;
+        var i = 0
         for index in indexs {
-            let name = names[i]
-            subtitles[Int(index)] = name
-            i = i+1
+            if index >= 0 {
+                let name = names[i]
+                audios[Int(index)] = name
+            }
+            i = i + 1
         }
         
-        return subtitles
+        return audios
     }
-    
-    
-    
 }
-
-

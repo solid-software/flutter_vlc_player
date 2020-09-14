@@ -193,91 +193,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         methodChannel.setMethodCallHandler(this);
     }
 
-//    private void changeSurfaceSize(int width, int height) {
-//        int screenWidth = width;
-//        int screenHeight = height;
-//        mVideoWidth = width;
-//        mVideoHeight = height;
-//        mVideoVisibleWidth = width;
-//        mVideoVisibleHeight = height;
-//
-//        if (mMediaPlayer != null) {
-//            final IVLCVout vlcVout = mMediaPlayer.getVLCVout();
-//            vlcVout.setWindowSize(screenWidth, screenHeight);
-//        }
-//
-//        double displayWidth = screenWidth, displayHeight = screenHeight;
-//
-//        if (screenWidth < screenHeight) {
-//            displayWidth = screenHeight;
-//            displayHeight = screenWidth;
-//        }
-//
-//        // sanity check
-//        if (displayWidth * displayHeight <= 1 || mVideoWidth * mVideoHeight <= 1) {
-//            return;
-//        }
-//
-//        // compute the aspect ratio
-//        double aspectRatio, visibleWidth;
-//        if (mSarDen == mSarNum) {
-//            /* No indication about the density, assuming 1:1 */
-//            visibleWidth = mVideoVisibleWidth;
-//            aspectRatio = (double) mVideoVisibleWidth / (double) mVideoVisibleHeight;
-//        } else {
-//            /* Use the specified aspect ratio */
-//            visibleWidth = mVideoVisibleWidth * (double) mSarNum / mSarDen;
-//            aspectRatio = visibleWidth / mVideoVisibleHeight;
-//        }
-//
-//        // compute the display aspect ratio
-//        double displayAspectRatio = displayWidth / displayHeight;
-//
-//        counter++;
-//
-//        switch (mCurrentSize) {
-//            case SURFACE_BEST_FIT:
-//                if (counter > 2) if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
-//                else displayWidth = displayHeight * aspectRatio;
-//                break;
-//            case SURFACE_FIT_HORIZONTAL:
-//                displayHeight = displayWidth / aspectRatio;
-//                break;
-//            case SURFACE_FIT_VERTICAL:
-//                displayWidth = displayHeight * aspectRatio;
-//                break;
-//            case SURFACE_FILL:
-//                break;
-//            case SURFACE_16_9:
-//                aspectRatio = 16.0 / 9.0;
-//                if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
-//                else displayWidth = displayHeight * aspectRatio;
-//                break;
-//            case SURFACE_4_3:
-//                aspectRatio = 4.0 / 3.0;
-//                if (displayAspectRatio < aspectRatio) displayHeight = displayWidth / aspectRatio;
-//                else displayWidth = displayHeight * aspectRatio;
-//                break;
-//            case SURFACE_ORIGINAL:
-//                displayHeight = mVideoVisibleHeight;
-//                displayWidth = visibleWidth;
-//                break;
-//        }
-//
-//        // set display size
-//        int finalWidth = (int) Math.ceil(displayWidth * mVideoWidth / mVideoVisibleWidth);
-//        int finalHeight = (int) Math.ceil(displayHeight * mVideoHeight / mVideoVisibleHeight);
-//
-//        SurfaceHolder holder = mSurface.getHolder();
-//        holder.setFixedSize(finalWidth, finalHeight);
-//
-//        ViewGroup.LayoutParams lp = mSurface.getLayoutParams();
-//        lp.width = finalWidth;
-//        lp.height = finalHeight;
-//        mSurface.setLayoutParams(lp);
-//        mSurface.invalidate();
-//    }
-
     @Override
     public View getView() {
         return textureView;
@@ -373,18 +288,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "dispose":
                 this.dispose();
                 break;
-            case "changeSound":
-                int audioNumber = Integer.parseInt((String) methodCall.argument("audioNumber"));
-                mediaPlayer.setAudioTrack(audioNumber);
-                break;
-            case "changeSubtitle":
-                int subtitleNumber = Integer.parseInt((String) methodCall.argument("subtitleNumber"));
-                mediaPlayer.setSpuTrack(subtitleNumber);
-                break;
-            case "addSubtitle":
-                String filePath =(String) methodCall.argument("filePath");
-                mediaPlayer.addSlave(0,filePath,true);
-                break;
+
             case "changeURL":
                 if (libVLC == null)
                     result.error("VLC_NOT_INITIALIZED", "The player has not yet been initialized.", false);
