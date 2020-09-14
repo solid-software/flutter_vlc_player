@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:wasm';
 
 import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/foundation.dart';
@@ -511,7 +512,9 @@ class VlcPlayerController {
 
   Future<Map<dynamic, dynamic>> getSpuTracks() async {
     Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getSpuTracks");
+        await _methodChannel.invokeMethod("getSpuTracks", {
+          'getSpuTracks':'getSpuTracks',
+        });
     return list;
   }
 
@@ -547,13 +550,18 @@ class VlcPlayerController {
   }
 
   Future<int> getAudioTracksCount() async {
-    var result = await _methodChannel.invokeMethod("getAudioTracksCount");
+    var result = await _methodChannel.invokeMethod("getAudioTracksCount",
+    {
+      'getAudioTracksCount':'getAudioTracksCount'
+    });
     return result;
   }
 
   Future<Map<dynamic, dynamic>> getAudioTracks() async {
     Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getAudioTracks");
+        await _methodChannel.invokeMethod("getAudioTracks", {
+          'getAudioTracks': 'getAudiotracks'
+        });
     return list;
   }
 
@@ -621,7 +629,8 @@ class VlcPlayerController {
   }
 
   Future<Uint8List> takeSnapshot() async {
-    var result = await _methodChannel.invokeMethod("getSnapshot");
+    var result =
+        await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
     var base64String = result['snapshot'];
     Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
