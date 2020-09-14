@@ -204,18 +204,6 @@ class VlcPlayerController {
   MethodChannel _methodChannel;
   EventChannel _eventChannel;
 
-  int get audioCount => _audioCount;
-  int _audioCount = 1;
-
-  int get activeAudioNum => _activeAudioNum;
-  int _activeAudioNum = 1;
-
-  int get activeSubtitleNum => _activeSubtitleNum;
-  int _activeSubtitleNum;
-
-  int get subtitleCount => _subtitleCount;
-  int _subtitleCount = 0;
-
   VoidCallback _onInit;
   CastCallback _onCastHandler;
   List<VoidCallback> _eventHandlers;
@@ -518,9 +506,7 @@ class VlcPlayerController {
   }
 
   Future<int> getSpuTracksCount() async {
-    var result = await _methodChannel.invokeMethod("getSpuTracksCount", {
-      'getSpuTracksCount':'getSpuTracksCount',
-    });
+    var result = await _methodChannel.invokeMethod("getSpuTracksCount");
     return result;
   }
 
@@ -539,9 +525,7 @@ class VlcPlayerController {
   }
 
   Future<int> getSpuTrack() async {
-    var result = await _methodChannel.invokeMethod("getSpuTrack",{
-       'getSpuTrack':'getSpuTrack',
-    });
+    var result = await _methodChannel.invokeMethod("getSpuTrack");
     return result;
   }
 
