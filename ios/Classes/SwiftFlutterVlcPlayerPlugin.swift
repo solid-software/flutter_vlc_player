@@ -376,7 +376,7 @@ public class VLCView: NSObject, FlutterPlatformView {
     }
 }
 
-class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate {
+class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
     private var eventSink: FlutterEventSink?
     
     func onListen(withArguments _: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -509,6 +509,17 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
             ])
         }
     }
+    
+    //TODO handle item discovery
+    func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+    }
+    
+    func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+    }
+    
+    
 }
 
 public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
@@ -615,4 +626,23 @@ extension VLCMediaPlayer {
         
         return audios
     }
+    
+    func startCastDiscovery() {
+
+     
+         guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+         else {
+             print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+             return
+         }
+         guard rendererDiscoverer.start() else {
+             print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+             return
+         }
+        
+        //here
+        //rendererDiscoverer.delegate = self?
+        //rendererDiscoverer.delegate =  eventChannelHandler ?
+         discoverers.append(rendererDiscoverer)
+     }
 }
