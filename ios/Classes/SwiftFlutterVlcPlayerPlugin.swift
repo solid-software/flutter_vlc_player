@@ -45,6 +45,9 @@ public class VLCView: NSObject, FlutterPlatformView {
             guard let self = self else { return }
             
             if let arguments = call.arguments as? [String: Any] {
+                
+                
+                
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
                     
@@ -350,6 +353,8 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .startCastDiscovery:
+                    
+                    startCastDiscovery(delegate: self.eventChannelHandler)
                     return
                     
                 case .stopCastDiscovery:
@@ -375,6 +380,24 @@ public class VLCView: NSObject, FlutterPlatformView {
         return hostedView
     }
 }
+
+func startCastDiscovery(delegate: VLCRendererDiscovererDelegate) {
+
+ 
+     guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+     else {
+         print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+         return
+     }
+     guard rendererDiscoverer.start() else {
+         print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+         return
+     }
+    
+    //here
+    rendererDiscoverer.delegate =  delegate
+    //discoverers.append(rendererDiscoverer)
+ }
 
 class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
     private var eventSink: FlutterEventSink?
@@ -627,22 +650,5 @@ extension VLCMediaPlayer {
         return audios
     }
     
-    func startCastDiscovery() {
 
-     
-         guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
-         else {
-             print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
-             return
-         }
-         guard rendererDiscoverer.start() else {
-             print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
-             return
-         }
-        
-        //here
-        //rendererDiscoverer.delegate = self?
-        //rendererDiscoverer.delegate =  eventChannelHandler ?
-         discoverers.append(rendererDiscoverer)
-     }
 }

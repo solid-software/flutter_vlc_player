@@ -632,7 +632,7 @@ class VlcPlayerController {
   }
 
   Future<void> startCastDiscovery() async {
-    await _methodChannel.invokeMethod("startCastDiscovery");
+    await _methodChannel.invokeMethod("startCastDiscovery", {"startCastDiscovery":"startCastDiscovery"});
   }
 
   Future<void> stopCastDiscovery() async {
