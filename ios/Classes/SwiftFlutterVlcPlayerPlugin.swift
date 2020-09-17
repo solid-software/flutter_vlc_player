@@ -44,6 +44,30 @@ public class VLCView: NSObject, FlutterPlatformView {
         eventChannelHandler = VLCPlayerEventStreamHandler()
     }
     
+    public func startCasting(castDeviceName:String)
+    {
+        if ( self.player.isPlaying )
+        {
+            self.player.pause()
+        }
+        
+        var castItems = self.eventChannelHandler.getRenderItems()
+        var i=0
+        var castItemRenderItem: VLCRendererItem? = nil
+        for castitem in castItems {
+            let name = castItems[i].name
+            if ( name.contains(castDeviceName))
+            {
+                castItemRenderItem = castItems[i]
+            }
+            i = i + 1
+        }
+        
+        self.player.setRendererItem(castItemRenderItem)
+        self.player.play()
+        
+    }
+    
     public func view() -> UIView {
         channel.setMethodCallHandler {
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
@@ -381,6 +405,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                     
                 case .stopCastDiscovery:
                     self.strongRef = nil
+                    self.player.setRendererItem(nil)
                     return
                     
                 case .getCastDevices:
@@ -398,6 +423,10 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .startCasting:
+                    let castDeviceName = arguments["castDevice"] as? String
+
+                    self.startCasting(castDeviceName: castDeviceName ?? "error")
+                    
                     return
                     
                 default:
