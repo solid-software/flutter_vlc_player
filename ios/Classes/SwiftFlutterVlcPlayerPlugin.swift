@@ -15,6 +15,8 @@ public class SwiftFlutterVlcPlayerPlugin: NSObject, FlutterPlugin {
 }
 
 public class VLCView: NSObject, FlutterPlatformView {
+   
+
     @IBOutlet private var hostedView: UIView!
     private var vlcMediaPlayer: VLCMediaPlayer!
     private var registrar: FlutterPluginRegistrar
@@ -28,6 +30,10 @@ public class VLCView: NSObject, FlutterPlatformView {
     private static var HW_ACCELERATION_DISABLED = 0
     private static var HW_ACCELERATION_DECODING = 1
     private static var HW_ACCELERATION_FULL = 2
+    
+    var rendererItems: [VLCRendererItem] = [VLCRendererItem]()
+    var discoverers: [VLCRendererDiscoverer] = [VLCRendererDiscoverer]()
+    var strongRef: VLCRendererDiscoverer?
     
     public init(withFrame _: CGRect, withRegistrar registrar: FlutterPluginRegistrar, withId id: Int64) {
         self.registrar = registrar
@@ -44,6 +50,8 @@ public class VLCView: NSObject, FlutterPlatformView {
             
             guard let self = self else { return }
             
+            
+           
             if let arguments = call.arguments as? [String: Any] {
                 
                 
@@ -353,14 +361,40 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .startCastDiscovery:
+                    guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+                    else {
+                        print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+                        return
+                    }
+                    guard rendererDiscoverer.start() else {
+                        print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+                        return
+                    }
+                   
+                   //here
+                  
+                    rendererDiscoverer.delegate = self.eventChannelHandler
+                    self.strongRef = rendererDiscoverer
                     
-                    startCastDiscovery(delegate: self.eventChannelHandler)
+                    //
                     return
                     
                 case .stopCastDiscovery:
+                    self.strongRef = nil
                     return
                     
                 case .getCastDevices:
+                    var castDescriptions: [Int: String] = [:]
+                    var castItems = self.eventChannelHandler.getRenderItems()
+                    var i=0
+                    for castitem in castItems {
+                        let name = castItems[i].name
+                        castDescriptions[Int(i)] = name
+                        i = i + 1
+                    }
+                    
+                   
+                    result(castDescriptions)
                     return
                     
                 case .startCasting:
@@ -381,7 +415,8 @@ public class VLCView: NSObject, FlutterPlatformView {
     }
 }
 
-func startCastDiscovery(delegate: VLCRendererDiscovererDelegate) {
+var strongRef: VLCRendererDiscoverer?
+func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
 
  
      guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
@@ -395,11 +430,33 @@ func startCastDiscovery(delegate: VLCRendererDiscovererDelegate) {
      }
     
     //here
+   
     rendererDiscoverer.delegate =  delegate
-    //discoverers.append(rendererDiscoverer)
+    strongRef = rendererDiscoverer
+    
+  
  }
 
 class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
+    
+    var renderItems:[VLCRendererItem] = [VLCRendererItem]()
+    
+    func getRenderItems() -> [VLCRendererItem]
+    {
+        return renderItems
+    }
+    
+    func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+        renderItems.append(item)
+
+    }
+    
+    func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+
+    }
+    
     private var eventSink: FlutterEventSink?
     
     func onListen(withArguments _: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -533,15 +590,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         }
     }
     
-    //TODO handle item discovery
-    func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
-        print(item.name)
-    }
-    
-    func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
-        print(item.name)
-    }
-    
+
     
 }
 
