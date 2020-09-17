@@ -647,7 +647,7 @@ class VlcPlayerController {
 
   Future<void> startCasting(String castDevice) async {
     await _methodChannel.invokeMethod("startCasting", {
-      'castDevice': castDevice,
+      'startCasting': castDevice,
     });
   }
 

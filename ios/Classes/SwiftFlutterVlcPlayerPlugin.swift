@@ -423,7 +423,7 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .startCasting:
-                    let castDeviceName = arguments["castDevice"] as? String
+                    let castDeviceName = arguments["startCasting"] as? String
 
                     self.startCasting(castDeviceName: castDeviceName ?? "error")
                     
