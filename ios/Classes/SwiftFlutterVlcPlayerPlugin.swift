@@ -18,7 +18,7 @@ public class VLCView: NSObject, FlutterPlatformView {
    
 
     @IBOutlet private var hostedView: UIView!
-    private var vlcMediaPlayer: VLCMediaPlayer!
+//    private var vlcMediaPlayer: VLCMediaPlayer!
     private var registrar: FlutterPluginRegistrar
     private var channel: FlutterMethodChannel
     private var eventChannel: FlutterEventChannel
@@ -46,26 +46,14 @@ public class VLCView: NSObject, FlutterPlatformView {
     
     public func startCasting(castDeviceName:String)
     {
-        if ( self.player.isPlaying )
+        if (self.player.isPlaying)
         {
             self.player.pause()
         }
-        
-        var castItems = self.eventChannelHandler.getRenderItems()
-        var i=0
-        var castItemRenderItem: VLCRendererItem? = nil
-        for castitem in castItems {
-            let name = castItems[i].name
-            if ( name.contains(castDeviceName))
-            {
-                castItemRenderItem = castItems[i]
-            }
-            i = i + 1
-        }
-        
+        let castItems = self.eventChannelHandler.getRenderItems()
+        let castItemRenderItem = castItems.first { $0.name.contains(castDeviceName) }
         self.player.setRendererItem(castItemRenderItem)
         self.player.play()
-        
     }
     
     public func view() -> UIView {
@@ -74,11 +62,7 @@ public class VLCView: NSObject, FlutterPlatformView {
             
             guard let self = self else { return }
             
-            
-           
             if let arguments = call.arguments as? [String: Any] {
-                
-                
                 
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
@@ -336,18 +320,8 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .getVideoTracks:
-                    let videoTracksNames = self.player.videoTrackNames as! [String]
-                    let videoTracksIndexes = self.player.videoTrackIndexes as! [Int32]
-                    var videos: [Int: String] = [:]
-                    var i = 0
-                    for index in videoTracksIndexes {
-                        if index >= 0 {
-                            let name = videoTracksNames[i]
-                            videos[Int(index)] = name
-                        }
-                        i = i + 1
-                    }
-                    result(videos)
+                    let videoTracks = self.player.videoTracks()
+                    result(videoTracks)
                     return
                     
                 case .getCurrentVideoTrack:
@@ -394,39 +368,41 @@ public class VLCView: NSObject, FlutterPlatformView {
                         print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
                         return
                     }
-                   
-                   //here
-                  
                     rendererDiscoverer.delegate = self.eventChannelHandler
                     self.strongRef = rendererDiscoverer
-                    
-                    //
+                    result(nil)
                     return
                     
                 case .stopCastDiscovery:
                     self.strongRef = nil
+                    self.player.pause()
+                    // todo : should we stop renderer discoveres also (stop is deprecated?!)
                     self.player.setRendererItem(nil)
+                    self.rendererItems.removeAll()
+                    self.discoverers.removeAll()
+                    result(nil)
                     return
                     
                 case .getCastDevices:
+                    // todo: which one to use
                     var castDescriptions: [Int: String] = [:]
-                    var castItems = self.eventChannelHandler.getRenderItems()
-                    var i=0
-                    for castitem in castItems {
-                        let name = castItems[i].name
-                        castDescriptions[Int(i)] = name
-                        i = i + 1
+                    let castItems = self.eventChannelHandler.getRenderItems()
+                    for (index, item) in castItems.enumerated() {
+                        castDescriptions[Int(index)] = item.name
                     }
-                    
-                   
+                    /*
+                     var castDescriptions: [String: String] = [:]
+                     let castItems = self.eventChannelHandler.getRenderItems()
+                     for (_, item) in castItems.enumerated() {
+                        castDescriptions[item.name] = item.description
+                     }*/
                     result(castDescriptions)
                     return
                     
                 case .startCasting:
                     let castDeviceName = arguments["startCasting"] as? String
-
                     self.startCasting(castDeviceName: castDeviceName ?? "error")
-                    
+                    result(nil)
                     return
                     
                 default:
@@ -447,7 +423,6 @@ public class VLCView: NSObject, FlutterPlatformView {
 var strongRef: VLCRendererDiscoverer?
 func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
 
- 
      guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
      else {
          print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
@@ -456,14 +431,10 @@ func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
      guard rendererDiscoverer.start() else {
          print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
          return
-     }
-    
+    }
     //here
-   
     rendererDiscoverer.delegate =  delegate
     strongRef = rendererDiscoverer
-    
-  
  }
 
 class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
@@ -476,14 +447,13 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
     }
     
     func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
-        print(item.name)
         renderItems.append(item)
-
     }
     
     func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
-        print(item.name)
-
+        if let index = renderItems.firstIndex(of: item) {
+            renderItems.remove(at: index)
+        }
     }
     
     private var eventSink: FlutterEventSink?
@@ -728,5 +698,27 @@ extension VLCMediaPlayer {
         return audios
     }
     
+    func videoTracks() -> [Int: String]{
+        
+        guard let indexs = videoTrackIndexes as? [Int],
+            let names = videoTrackNames as? [String],
+            indexs.count == names.count
+            else {
+                return [:]
+        }
+        
+        var videos: [Int: String] = [:]
+        
+        var i = 0
+        for index in indexs {
+            if index >= 0 {
+                let name = names[i]
+                videos[Int(index)] = name
+            }
+            i = i + 1
+        }
+        
+        return videos
+    }
 
 }

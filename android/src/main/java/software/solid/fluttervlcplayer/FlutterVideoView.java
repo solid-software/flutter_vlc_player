@@ -533,7 +533,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 break;
 
             case "startCasting":
-                String castDevice = methodCall.argument("castDevice");
+                String castDevice = methodCall.argument("startCasting");
                 startCasting(castDevice);
                 result.success(null);
                 break;
