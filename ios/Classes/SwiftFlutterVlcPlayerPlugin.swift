@@ -15,6 +15,8 @@ public class SwiftFlutterVlcPlayerPlugin: NSObject, FlutterPlugin {
 }
 
 public class VLCView: NSObject, FlutterPlatformView {
+   
+
     @IBOutlet private var hostedView: UIView!
     private var vlcMediaPlayer: VLCMediaPlayer!
     private var registrar: FlutterPluginRegistrar
@@ -29,6 +31,10 @@ public class VLCView: NSObject, FlutterPlatformView {
     private static var HW_ACCELERATION_DECODING = 1
     private static var HW_ACCELERATION_FULL = 2
     
+    var rendererItems: [VLCRendererItem] = [VLCRendererItem]()
+    var discoverers: [VLCRendererDiscoverer] = [VLCRendererDiscoverer]()
+    var strongRef: VLCRendererDiscoverer?
+    
     public init(withFrame _: CGRect, withRegistrar registrar: FlutterPluginRegistrar, withId id: Int64) {
         self.registrar = registrar
         hostedView = UIView()
@@ -38,13 +44,42 @@ public class VLCView: NSObject, FlutterPlatformView {
         eventChannelHandler = VLCPlayerEventStreamHandler()
     }
     
+    public func startCasting(castDeviceName:String)
+    {
+        if ( self.player.isPlaying )
+        {
+            self.player.pause()
+        }
+        
+        var castItems = self.eventChannelHandler.getRenderItems()
+        var i=0
+        var castItemRenderItem: VLCRendererItem? = nil
+        for castitem in castItems {
+            let name = castItems[i].name
+            if ( name.contains(castDeviceName))
+            {
+                castItemRenderItem = castItems[i]
+            }
+            i = i + 1
+        }
+        
+        self.player.setRendererItem(castItemRenderItem)
+        self.player.play()
+        
+    }
+    
     public func view() -> UIView {
         channel.setMethodCallHandler {
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             
             guard let self = self else { return }
             
+            
+           
             if let arguments = call.arguments as? [String: Any] {
+                
+                
+                
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
                     
@@ -350,15 +385,48 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .startCastDiscovery:
+                    guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+                    else {
+                        print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+                        return
+                    }
+                    guard rendererDiscoverer.start() else {
+                        print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+                        return
+                    }
+                   
+                   //here
+                  
+                    rendererDiscoverer.delegate = self.eventChannelHandler
+                    self.strongRef = rendererDiscoverer
+                    
+                    //
                     return
                     
                 case .stopCastDiscovery:
+                    self.strongRef = nil
+                    self.player.setRendererItem(nil)
                     return
                     
                 case .getCastDevices:
+                    var castDescriptions: [Int: String] = [:]
+                    var castItems = self.eventChannelHandler.getRenderItems()
+                    var i=0
+                    for castitem in castItems {
+                        let name = castItems[i].name
+                        castDescriptions[Int(i)] = name
+                        i = i + 1
+                    }
+                    
+                   
+                    result(castDescriptions)
                     return
                     
                 case .startCasting:
+                    let castDeviceName = arguments["startCasting"] as? String
+
+                    self.startCasting(castDeviceName: castDeviceName ?? "error")
+                    
                     return
                     
                 default:
@@ -376,7 +444,48 @@ public class VLCView: NSObject, FlutterPlatformView {
     }
 }
 
-class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate {
+var strongRef: VLCRendererDiscoverer?
+func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
+
+ 
+     guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+     else {
+         print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+         return
+     }
+     guard rendererDiscoverer.start() else {
+         print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+         return
+     }
+    
+    //here
+   
+    rendererDiscoverer.delegate =  delegate
+    strongRef = rendererDiscoverer
+    
+  
+ }
+
+class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
+    
+    var renderItems:[VLCRendererItem] = [VLCRendererItem]()
+    
+    func getRenderItems() -> [VLCRendererItem]
+    {
+        return renderItems
+    }
+    
+    func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+        renderItems.append(item)
+
+    }
+    
+    func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
+        print(item.name)
+
+    }
+    
     private var eventSink: FlutterEventSink?
     
     func onListen(withArguments _: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -509,6 +618,9 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
             ])
         }
     }
+    
+
+    
 }
 
 public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
@@ -615,4 +727,6 @@ extension VLCMediaPlayer {
         
         return audios
     }
+    
+
 }
