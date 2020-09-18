@@ -384,18 +384,11 @@ public class VLCView: NSObject, FlutterPlatformView {
                     return
                     
                 case .getCastDevices:
-                    // todo: which one to use
-                    var castDescriptions: [Int: String] = [:]
+                    var castDescriptions: [String: String] = [:]
                     let castItems = self.eventChannelHandler.getRenderItems()
-                    for (index, item) in castItems.enumerated() {
-                        castDescriptions[Int(index)] = item.name
+                    for (_, item) in castItems.enumerated() {
+                        castDescriptions[item.name] = item.name
                     }
-                    /*
-                     var castDescriptions: [String: String] = [:]
-                     let castItems = self.eventChannelHandler.getRenderItems()
-                     for (_, item) in castItems.enumerated() {
-                        castDescriptions[item.name] = item.description
-                     }*/
                     result(castDescriptions)
                     return
                     

@@ -632,16 +632,18 @@ class VlcPlayerController {
   }
 
   Future<void> startCastDiscovery() async {
-    await _methodChannel.invokeMethod("startCastDiscovery", {"startCastDiscovery":"startCastDiscovery"});
+    await _methodChannel.invokeMethod(
+        "startCastDiscovery", {"startCastDiscovery": "startCastDiscovery"});
   }
 
   Future<void> stopCastDiscovery() async {
-    await _methodChannel.invokeMethod("stopCastDiscovery", {"stopCastDiscovery":"stopCastDiscovery"});
+    await _methodChannel.invokeMethod(
+        "stopCastDiscovery", {"stopCastDiscovery": "stopCastDiscovery"});
   }
 
   Future<Map<dynamic, dynamic>> getCastDevices() async {
-    Map<dynamic, dynamic> list =
-        await _methodChannel.invokeMethod("getCastDevices", {"getCastDevices":"getCastDevices"});
+    Map<dynamic, dynamic> list = await _methodChannel
+        .invokeMethod("getCastDevices", {"getCastDevices": "getCastDevices"});
     return list;
   }
 
