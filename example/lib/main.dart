@@ -29,8 +29,6 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
 //  String initUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
 //  String initUrl = "/storage/emulated/0/Download/Test.mp4";
 //  String initUrl = "/sdcard/Download/Test.mp4";
-  String initUrl2 =
-      "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
 
   String changeUrl =
       "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
@@ -46,7 +44,9 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   int numberOfCaptions = 0;
   int numberOfAudioTracks = 0;
   bool isBuffering = true;
+  bool getCastDeviceBtnEnabled = false;
 
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     _videoViewController = new VlcPlayerController(onInit: () {
@@ -80,11 +80,8 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
             break;
 
           case PlayingState.STOPPED:
-            if ((oPosition.inSeconds.compareTo(oDuration.inSeconds) >= 0) &&
-                (oDuration != Duration.zero)) {
-              isPlaying = false;
-            }
             setState(() {
+              isPlaying = false;
               isBuffering = false;
             });
             break;
@@ -114,6 +111,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: const Text('Plugin example app'),
       ),
@@ -295,8 +293,11 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                       ),
                       onPressed: () async {
                         await _videoViewController.startCastDiscovery();
-                        Scaffold.of(context).showSnackBar(
+                        _scaffoldKey.currentState.showSnackBar(
                             SnackBar(content: Text("Cast Discovery Started")));
+                        setState(() {
+                          getCastDeviceBtnEnabled = true;
+                        });
                       },
                     ),
                   ),
@@ -309,9 +310,11 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                         style: TextStyle(fontSize: 12),
                         textAlign: TextAlign.center,
                       ),
-                      onPressed: () {
-                        _getCastDevices();
-                      },
+                      onPressed: !getCastDeviceBtnEnabled
+                          ? null
+                          : () {
+                              _getCastDevices();
+                            },
                     ),
                   ),
                   Flexible(
@@ -325,8 +328,11 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                       ),
                       onPressed: () async {
                         await _videoViewController.stopCastDiscovery();
-                        Scaffold.of(context).showSnackBar(
+                        _scaffoldKey.currentState.showSnackBar(
                             SnackBar(content: Text("Cast Discovery Stopped")));
+                        setState(() {
+                          getCastDeviceBtnEnabled = false;
+                        });
                       },
                     ),
                   )
@@ -495,6 +501,9 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
       await _videoViewController.startCasting(
         selectedCastDeviceName,
       );
+    } else {
+      _scaffoldKey.currentState
+          .showSnackBar(SnackBar(content: Text("No Cast Device Found!")));
     }
   }
 

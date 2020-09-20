@@ -28,13 +28,13 @@ int getHwAcc({@required HwAcc hwAcc}) {
   }
 }
 
-class Size {
+class VlcMediaSize {
   final int width;
   final int height;
 
-  static const zero = const Size(0, 0);
+  static const zero = const VlcMediaSize(0, 0);
 
-  const Size(int width, int height)
+  const VlcMediaSize(int width, int height)
       : this.width = width,
         this.height = height;
 }
@@ -254,10 +254,10 @@ class VlcPlayerController {
 
   /// This is the dimensions of the content (height and width) as returned by LibVLC.
   ///
-  /// Returns [Size.zero] when the size is null
+  /// Returns [VlcMediaSize.zero] when the size is null
   /// (i.e. the player is uninitialized.)
-  Size get size => _size != null ? _size : Size.zero;
-  Size _size;
+  VlcMediaSize get size => _size != null ? _size : VlcMediaSize.zero;
+  VlcMediaSize _size;
 
   /// This is the aspect ratio of the content as returned by LibVLC.
   /// Not to be confused with the aspect ratio provided to the [VlcPlayer]
@@ -360,7 +360,7 @@ class VlcPlayerController {
       switch (event['name']) {
         case 'playing':
           if (event['width'] != null && event['height'] != null)
-            _size = new Size(event['width'], event['height']);
+            _size = new VlcMediaSize(event['width'], event['height']);
           if (event['length'] != null) _duration = event['length'];
           if (event['ratio'] != null) _aspectRatio = event['ratio'];
           if (event['audioTracksCount'] != null)

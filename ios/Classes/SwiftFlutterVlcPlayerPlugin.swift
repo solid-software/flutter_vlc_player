@@ -412,7 +412,7 @@ public class VLCView: NSObject, FlutterPlatformView {
         return hostedView
     }
 }
-
+/*
 var strongRef: VLCRendererDiscoverer?
 func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
 
@@ -429,7 +429,7 @@ func startCastDiscovery(delegate:  VLCRendererDiscovererDelegate ) {
     rendererDiscoverer.delegate =  delegate
     strongRef = rendererDiscoverer
  }
-
+*/
 class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCRendererDiscovererDelegate {
     
     var renderItems:[VLCRendererItem] = [VLCRendererItem]()
@@ -441,12 +441,26 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
     
     func rendererDiscovererItemAdded(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
         renderItems.append(item)
+        //
+        guard let eventSink = self.eventSink else { return }
+        eventSink([
+            "name": "castItemAdded",
+            "value": item.name,
+            "displayName" : item.name
+        ])
     }
     
     func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
         if let index = renderItems.firstIndex(of: item) {
             renderItems.remove(at: index)
         }
+        //
+        guard let eventSink = self.eventSink else { return }
+        eventSink([
+            "name": "castItemDeleted",
+            "value": item.name,
+            "displayName" : item.name
+        ])
     }
     
     private var eventSink: FlutterEventSink?

@@ -314,13 +314,11 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             case "getSnapshot":
                 String imageBytes;
                 Map<String, String> response = new HashMap<>();
-                if (mediaPlayer.isPlaying()) {
-                    Bitmap bitmap = textureView.getBitmap();
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    imageBytes = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-                    response.put("snapshot", imageBytes);
-                }
+                Bitmap bitmap = textureView.getBitmap();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                imageBytes = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+                response.put("snapshot", imageBytes);
                 result.success(response);
                 break;
 
