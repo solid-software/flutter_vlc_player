@@ -1,8 +1,12 @@
 #  VLC Player Plugin
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
-<img src="img_example_v4.jpg" height="400">
-<img src="imgpsh_mobile_save.jfif?raw=true" height="400">
+<p float="left">
+  <img src="img_example_v4.jpg" height="400">
+  <img src="imgpsh_mobile_save.jfif?raw=true" height="400">
+</p>
+
+
 
 ## Installation
 
@@ -14,9 +18,7 @@ To upgrade to version 4.0 (or v3.0), first you need to migrate the existing proj
 
 This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
 
-<br>
 <hr>
-<br>
 
 ## Breaking Changes (from V3 to V4)
 1) Player Stop/Pause status is seperated 
@@ -47,9 +49,7 @@ This command will create only ios directory with swift support. See https://stac
     addSubtitle(String filePath) -> addSubtitleTrack(String subtitlePath, ...)
 
 
-<br/>
 <hr>
-<br/>
 
 ### iOS
 For iOS, you need to opt into the Flutter embedded views preview.  
@@ -88,9 +88,7 @@ To enable vlc cast functionality for external displays (chromecast), you should 
 </array>
 ```
 
-<br/>
 <hr>
-<br/>
 
 ### Android
 To load media/subitle from an internet source, your app will need the `INTERNET` permission.  
@@ -119,9 +117,7 @@ After that you can access the media/subtitle file by
     "/storage/emulated/0/{FilePath}"
     "/sdcard/{FilePath}"
 
-<br>
 <hr>
-<br>
 
 ## Quick Start
 To start using the plugin, copy this code or follow the [example](https://github.com/solid-software/flutter_vlc_player/tree/master/example):
