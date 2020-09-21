@@ -107,19 +107,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 public void run() {
                     if (vout == null) return;
                     vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-//                    vout.setWindowSize(textureView.getWidth(), textureView.getHeight());
-//                    ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) textureView.getLayoutParams();
-//                    lp.width = 300;
-//                    lp.height = 300;
-//                    textureView.setLayoutParams(lp);
-//                    textureView.invalidate();
                     vout.attachViews();
                     textureView.forceLayout();
-//                    if (wasPlaying)
-                    {
-                        mediaPlayer.play();
-                        wasPlaying = false;
-                    }
+                    mediaPlayer.play();
+                    wasPlaying = false;
                 }
             };
 
@@ -165,30 +156,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
         });
 
-        /*
-        textureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-
-                }
-            }
-        });
-
-        textureView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        break;
-                }
-                return true;
-            }
-        });*/
-
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
     }
@@ -205,7 +172,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
             mediaPlayer.setEventListener(null);
         }
         if (vout != null) {
-//            vout.removeCallback(this);
             vout.detachViews();
         }
         playerDisposed = true;
@@ -248,17 +214,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 textureView.forceLayout();
                 textureView.setFitsSystemWindows(true);
                 vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-//                vout.addCallback(new IVLCVout.Callback() {
-//                    @Override
-//                    public void onSurfacesCreated(IVLCVout vout) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onSurfacesDestroyed(IVLCVout vout) {
-//
-//                    }
-//                });
                 vout.attachViews();
                 //
                 String initStreamURL = methodCall.argument("url");

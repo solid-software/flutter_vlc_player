@@ -275,34 +275,36 @@ class VlcPlayerController {
 
   double get playbackSpeed => _playbackSpeed;
 
-  /// This is the number of audio tracks embedded in the video
+  /// Returns the number of available audio tracks embedded in media except the original audio.
   int _audioTracksCount = 1;
 
   int get audioTracksCount => _audioTracksCount - 1;
 
-  /// this is the id of active audio track
+  /// Returns the active audio track index. "-1" means audio is disabled.
   int _activeAudioTrack = 1;
 
   int get activeAudioTrack => _activeAudioTrack;
 
-  /// This is the number of spu tracks embedded in the video
+  /// Returns the number of available subtitle tracks embedded in media.
   int _spuTracksCount = 0;
 
   int get spuTracksCount => _spuTracksCount;
 
-  /// this is the id of active spu track
+  /// Returns the active subitlte track index. "-1" means subitle is disabled.
   int _activeSpuTrack = 0;
 
   int get activeSpuTrack => _activeSpuTrack;
 
-  VlcPlayerController(
-      {
+  VlcPlayerController({
+    /// This is a callback that will be executed once the platform view has been initialized.
+    /// If you want the media to play as soon as the platform view has initialized, you could just call
+    /// [VlcPlayerController.play] in this callback. (see the example)
+    VoidCallback onInit,
 
-      /// This is a callback that will be executed once the platform view has been initialized.
-      /// If you want the media to play as soon as the platform view has initialized, you could just call
-      /// [VlcPlayerController.play] in this callback. (see the example)
-      VoidCallback onInit,
-      CastCallback onCastHandler}) {
+    /// This is a callback that will be executed every time a new cast device detected/removed
+    /// It should be defined as "void Function(CastStatus, String, String)", where the CastStatus is an enum { DEVICE_ADDED, DEVICE_DELETED } and the next two String arguments are name and displayName of cast device, respectively.
+    CastCallback onCastHandler,
+  }) {
     _onInit = onInit;
     _onCastHandler = onCastHandler;
     _eventHandlers = new List();
@@ -421,6 +423,14 @@ class VlcPlayerController {
     _onInit();
   }
 
+  /// This stops playback and changes the URL. Once the new URL has been loaded, the playback state will revert to
+  /// its state before the method was called. (i.e. if setStreamUrl is called whilst media is playing, once the new
+  /// URL has been loaded, the new stream will begin playing.)
+  /// [url] - the URL of the stream to start playing.
+  /// [isLocalMedia] - Set true if the media url is on local storage.
+  /// [subtitle] - Set subtitle url if you wanna add subtitle on media loading.
+  /// [isLocalSubtitle] - Set true if subtitle is on local storage
+  /// [isSubtitleSelected] - Set true if you wanna force the added subtitle to start display on media.
   Future<void> setStreamUrl(String url,
       {bool isLocalMedia,
       String subtitle,
@@ -443,72 +453,90 @@ class VlcPlayerController {
     _fireEventHandlers();
   }
 
+  /// Start playing media.
   Future<void> play() async {
     await _methodChannel.invokeMethod("setPlaybackState", {
       'playbackState': 'play',
     });
   }
 
+  /// Pause media player.
   Future<void> pause() async {
     await _methodChannel.invokeMethod("setPlaybackState", {
       'playbackState': 'pause',
     });
   }
 
+  /// Stop media player.
   Future<void> stop() async {
     await _methodChannel.invokeMethod("setPlaybackState", {
       'playbackState': 'stop',
     });
   }
 
+  /// Returns true if media is playing.
   Future<bool> isPlaying() async {
     var result = await _methodChannel.invokeMethod("isPlaying");
     return result;
   }
 
+  /// [time] - time in milliseconds to jump to.
   Future<void> setTime(int time) async {
     await _methodChannel.invokeMethod("setTime", {
       'time': time.toString(),
     });
   }
 
+  /// Returns current media seek time in milliseconds.
   Future<int> getTime() async {
     var result = await _methodChannel.invokeMethod("getTime");
     return result;
   }
 
+  /// Returns duration/length of loaded video in milliseconds.
   Future<int> getDuration() async {
     var result = await _methodChannel.invokeMethod("getDuration");
     return result;
   }
 
+  /// [volume] - Set vlc volume level which should be in range [0-100].
   Future<void> setVolume(int volume) async {
     await _methodChannel.invokeMethod("setVolume", {
       'volume': volume,
     });
   }
 
+  /// Returns current vlc volume level.
   Future<int> getVolume() async {
     var result = await _methodChannel.invokeMethod("getVolume");
     return result;
   }
 
+  /// [speed] - the rate at which VLC should play media.
+  /// For reference:
+  /// 2.0 is double speed.
+  /// 1.0 is normal speed.
+  /// 0.5 is half speed.
   Future<void> setPlaybackSpeed(double speed) async {
     await _methodChannel.invokeMethod("setPlaybackSpeed", {
       'speed': speed.toString(),
     });
   }
 
+  /// Returns the vlc playback speed.
   Future<double> getPlaybackSpeed() async {
     var result = await _methodChannel.invokeMethod("getPlaybackSpeed");
     return result;
   }
 
+  /// Return the number of subtitle tracks (both embedded and inserted)
   Future<int> getSpuTracksCount() async {
     var result = await _methodChannel.invokeMethod("getSpuTracksCount");
     return result;
   }
 
+  /// Return all subtitle tracks as array of <Int, String>
+  /// The key parameter is the index of subtitle which is used for changing subtitle and the value is the display name of subtitle
   Future<Map<dynamic, dynamic>> getSpuTracks() async {
     Map<dynamic, dynamic> list =
         await _methodChannel.invokeMethod("getSpuTracks", {
@@ -517,28 +545,37 @@ class VlcPlayerController {
     return list;
   }
 
+  /// Change active subtitle index (set -1 to disable subtitle).
+  /// [spuTrackNumber] - the subtitle index obtained from getSpuTracks()
   Future<void> setSpuTrack(int spuTrackNumber) async {
     await _methodChannel.invokeMethod("setSpuTrack", {
       'spuTrackNumber': spuTrackNumber,
     });
   }
 
+  /// Returns selected spu track index
   Future<int> getSpuTrack() async {
     var result = await _methodChannel.invokeMethod("getSpuTrack");
     return result;
   }
 
+  /// [delay] - the amount of time in milliseconds which vlc subtitle should be delayed. (both positive & negative value appliable)
   Future<void> setSpuDelay(int delay) async {
     await _methodChannel.invokeMethod("setSpuDelay", {
       'delay': delay.toString(),
     });
   }
 
+  /// Returns the amount of subtitle time delay.
   Future<int> getSpuDelay() async {
     var result = await _methodChannel.invokeMethod("getSpuDelay");
     return result;
   }
 
+  /// Add extra subtitle to media.
+  /// [subtitlePath] - URL of subtitle
+  /// [isLocalSubtitle] - Set true if subtitle is on local storage
+  /// [isSubtitleSelected] - Set true if you wanna force the added subtitle to start display on media.
   Future<void> addSubtitleTrack(String subtitlePath,
       {bool isLocalSubtitle, bool isSubtitleSelected}) async {
     await _methodChannel.invokeMethod("addSubtitleTrack", {
@@ -548,81 +585,101 @@ class VlcPlayerController {
     });
   }
 
+  /// Returns the number of audio tracks
   Future<int> getAudioTracksCount() async {
     var result = await _methodChannel.invokeMethod(
         "getAudioTracksCount", {'getAudioTracksCount': 'getAudioTracksCount'});
     return result;
   }
 
+  /// Returns all audio tracks as array of <Int, String>
+  /// The key parameter is the index of audio track which is used for changing audio and the value is the display name of audio
   Future<Map<dynamic, dynamic>> getAudioTracks() async {
     Map<dynamic, dynamic> list = await _methodChannel
         .invokeMethod("getAudioTracks", {'getAudioTracks': 'getAudiotracks'});
     return list;
   }
 
+  /// Returns selected audio track index
   Future<int> getAudioTrack() async {
     var result = await _methodChannel.invokeMethod("getAudioTrack");
     return result;
   }
 
+  /// Change active audio track index (set -1 to mute).
+  /// [audioTrackNumber] - the audio track index obtained from getAudioTracks()
   Future<void> setAudioTrack(int audioTrackNumber) async {
     await _methodChannel.invokeMethod("setAudioTrack", {
       'audioTrackNumber': audioTrackNumber,
     });
   }
 
+  /// [delay] - the amount of time in milliseconds which vlc audio should be delayed. (both positive & negative value appliable)
   Future<void> setAudioDelay(int delay) async {
     await _methodChannel.invokeMethod("setAudioDelay", {
       'delay': delay.toString(),
     });
   }
 
+  /// Returns the amount of audio track time delay.
   Future<int> getAudioDelay() async {
     var result = await _methodChannel.invokeMethod("getAudioDelay");
     return result;
   }
 
+  /// Returns the number of video tracks
   Future<int> getVideoTracksCount() async {
     var result = await _methodChannel.invokeMethod("getVideoTracksCount");
     return result;
   }
 
+  /// Returns all video tracks as array of <Int, String>
+  /// The key parameter is the index of video track and the value is the display name of video track
   Future<Map<dynamic, dynamic>> getVideoTracks() async {
     Map<dynamic, dynamic> list =
         await _methodChannel.invokeMethod("getVideoTracks");
     return list;
   }
 
+  /// Returns an object which contains information about current video track
   Future<dynamic> getCurrentVideoTrack() async {
     return await _methodChannel.invokeMethod("getCurrentVideoTrack");
   }
 
+  /// Returns selected video track index
   Future<int> getVideoTrack() async {
     return await _methodChannel.invokeMethod("getVideoTrack");
   }
 
+  /// [scale] - the video scale value
+  /// Set video scale
   Future<void> setVideoScale(double scale) async {
     await _methodChannel.invokeMethod("setVideoScale", {
       'scale': scale.toString(),
     });
   }
 
+  /// Returns video scale
   Future<double> getVideoScale() async {
     var result = await _methodChannel.invokeMethod("getVideoScale");
     return result;
   }
 
+  /// [aspect] - the video apect ratio like "16:9"
+  /// Set video aspect ratio
   Future<void> setVideoAspectRatio(String aspect) async {
     await _methodChannel.invokeMethod("setVideoAspectRatio", {
       'aspect': aspect,
     });
   }
 
+  /// Returns video aspect ratio
   Future<String> getVideoAspectRatio() async {
     var result = await _methodChannel.invokeMethod("getVideoAspectRatio");
     return result;
   }
 
+  /// Returns binary data for a snapshot of the media at the current frame.
   Future<Uint8List> takeSnapshot() async {
     var result =
         await _methodChannel.invokeMethod("getSnapshot", {'getSnapShot': ''});
@@ -631,28 +688,35 @@ class VlcPlayerController {
     return imageBytes;
   }
 
+  /// Start vlc cast discovery to find external display devices (chromecast)
   Future<void> startCastDiscovery() async {
     await _methodChannel.invokeMethod(
         "startCastDiscovery", {"startCastDiscovery": "startCastDiscovery"});
   }
 
+  /// Stop vlc cast and cast discovery
   Future<void> stopCastDiscovery() async {
     await _methodChannel.invokeMethod(
         "stopCastDiscovery", {"stopCastDiscovery": "stopCastDiscovery"});
   }
 
+  /// Returns all detected cast devices as array of <String, String>
+  /// The key parameter is the name of cast device and the value is the display name of cast device
   Future<Map<dynamic, dynamic>> getCastDevices() async {
     Map<dynamic, dynamic> list = await _methodChannel
         .invokeMethod("getCastDevices", {"getCastDevices": "getCastDevices"});
     return list;
   }
 
+  /// [castDevice] - name of cast device
+  /// Start vlc video casting to the selected device. Set null if you wanna to stop video casting.
   Future<void> startCasting(String castDevice) async {
     await _methodChannel.invokeMethod("startCasting", {
       'startCasting': castDevice,
     });
   }
 
+  /// Disposes the platform view and unloads the VLC player.
   Future<void> dispose() async {
     await _methodChannel.invokeMethod("dispose");
   }

@@ -268,8 +268,8 @@ VlcPlayerController({
   int duration = Duration.zero;
 
   /// This is the dimensions of the content (height and width).
-  /// (SAFE) This value is always safe to use - it is set to Size.zero when the player is uninitialized.
-  Size size = Size.zero;
+  /// (SAFE) This value is always safe to use - it is set to VlcMediaSize.zero when the player is uninitialized.
+  VlcMediaSize size = VlcMediaSize.zero;
 
   /// This is the aspect ratio of the content as returned by VLC once the content has been loaded.
   /// (Not to be confused with the aspect ratio provided to the [VlcPlayer] widget, which is simply used for an
@@ -293,18 +293,23 @@ VlcPlayerController({
   int activeSpuTrack;
 
   /*** METHODS ***/
-  /// [url] - the URL of the stream to start playing.
   /// This stops playback and changes the URL. Once the new URL has been loaded, the playback state will revert to
   /// its state before the method was called. (i.e. if setStreamUrl is called whilst media is playing, once the new
   /// URL has been loaded, the new stream will begin playing.)
+  /// [url] - the URL of the stream to start playing.
   /// [isLocalMedia] - Set true if the media url is on local storage.
   /// [subtitle] - Set subtitle url if you wanna add subtitle on media loading.
   /// [isLocalSubtitle] - Set true if subtitle is on local storage
   /// [isSubtitleSelected] - Set true if you wanna force the added subtitle to start display on media.
   Future<void> setStreamUrl(String url, {bool isLocalMedia, String subtitle, bool isLocalSubtitle, bool isSubtitleSelected});
 
+  /// Start playing media.
   Future<void> play();
+
+  /// Pause media player.
   Future<void> pause();
+  
+  /// Stop media player.
   Future<void> stop();
 
   /// Returns true if media is playing.
@@ -403,7 +408,7 @@ VlcPlayerController({
   /// Returns video scale
   Future<double> getVideoScale();
 
-  /// [aspect] - the video apect ratio
+  /// [aspect] - the video apect ratio like "16:9"
   /// Set video aspect ratio
   Future<void> setVideoAspectRatio(String aspect);
 
