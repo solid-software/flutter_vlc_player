@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "software.solid.fluttervlcplayerexample"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
