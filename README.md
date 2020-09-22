@@ -2,54 +2,13 @@
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
 <p float="left">
-  <img src="img_example_v4.jpg" height="400">
-  <img src="imgpsh_mobile_save.jfif?raw=true" height="400">
+  <img src="https://github.com/solid-software/flutter_vlc_player/blob/master/img_example_v4.jpg?raw=true" height="400">
+  <img src="https://github.com/solid-software/flutter_vlc_player/blob/master/imgpsh_mobile_save.jfif?raw=true" height="400">
 </p>
 
 
 
 ## Installation
-
-### Version 4.0 Upgrade For Existing Apps
-To upgrade to version 4.0 (or v3.0), first you need to migrate the existing project to swift.
-
-    Delete existing ios folder from root of flutter project.
-    Run this command flutter create -i swift .
-
-This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
-
-<hr>
-
-## Breaking Changes (from V3 to V4)
-1) Player Stop/Pause status is seperated 
-
-    previously (v3 and lower): Stop/Pause -> STOPPED,
-    <br>
-    now (v4): Stop -> STOPPED and Pause -> PAUSED. 
-
-2) Refactored belowing attributes & methods
-
-    // attributes
-    <br>
-    audioCount -> audioTracksCount
-    <br>
-    activeAudioNum -> activeAudioTrack
-    <br>
-    subtitleCount -> spuTracksCount
-    <br>
-    activeSubtitleNum -> activeSpuTrack
-    <br>
-    <br>
-    // methods
-    <br>
-    changeSound(int audioNumber) -> setAudioTrack(int audioTrackNumber)
-    <br>
-    changeSubtitle(int subtitleNumber) -> setSpuTrack(int spuTrackNumber)
-    <br>
-    addSubtitle(String filePath) -> addSubtitleTrack(String subtitlePath, ...)
-
-
-<hr>
 
 ### iOS
 For iOS, you need to opt into the Flutter embedded views preview.  
@@ -437,6 +396,49 @@ VlcPlayerController({
 
 }
 ```
+
+## Upgrade instructions
+
+### Version 4.0 Upgrade For Existing Apps
+To upgrade to version 4.0 (or v3.0), first you need to migrate the existing project to swift.
+
+    Delete existing ios folder from root of flutter project.
+    Run this command flutter create -i swift .
+
+This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
+
+<hr>
+
+### Breaking Changes (from V3 to V4)
+1) Player Stop/Pause status is seperated 
+
+    previously (v3 and lower): Stop/Pause -> STOPPED,
+    <br>
+    now (v4): Stop -> STOPPED and Pause -> PAUSED. 
+
+2) Refactored belowing attributes & methods
+
+    // attributes
+    <br>
+    audioCount -> audioTracksCount
+    <br>
+    activeAudioNum -> activeAudioTrack
+    <br>
+    subtitleCount -> spuTracksCount
+    <br>
+    activeSubtitleNum -> activeSpuTrack
+    <br>
+    <br>
+    // methods
+    <br>
+    changeSound(int audioNumber) -> setAudioTrack(int audioTrackNumber)
+    <br>
+    changeSubtitle(int subtitleNumber) -> setSpuTrack(int spuTrackNumber)
+    <br>
+    addSubtitle(String filePath) -> addSubtitleTrack(String subtitlePath, ...)
+
+
+<hr>
 
 ## Current issues
 Current issues list [is here](https://github.com/solid-software/flutter_vlc_player/issues).   
