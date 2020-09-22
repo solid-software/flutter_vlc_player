@@ -1,3 +1,12 @@
+## 4.0.0
+* Improved structure (see example for breaking changes). Example code updated also.
+* Fix android black screen issue
+* Support playing local media/subtitle file
+* Support casting media to external device
+* Updated changing audio/subtitle method
+* Support audio/subtitle delay
+credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
+
 ## 3.0.7
 * Updates MobileVLC to allow for changing of subtitles and adding subtiles . 
 credits to @rikaweb(https://github.com/rikaweb) and Mitch Ross (https://github.com/mitchross)
