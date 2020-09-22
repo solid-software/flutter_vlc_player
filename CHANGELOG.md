@@ -1,3 +1,6 @@
+## 4.0.1
+* Improved documentation.
+
 ## 4.0.0
 * Improved structure (see example for breaking changes). Example code updated also.
 * Fix android black screen issue
