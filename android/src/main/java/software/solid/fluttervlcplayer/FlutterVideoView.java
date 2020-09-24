@@ -47,7 +47,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private static final int HW_ACCELERATION_DECODING = 1;
     private static final int HW_ACCELERATION_FULL = 2;
 
-    final PluginRegistry.Registrar registrar;
+    //final PluginRegistry.Registrar registrar;
     private final MethodChannel methodChannel;
 
     private QueuingEventSink eventSink;
@@ -72,11 +72,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
      */
     Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public FlutterVideoView(Context context, PluginRegistry.Registrar _registrar, BinaryMessenger messenger, int id) {
+    public FlutterVideoView( final Context context,
+                             BinaryMessenger messenger,
+                             int id,
+                             Map<String, Object> params,
+                             View containerView)
+    {
         this.playerDisposed = false;
 
         this.context = context;
-        this.registrar = _registrar;
+        //this.registrar = _registrar;
 
         eventSink = new QueuingEventSink();
         eventChannel = new EventChannel(messenger, "flutter_video_plugin/getVideoEvents_" + id);
@@ -95,6 +100,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
         );
 
+        containerView.create
         TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
         textureView = new TextureView(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
@@ -159,6 +165,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
     }
+
+
 
     @Override
     public View getView() {
