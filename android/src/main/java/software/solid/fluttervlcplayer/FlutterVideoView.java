@@ -29,6 +29,7 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.RendererDiscoverer;
 import org.videolan.libvlc.RendererItem;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
     private QueuingEventSink eventSink;
     private final EventChannel eventChannel;
+    TextureRegistry textureRegistry;
 
     private final Context context;
 
@@ -76,12 +78,14 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                              BinaryMessenger messenger,
                              int id,
                              Map<String, Object> params,
-                             View containerView)
+                             View containerView,
+                             TextureRegistry textureRegistry)
     {
         this.playerDisposed = false;
 
         this.context = context;
         //this.registrar = _registrar;
+        this.textureRegistry = textureRegistry;
 
         eventSink = new QueuingEventSink();
         eventChannel = new EventChannel(messenger, "flutter_video_plugin/getVideoEvents_" + id);
@@ -100,8 +104,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
                 }
         );
 
-        containerView.create
-        TextureRegistry.SurfaceTextureEntry textureEntry = registrar.textures().createSurfaceTexture();
+
+        TextureRegistry.SurfaceTextureEntry textureEntry = textureRegistry.createSurfaceTexture();
         textureView = new TextureView(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {

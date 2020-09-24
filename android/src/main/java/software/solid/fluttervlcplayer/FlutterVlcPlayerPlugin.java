@@ -19,7 +19,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin {
             .platformViewRegistry()
             .registerViewFactory(
                     "plugins.flutter.io/webview",
-                    new FlutterVideoViewFactory(registrar.messenger(), registrar.view()));
+                    new FlutterVideoViewFactory(registrar.messenger(), registrar.view(), registrar.textures()));
 
   }
 
@@ -31,7 +31,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin {
             .getPlatformViewsController()
             .getRegistry()
             .registerViewFactory(
-                    "flutter_video_plugin/getVideoView", new FlutterVideoViewFactory(messenger, /*containerView=*/ null));
+                    "flutter_video_plugin/getVideoView", new FlutterVideoViewFactory(messenger, /*containerView=*/ null, binding.getTextureRegistry()));
   }
 
   @Override
