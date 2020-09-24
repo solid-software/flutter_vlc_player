@@ -27,9 +27,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin {
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     BinaryMessenger messenger = binding.getBinaryMessenger();
     binding
-            .getFlutterEngine()
-            .getPlatformViewsController()
-            .getRegistry()
+            .getPlatformViewRegistry()
             .registerViewFactory(
                     "flutter_video_plugin/getVideoView", new FlutterVideoViewFactory(messenger, /*containerView=*/ null, binding.getTextureRegistry()));
   }
