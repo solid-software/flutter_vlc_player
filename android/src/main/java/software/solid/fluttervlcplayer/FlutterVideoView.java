@@ -67,12 +67,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private boolean autoplay = true;
     private boolean firstRun = true;
 
-    /**
-     * HACK: handler to call updateVideoSurfaces as soon as a video output
-     * is created. It is currently mandatory to have the video being displayed
-     * instead of a black screen.
-     */
-    Handler mHandler = new Handler(Looper.getMainLooper());
+
+
 
     public FlutterVideoView( final Context context,
                              BinaryMessenger messenger,
@@ -112,22 +108,16 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
             boolean wasPlaying = false;
 
-            private final Runnable mRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (vout == null) return;
-                    vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                    vout.attachViews();
-                    textureView.forceLayout();
-                    mediaPlayer.play();
-                    wasPlaying = false;
-                }
-            };
+
 
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                mHandler.removeCallbacks(mRunnable);
-                mHandler.postDelayed(mRunnable, 1000);
+                if (vout == null) return;
+                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+                vout.attachViews();
+                textureView.forceLayout();
+                mediaPlayer.play();
+                wasPlaying = false;
             }
 
             @Override
