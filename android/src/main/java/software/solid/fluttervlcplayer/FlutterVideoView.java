@@ -48,7 +48,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private static final int HW_ACCELERATION_DECODING = 1;
     private static final int HW_ACCELERATION_FULL = 2;
 
-    //final PluginRegistry.Registrar registrar;
+
     private final MethodChannel methodChannel;
 
     private QueuingEventSink eventSink;
@@ -84,7 +84,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         this.playerDisposed = false;
 
         this.context = context;
-        //this.registrar = _registrar;
+
         this.textureRegistry = textureRegistry;
 
         eventSink = new QueuingEventSink();

@@ -32,20 +32,5 @@ public final class FlutterVideoViewFactory extends PlatformViewFactory {
     }
 
 
-//    @Override
-//    public PlatformView create(Context context, int id, Object args) {
-//        final FlutterVideoView videoView = new FlutterVideoView(context, registrar, messenger, i);
-//
-//        registrar.addViewDestroyListener(
-//                new PluginRegistry.ViewDestroyListener() {
-//                    @Override
-//                    public boolean onViewDestroy(FlutterNativeView view) {
-//                        videoView.dispose();
-//                        return false; // We are not interested in assuming ownership of the NativeView.
-//                    }
-//                }
-//        );
-//
-//        return videoView;
-//    }
+
 }
