@@ -18,7 +18,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin {
     registrar
             .platformViewRegistry()
             .registerViewFactory(
-                    "plugins.flutter.io/webview",
+                    "flutter_video_plugin/getVideoView",
                     new FlutterVideoViewFactory(registrar.messenger(), registrar.view(), registrar.textures()));
 
   }
@@ -34,6 +34,8 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+
+
 
   }
 
