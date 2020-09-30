@@ -70,6 +70,7 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
 
 
+
     public FlutterVideoView( final Context context,
                              BinaryMessenger messenger,
                              int id,
@@ -101,60 +102,13 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         );
 
 
+
+
+
         TextureRegistry.SurfaceTextureEntry textureEntry = textureRegistry.createSurfaceTexture();
         textureView = new TextureView(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
-            boolean wasPlaying = false;
-
-
-
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if (vout == null) return;
-                vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
-                vout.attachViews();
-                textureView.forceLayout();
-                mediaPlayer.play();
-                wasPlaying = false;
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                if (playerDisposed) {
-                    if (mediaPlayer != null) {
-                        mediaPlayer.stop();
-                        mediaPlayer.setEventListener(null);
-                        mediaPlayer.getVLCVout().detachViews();
-                        mediaPlayer.release();
-                        libVLC.release();
-                        libVLC = null;
-                        mediaPlayer = null;
-                        vout = null;
-                    }
-                    return true;
-                } else {
-                    if (mediaPlayer != null && vout != null) {
-                        wasPlaying = mediaPlayer.isPlaying();
-                        mediaPlayer.pause();
-                        vout.detachViews();
-                    }
-                    return true;
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-
-        });
 
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
         methodChannel.setMethodCallHandler(this);
