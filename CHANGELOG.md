@@ -1,5 +1,5 @@
 ## 4.0.2
-* Update Cocoapods version for VLCkit on ios. This fixes issues with iOS 12 and Simulators. Credits to Mitch Ross (https://github.com/mitchross).
+* Update Cocoapods version for VLCkit on iOS. This fixes issues with iOS 12 and Simulators. Credits to Mitch Ross (https://github.com/mitchross).
 
 ## 4.0.1
 * Improved documentation.
