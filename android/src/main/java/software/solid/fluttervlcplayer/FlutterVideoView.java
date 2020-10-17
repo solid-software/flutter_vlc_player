@@ -20,6 +20,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.*;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
@@ -67,7 +68,8 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
     private boolean playerDisposed;
     private boolean autoplay = true;
     private boolean firstRun = true;
-
+    private View containerView;
+    Handler mHandler = new Handler(Looper.getMainLooper());
 
 
 
@@ -84,6 +86,10 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         this.context = context;
 
         this.textureRegistry = textureRegistry;
+
+        this.containerView = containerView;
+
+
 
         eventSink = new QueuingEventSink();
         eventChannel = new EventChannel(messenger, "flutter_video_plugin/getVideoEvents_" + id);
@@ -107,8 +113,69 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
 
 
         TextureRegistry.SurfaceTextureEntry textureEntry = textureRegistry.createSurfaceTexture();
+
         textureView = new TextureView(context);
+
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
+
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+
+            boolean wasPlaying = false;
+
+            private final Runnable mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (vout == null) return;
+                    vout.setVideoSurface(new Surface(textureView.getSurfaceTexture()), null);
+                    vout.attachViews();
+                    textureView.forceLayout();
+                    mediaPlayer.play();
+                    wasPlaying = false;
+                }
+            };
+
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                mHandler.removeCallbacks(mRunnable);
+                mHandler.postDelayed(mRunnable, 1000);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                Log.d("VIDEO", "surface texture size changes");
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                if (playerDisposed) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.stop();
+                        mediaPlayer.setEventListener(null);
+                        mediaPlayer.getVLCVout().detachViews();
+                        mediaPlayer.release();
+                        libVLC.release();
+                        libVLC = null;
+                        mediaPlayer = null;
+                        vout = null;
+                    }
+                    return true;
+                } else {
+                    if (mediaPlayer != null && vout != null) {
+                        wasPlaying = mediaPlayer.isPlaying();
+                        mediaPlayer.pause();
+                        vout.detachViews();
+                    }
+                    return true;
+                }
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+            }
+
+        });
 
 
         methodChannel = new MethodChannel(messenger, "flutter_video_plugin/getVideoView_" + id);
@@ -634,4 +701,6 @@ class FlutterVideoView implements PlatformView, MethodChannel.MethodCallHandler,
         // start the playback
         mediaPlayer.play();
     }
+
+
 }

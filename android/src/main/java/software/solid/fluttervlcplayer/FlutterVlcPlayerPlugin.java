@@ -2,6 +2,7 @@ package software.solid.fluttervlcplayer;
 
 import androidx.annotation.NonNull;
 
+import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -56,7 +57,7 @@ pluginBinding= null;
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-
+    Log.d("VIDEO", "Reattached ");
   }
 
   @Override
