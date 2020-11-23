@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '9.0'
-  s.dependency 'MobileVLCKit', '~> 3.3.14'
+  s.dependency 'MobileVLCKit', '~> 3.3.15'
   s.static_framework = true
   
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
