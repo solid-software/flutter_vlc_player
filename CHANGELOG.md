@@ -1,3 +1,6 @@
+## 4.0.3
+* Deleted dispose calls on VlcPlayerController from VlcPlayer
+
 ## 4.0.2
 * Update Cocoapods version for VLCkit on iOS. This fixes issues with iOS 12 and Simulators. Credits to Mitch Ross (https://github.com/mitchross).
 
