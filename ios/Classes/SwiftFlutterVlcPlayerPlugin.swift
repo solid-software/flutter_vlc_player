@@ -62,98 +62,99 @@ public class VLCView: NSObject, FlutterPlatformView {
             
             guard let self = self else { return }
             
-            if let arguments = call.arguments as? [String: Any] {
+            
+            let arguments = call.arguments as? Dictionary<String, Any?>;
+            switch FlutterMethodCallOption(rawValue: call.method) {
+            case .initialize:
                 
-                switch FlutterMethodCallOption(rawValue: call.method) {
-                case .initialize:
-                    
-                    var options = arguments["options"] as? [String] ?? []
-//                    let autoplay = arguments["autoplay"] as? Bool ?? true
-//                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
-                    let subtitleString = arguments["subtitle"] as? String ?? ""
-//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
-                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
-                    let loop = arguments["loop"] as? Bool ?? false
-                    if loop {
-                        options.append("--input-repeat=65535")
-                    }
-                    
-                    guard let urlString = arguments["url"] as? String,
-                        let url = URL(string: urlString)
-                        else {
-                            result(FlutterError(code: "500",
-                                                message: "Url is need to initialization",
-                                                details: nil)
-                            )
-                            return
-                    }
-                    let media = VLCMedia(url: url)
-                    
-                    for option in options {
-                        media.addOption(option)
-                    }
-                    let hardwareAcceleration = arguments["hwAcc"] as? Int32 ?? -1
-                    if hardwareAcceleration != VLCView.HW_ACCELERATION_AUTOMATIC {
-                        if hardwareAcceleration == VLCView.HW_ACCELERATION_DISABLED {
-                            media.addOption("--codec=avcodec")
-                        } else if hardwareAcceleration == VLCView.HW_ACCELERATION_FULL || hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
-                            media.addOption("--codec=all")
-                            if hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
-                                media.addOption(":no-mediacodec-dr")
-                                media.addOption(":no-omxil-dr")
-                            }
+                var options = arguments?["options"] as? [String] ?? []
+                //                    let autoplay = arguments["autoplay"] as? Bool ?? true
+                //                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
+                let subtitleString = arguments?["subtitle"] as? String ?? ""
+                //                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
+                let isSubtitleSelected = arguments?["isSubtitleSelected"] as? Bool ?? false
+                let loop = arguments?["loop"] as? Bool ?? false
+                if loop {
+                    options.append("--input-repeat=65535")
+                }
+                
+                guard let urlString = arguments?["url"] as? String,
+                      let url = URL(string: urlString)
+                else {
+                    result(FlutterError(code: "500",
+                                        message: "Url is required for initialization",
+                                        details: nil)
+                    )
+                    return
+                }
+                let media = VLCMedia(url: url)
+                
+                for option in options {
+                    media.addOption(option)
+                }
+                let hardwareAcceleration = arguments?["hwAcc"] as? Int32 ?? -1
+                if hardwareAcceleration != VLCView.HW_ACCELERATION_AUTOMATIC {
+                    if hardwareAcceleration == VLCView.HW_ACCELERATION_DISABLED {
+                        media.addOption("--codec=avcodec")
+                    } else if hardwareAcceleration == VLCView.HW_ACCELERATION_FULL || hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
+                        media.addOption("--codec=all")
+                        if hardwareAcceleration == VLCView.HW_ACCELERATION_DECODING {
+                            media.addOption(":no-mediacodec-dr")
+                            media.addOption(":no-omxil-dr")
                         }
                     }
-                    media.addOption(":input-fast-seek")
-                    
-                    self.player.media = media
-                    self.player.position = 0.5
-                    self.player.drawable = self.hostedView
-                    self.player.delegate = self.eventChannelHandler
-                    
-                    if !subtitleString.isEmpty{
-                        let subtitleUrl = URL(string: subtitleString)
-                        self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
-                    }
-                    
-                    result(nil)
+                }
+                media.addOption(":input-fast-seek")
+                
+                self.player.media = media
+                self.player.position = 0.5
+                self.player.drawable = self.hostedView
+                self.player.delegate = self.eventChannelHandler
+                
+                if !subtitleString.isEmpty{
+                    let subtitleUrl = URL(string: subtitleString)
+                    self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
+                }
+                
+                result(nil)
+                return
+                
+            case .dispose:
+                self.player.stop()
+                return
+                
+            case .changeURL:
+                let isPlaying = self.player.isPlaying
+                self.player.stop()
+                
+                guard let urlString = arguments?["url"] as? String,
+                      let url = URL(string: urlString) else {
+                    result(FlutterError(code: "500",
+                                        message: "Url is required for initialization",
+                                        details: nil)
+                    )
                     return
-                    
-                case .dispose:
-                    self.player.stop()
-                    return
-                    
-                case .changeURL:
-                    let isPlaying = self.player.isPlaying
-                    self.player.stop()
-                    
-                    guard let urlString = arguments["url"] as? String, let url = URL(string: urlString) else {
-                        result(FlutterError(code: "500",
-                                            message: "Url is need for initialization",
-                                            details: nil)
-                        )
-                        return
-                    }
-//                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
-                    let subtitleString = arguments["subtitle"] as? String ?? ""
-//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
-                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
-                    
-                    let media = VLCMedia(url: url)
-                    self.player.media = media
-                    if !subtitleString.isEmpty
-                    {
-                        let subtitleUrl = URL(string: subtitleString)
-                        self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
-                    }
-                    if isPlaying{
-                        self.player.play()
-                    }
-                    result(nil)
-                    return
-                    
-                case .getSnapshot:
-                    let drawable: UIView = self.player.drawable as! UIView
+                }
+                //                    let isLocalMedia = arguments["isLocalMedia"] as? Bool ?? false
+                let subtitleString = arguments?["subtitle"] as? String ?? ""
+                //                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool ?? false
+                let isSubtitleSelected = arguments?["isSubtitleSelected"] as? Bool ?? false
+                
+                let media = VLCMedia(url: url)
+                self.player.media = media
+                if !subtitleString.isEmpty
+                {
+                    let subtitleUrl = URL(string: subtitleString)
+                    self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
+                }
+                if isPlaying{
+                    self.player.play()
+                }
+                result(nil)
+                return
+                
+            case .getSnapshot:
+                if let drawable: UIView = self.player.drawable as? UIView {
                     let size = drawable.frame.size
                     
                     UIGraphicsBeginImageContextWithOptions(size, _: false, _: 0.0)
@@ -169,240 +170,276 @@ public class VLCView: NSObject, FlutterPlatformView {
                     result([
                         "snapshot": byteArray?.base64EncodedString(),
                     ])
-                    return
-                    
-                case .setPlaybackState:
-                    let playbackState = arguments["playbackState"] as? String
-                    
-                    if playbackState == "play" {
-                        self.player.play()
-                    } else if playbackState == "pause" {
-                        self.player.pause()
-                    } else if playbackState == "stop" {
-                        self.player.stop()
-                    }
-                    
-                    result(nil)
-                    return
-                    
-                    
-                case .isPlaying:
-                    result(self.player.isPlaying)
-                    return
-                    
-                case .setPlaybackSpeed:
-                    let playbackSpeed = arguments["speed"] as? String
-                    let rate = (playbackSpeed! as NSString).floatValue
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "Drawable is nil.",
+                                        details: nil))
+                }
+                
+                return
+                
+            case .setPlaybackState:
+                let playbackState = arguments?["playbackState"] as? String
+                
+                if playbackState == "play" {
+                    self.player.play()
+                } else if playbackState == "pause" {
+                    self.player.pause()
+                } else if playbackState == "stop" {
+                    self.player.stop()
+                }
+                
+                result(nil)
+                return
+                
+                
+            case .isPlaying:
+                result(self.player.isPlaying)
+                return
+                
+            case .setPlaybackSpeed:
+                if let playbackSpeed = arguments?["speed"] as? String {
+                    let rate = (playbackSpeed as NSString).floatValue
                     self.player.rate = rate
                     result(nil)
-                    return
-                    
-                case .getPlaybackSpeed:
-                    let playbackSpeed = self.player.rate
-                    result(playbackSpeed)
-                    return
-                    
-                case .setTime:
-                    let setTimeInMillisecondsAsString = arguments["time"] as? String
-                    let newTime = NSNumber(value: (setTimeInMillisecondsAsString! as NSString).doubleValue)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "speed required",
+                                        details: nil))
+                }
+                
+                return
+                
+            case .getPlaybackSpeed:
+                let playbackSpeed = self.player.rate
+                result(playbackSpeed)
+                return
+                
+            case .setTime:
+                if let setTimeInMillisecondsAsString = arguments?["time"] as? String {
+                    let newTime = NSNumber(value: (setTimeInMillisecondsAsString as NSString).doubleValue)
                     let time = VLCTime(number: newTime)
                     self.player.time = time
                     result(nil)
-                    return
-                    
-                case .getTime:
-                    let time = self.player.time.value.intValue
-                    result(time)
-                    return
-                    
-                case .getDuration:
-                    let length = self.player.media.length.intValue
-                    result(length)
-                    return
-                    
-                case .setVolume:
-                    var setVolume = arguments["volume"] as? Int32 ?? 100
-                    setVolume = max(0, min(100, setVolume))
-                    self.player.audio.volume = setVolume
-                    result(nil)
-                    return
-                    
-                case .getVolume:
-                    let getVolume = self.player.audio.volume
-                    result(getVolume)
-                    return
-                    
-                case .getSpuTracksCount:
-                    result(self.player.numberOfSubtitlesTracks)
-                    return
-                    
-                case .getSpuTracks:
-                    let subtitles = self.player.subtitles()
-                    result(subtitles)
-                    return
-                    
-                case .setSpuTrack:
-                    let spuTrackNumber = arguments["spuTrackNumber"] as? Int ?? 0
-                    self.player.currentVideoSubTitleIndex = Int32(spuTrackNumber)
-                    result(nil)
-                    return
-                    
-                case .getSpuTrack:
-                    let spuTrackNumber = self.player.currentVideoSubTitleIndex
-                    result(spuTrackNumber)
-                    return
-                    
-                case .setSpuDelay:
-                    let spuDelayAsString = arguments["delay"] as? String
-                    let spuDelay = NSNumber(value: (spuDelayAsString! as NSString).integerValue)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "time required",
+                                        details: nil))
+                }
+                
+                return
+                
+            case .getTime:
+                let time = self.player.time.value.intValue
+                result(time)
+                return
+                
+            case .getDuration:
+                let length = self.player.media.length.intValue
+                result(length)
+                return
+                
+            case .setVolume:
+                var setVolume = arguments?["volume"] as? Int32 ?? 100
+                setVolume = max(0, min(100, setVolume))
+                self.player.audio.volume = setVolume
+                result(nil)
+                return
+                
+            case .getVolume:
+                let getVolume = self.player.audio.volume
+                result(getVolume)
+                return
+                
+            case .getSpuTracksCount:
+                result(self.player.numberOfSubtitlesTracks)
+                return
+                
+            case .getSpuTracks:
+                let subtitles = self.player.subtitles()
+                result(subtitles)
+                return
+                
+            case .setSpuTrack:
+                let spuTrackNumber = arguments?["spuTrackNumber"] as? Int ?? 0
+                self.player.currentVideoSubTitleIndex = Int32(spuTrackNumber)
+                result(nil)
+                return
+                
+            case .getSpuTrack:
+                let spuTrackNumber = self.player.currentVideoSubTitleIndex
+                result(spuTrackNumber)
+                return
+                
+            case .setSpuDelay:
+                if let spuDelayAsString = arguments?["delay"] as? String {
+                    let spuDelay = NSNumber(value: (spuDelayAsString as NSString).integerValue)
                     self.player.currentVideoSubTitleDelay = Int(truncating: spuDelay)
                     result(nil)
-                    return
-                    
-                case .getSpuDelay:
-                    let spuDelay = self.player.currentVideoSubTitleDelay
-                    result(spuDelay)
-                    return
-                    
-                case .addSubtitleTrack:
-//                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool
-                    let isSubtitleSelected = arguments["isSubtitleSelected"] as? Bool ?? false
-                    guard let subtitleString = arguments["subtitlePath"] as? String,
-                        let subtitleUrl = URL(string: subtitleString) else {
-                        result(FlutterError(code: "500",
-                                            message: "subtitle file path failed",
-                                            details: nil)
-                        )
-                        return
-                    }
-                    self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
-//                     if isLocalSubtitle {
-//                         self.player.openVideoSubTitlesFromFile(subtitle)
-//                     }
-                    result(nil)
-                    return
-                    
-                case .getAudioTracksCount:
-                    result(self.player.numberOfAudioTracks)
-                    return
-                    
-                case .getAudioTracks:
-                    let audioTracks = self.player.audioTracks()
-                    result(audioTracks)
-                    return
-                    
-                case .getAudioTrack:
-                    let audioTrackNumber = self.player.currentAudioTrackIndex
-                    result(audioTrackNumber)
-                    return
-                    
-                case .setAudioTrack:
-                    let audioTrackNumber = arguments["audioTrackNumber"] as? Int ?? 0
-                    self.player.currentAudioTrackIndex = Int32(audioTrackNumber)
-                    // self.player.audioChannel = audioTrackNumber
-                    result(nil)
-                    return
-                    
-                case .setAudioDelay:
-                    let audioDelayAsString = arguments["delay"] as? String
-                    let audioDelay = NSNumber(value: (audioDelayAsString! as NSString).integerValue)
-                    self.player.currentAudioPlaybackDelay = Int(truncating: audioDelay)
-                    result(nil)
-                    return
-                    
-                case .getAudioDelay:
-                    let audioDelay = self.player.currentAudioPlaybackDelay
-                    result(audioDelay)
-                    return
-                    
-                case .getVideoTracksCount:
-                    result(self.player.numberOfVideoTracks)
-                    return
-                    
-                case .getVideoTracks:
-                    let videoTracks = self.player.videoTracks()
-                    result(videoTracks)
-                    return
-                    
-                case .getCurrentVideoTrack:
-                    //                    let videoTracks = self.player.videoTracks
-                    //                    let videoTrackIndex = self.player.currentVideoTrackIndex
-                    // TODO: look for videoTrackIndex in videoTracks array
-                    result(nil)
-                    return
-                    
-                case .getVideoTrack:
-                    let videoTrackIndex = self.player.currentVideoTrackIndex
-                    result(videoTrackIndex)
-                    return
-                    
-                case .setVideoScale:
-                    let videoScale = arguments["scale"] as? String
-                    let scale = (videoScale! as NSString).floatValue
-                    self.player.scaleFactor = scale
-                    result(nil)
-                    return
-                    
-                case .getVideoScale:
-                    result(self.player.scaleFactor)
-                    return
-                    
-                case .setVideoAspectRatio:
-                    let aspectRatio = arguments["aspect"] as? NSString
-                    let aspectRatioConverted = UnsafeMutablePointer<Int8>(mutating: (aspectRatio)?.utf8String!)
-                    self.player.videoAspectRatio = aspectRatioConverted
-                    result(nil)
-                    return
-                    
-                case .getVideoAspectRatio:
-                    result(self.player.videoAspectRatio)
-                    return
-                    
-                case .startCastDiscovery:
-                    guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
-                    else {
-                        print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
-                        return
-                    }
-                    guard rendererDiscoverer.start() else {
-                        print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
-                        return
-                    }
-                    rendererDiscoverer.delegate = self.eventChannelHandler
-                    self.strongRef = rendererDiscoverer
-                    result(nil)
-                    return
-                    
-                case .stopCastDiscovery:
-                    self.strongRef = nil
-                    self.player.pause()
-                    // todo : should we stop renderer discoveres also (stop is deprecated?!)
-                    self.player.setRendererItem(nil)
-                    self.rendererItems.removeAll()
-                    self.discoverers.removeAll()
-                    result(nil)
-                    return
-                    
-                case .getCastDevices:
-                    var castDescriptions: [String: String] = [:]
-                    let castItems = self.eventChannelHandler.getRenderItems()
-                    for (_, item) in castItems.enumerated() {
-                        castDescriptions[item.name] = item.name
-                    }
-                    result(castDescriptions)
-                    return
-                    
-                case .startCasting:
-                    let castDeviceName = arguments["startCasting"] as? String
-                    self.startCasting(castDeviceName: castDeviceName ?? "error")
-                    result(nil)
-                    return
-                    
-                default:
-                    result(FlutterMethodNotImplemented)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "spuDelay required",
+                                        details: nil))
+                }
+                return
+                
+            case .getSpuDelay:
+                let spuDelay = self.player.currentVideoSubTitleDelay
+                result(spuDelay)
+                return
+                
+            case .addSubtitleTrack:
+                //                    let isLocalSubtitle = arguments["isLocalSubtitle"] as? Bool
+                let isSubtitleSelected = arguments?["isSubtitleSelected"] as? Bool ?? false
+                guard let subtitleString = arguments?["subtitlePath"] as? String,
+                      let subtitleUrl = URL(string: subtitleString) else {
+                    result(FlutterError(code: "500",
+                                        message: "subtitle file path failed",
+                                        details: nil)
+                    )
                     return
                 }
-            } else {
+                self.player.addPlaybackSlave(subtitleUrl, type: .subtitle, enforce: isSubtitleSelected)
+                //                     if isLocalSubtitle {
+                //                         self.player.openVideoSubTitlesFromFile(subtitle)
+                //                     }
+                result(nil)
+                return
+                
+            case .getAudioTracksCount:
+                result(self.player.numberOfAudioTracks)
+                return
+                
+            case .getAudioTracks:
+                let audioTracks = self.player.audioTracks()
+                result(audioTracks)
+                return
+                
+            case .getAudioTrack:
+                let audioTrackNumber = self.player.currentAudioTrackIndex
+                result(audioTrackNumber)
+                return
+                
+            case .setAudioTrack:
+                let audioTrackNumber = arguments?["audioTrackNumber"] as? Int ?? 0
+                self.player.currentAudioTrackIndex = Int32(audioTrackNumber)
+                // self.player.audioChannel = audioTrackNumber
+                result(nil)
+                return
+                
+            case .setAudioDelay:
+                if let audioDelayAsString = arguments?["delay"] as? String {
+                    let audioDelay = NSNumber(value: (audioDelayAsString as NSString).integerValue)
+                    self.player.currentAudioPlaybackDelay = Int(truncating: audioDelay)
+                    result(nil)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "audioDelay required",
+                                        details: nil))
+                }
+                return
+                
+            case .getAudioDelay:
+                let audioDelay = self.player.currentAudioPlaybackDelay
+                result(audioDelay)
+                return
+                
+            case .getVideoTracksCount:
+                result(self.player.numberOfVideoTracks)
+                return
+                
+            case .getVideoTracks:
+                let videoTracks = self.player.videoTracks()
+                result(videoTracks)
+                return
+                
+            case .getCurrentVideoTrack:
+                //                    let videoTracks = self.player.videoTracks
+                //                    let videoTrackIndex = self.player.currentVideoTrackIndex
+                // TODO: look for videoTrackIndex in videoTracks array
+                result(nil)
+                return
+                
+            case .getVideoTrack:
+                let videoTrackIndex = self.player.currentVideoTrackIndex
+                result(videoTrackIndex)
+                return
+                
+            case .setVideoScale:
+                if let videoScale = arguments?["scale"] as? String {
+                    let scale = (videoScale as NSString).floatValue
+                    self.player.scaleFactor = scale
+                    result(nil)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "scale required",
+                                        details: nil))
+                }
+                
+                return
+                
+            case .getVideoScale:
+                result(self.player.scaleFactor)
+                return
+                
+            case .setVideoAspectRatio:
+                if let aspectRatio = arguments?["aspect"] as? NSString {
+                    let aspectRatioConverted = UnsafeMutablePointer<Int8>(mutating: aspectRatio.utf8String)
+                    self.player.videoAspectRatio = aspectRatioConverted
+                    result(nil)
+                } else {
+                    result(FlutterError(code: "500",
+                                        message: "aspect ratio required",
+                                        details: nil))
+                }
+                
+                return
+                
+            case .getVideoAspectRatio:
+                result(self.player.videoAspectRatio)
+                return
+                
+            case .startCastDiscovery:
+                guard let rendererDiscoverer = VLCRendererDiscoverer(name: "Bonjour_renderer")
+                else {
+                    print("VLCRendererDiscovererManager: Unable to instanciate renderer discoverer with name: Bonjour_renderer")
+                    return
+                }
+                guard rendererDiscoverer.start() else {
+                    print("VLCRendererDiscovererManager: Unable to start renderer discoverer with name: Bonjour_renderer")
+                    return
+                }
+                rendererDiscoverer.delegate = self.eventChannelHandler
+                self.strongRef = rendererDiscoverer
+                result(nil)
+                return
+                
+            case .stopCastDiscovery:
+                self.strongRef = nil
+                self.player.pause()
+                // todo : should we stop renderer discoveres also (stop is deprecated?!)
+                self.player.setRendererItem(nil)
+                self.rendererItems.removeAll()
+                self.discoverers.removeAll()
+                result(nil)
+                return
+                
+            case .getCastDevices:
+                var castDescriptions: [String: String] = [:]
+                let castItems = self.eventChannelHandler.getRenderItems()
+                for (_, item) in castItems.enumerated() {
+                    castDescriptions[item.name] = item.name
+                }
+                result(castDescriptions)
+                return
+                
+            case .startCasting:
+                let castDeviceName = arguments?["startCasting"] as? String
+                self.startCasting(castDeviceName: castDeviceName ?? "error")
+                result(nil)
+                return
+                
+            default:
                 result(FlutterMethodNotImplemented)
                 return
             }
