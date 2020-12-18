@@ -62,7 +62,7 @@ public class VLCView: NSObject, FlutterPlatformView {
             
             guard let self = self else { return }
             
-            if let arguments = call.arguments as? [String: Any] {
+            if let arguments = (call.arguments ?? [:]) as? [String: Any] {
                 
                 switch FlutterMethodCallOption(rawValue: call.method) {
                 case .initialize:
