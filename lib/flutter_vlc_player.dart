@@ -300,7 +300,7 @@ class VlcPlayerController {
   }) {
     _onInit = onInit;
     _onCastHandler = onCastHandler;
-    _eventHandlers = new List();
+    _eventHandlers = [];
   }
 
   void registerChannels(int id) {
