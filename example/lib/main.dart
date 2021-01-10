@@ -176,7 +176,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
                             value: sliderValue,
                             min: 0.0,
                             max: _videoViewController.duration == null
-                                ? 1.0
+                                ? (sliderValue + 1)
                                 : _videoViewController.duration.inSeconds
                                     .toDouble(),
                             onChanged: (progress) {

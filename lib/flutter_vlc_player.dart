@@ -187,15 +187,8 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   @override
   void deactivate() {
-    _controller.dispose();
     playerInitialized = false;
     super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
 
@@ -307,7 +300,7 @@ class VlcPlayerController {
   }) {
     _onInit = onInit;
     _onCastHandler = onCastHandler;
-    _eventHandlers = new List();
+    _eventHandlers = [];
   }
 
   void registerChannels(int id) {
