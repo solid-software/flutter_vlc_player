@@ -2,21 +2,12 @@ import Flutter
 import MobileVLCKit
 import UIKit
 
-//protocol KeyForAssetFn {
-//    func get(asset: String) -> String
-//}
-//
-//protocol KeyForAssetAndPackageName {
-//    func get(asset: String, packageName: String) -> String
-//}
 
 
 public class SwiftFlutterVlcPlayerPlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        
-//        let keyForAssetFn = registrar.lookupKey as (String) -> String
-//        let keyForAssetAndPackageName = registrar.lookupKey as (String, String) -> String
+
         let factory = VLCViewFactory(registrar: registrar)
         registrar.register(factory, withId: "flutter_video_plugin/getVideoView")
     }
@@ -27,13 +18,10 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
         
     private var registrar: FlutterPluginRegistrar
     private var builder: VLCViewBuilder
-//    private var keyForAsset: KeyForAssetFn
-//    private var keyForAssetAndPackageName: KeyForAssetAndPackageName
+
     
     init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
-//        self.keyForAsset = keyForAsset
-//        self.keyForAssetAndPackageName = keyForAssetAndPackageName
         self.builder = VLCViewBuilder(registrar: registrar)
         super.init()
     }
