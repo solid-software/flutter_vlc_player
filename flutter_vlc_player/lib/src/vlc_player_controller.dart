@@ -1,4 +1,15 @@
-part of vlc_player_flutter;
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+
+import 'package:flutter_vlc_player_platform_interface/vlc_player_flutter_platform_interface.dart';
+
+import 'vlc_player_value.dart';
+import 'vlc_app_life_cycle_observer.dart';
+import 'enums/playing_state.dart';
 
 final VlcPlayerPlatform _vlcPlayerPlatform = VlcPlayerPlatform.instance
 // This will clear all open videos on the platform when a full restart is
@@ -444,8 +455,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     }
     if (position > value.duration) {
       position = value.duration;
-    } else if (position < const Duration()) {
-      position = const Duration();
+    } else if (position < Duration.zero) {
+      position = Duration.zero;
     }
     await _vlcPlayerPlatform.seekTo(_viewId, position);
   }

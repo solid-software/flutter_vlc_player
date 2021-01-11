@@ -1,4 +1,6 @@
-part of vlc_player_flutter;
+import 'package:flutter/widgets.dart';
+
+import 'vlc_player_controller.dart';
 
 class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;

@@ -1,5 +1,3 @@
-part of vlc_player_flutter;
-
 enum PlayingState {
   initializing,
   initialized,

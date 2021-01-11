@@ -19,27 +19,25 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Vlc Player Example'),
-            bottom: TabBar(
-              tabs: [
-                Tab(text: 'Single'),
-                Tab(text: 'Multiple'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              SingleTab(),
-              MultipleTab(),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Vlc Player Example'),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Single'),
+              Tab(text: 'Multiple'),
             ],
           ),
+        ),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            SingleTab(),
+            MultipleTab(),
+          ],
         ),
       ),
     );
