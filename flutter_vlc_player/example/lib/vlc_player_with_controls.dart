@@ -60,7 +60,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   void listener () async{
     if (!this.mounted) return;
     //
-    if (_controller.value.initialized) {
+    if (_controller.value.isInitialized) {
       var oPosition = _controller.value.position;
       var oDuration = _controller.value.duration;
       if (oPosition != null && oDuration != null) {

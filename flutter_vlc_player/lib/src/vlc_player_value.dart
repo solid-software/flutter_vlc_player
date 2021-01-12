@@ -11,9 +11,10 @@ class VlcPlayerValue {
   /// rest will initialize with default values when unset.
   VlcPlayerValue({
     @required this.duration,
-    this.size,
-    this.position = const Duration(),
+    this.size = Size.zero,
+    this.position = Duration.zero,
     this.playingState = PlayingState.initializing,
+    this.isInitialized = false,
     this.isPlaying = false,
     this.isLooping = false,
     this.isBuffering = false,
@@ -34,7 +35,10 @@ class VlcPlayerValue {
 
   /// Returns an instance with a `null` [Duration].
   factory VlcPlayerValue.uninitialized() {
-    return VlcPlayerValue(duration: Duration.zero).._initialized = false;
+    return VlcPlayerValue(
+      duration: Duration.zero,
+      isInitialized: false,
+    );
   }
 
   /// Returns an instance with the playing state error
@@ -43,13 +47,14 @@ class VlcPlayerValue {
     return VlcPlayerValue(
       duration: Duration.zero,
       playingState: PlayingState.error,
+      isInitialized: false,
       errorDescription: errorDescription,
     );
   }
 
   /// The total duration of the video.
   ///
-  /// Is null when [initialized] is false.
+  /// The duration is [Duration.zero] if the video hasn't been initialized.
   final Duration duration;
 
   /// The current playback position.
@@ -110,21 +115,20 @@ class VlcPlayerValue {
 
   /// The [size] of the currently loaded video.
   ///
-  /// Is null when [initialized] is false.
+  /// The size is [Size.zero] if the video hasn't been initialized.
   final Size size;
 
   /// Indicates whether or not the vlc is ready to play.
-  bool get initialized => _initialized;
-  bool _initialized = false;
+  final bool isInitialized;
 
   /// Indicates whether or not the video is in an error state. If this is true
   /// [errorDescription] should have information about the problem.
   bool get hasError => errorDescription != null;
 
-  /// Returns [size.width] / [size.height] when size is non-null, or `1.0.` when
-  /// size is null or the aspect ratio would be less than or equal to 0.0.
+  /// Returns [size.width] / [size.height] when the player is initialized, or `1.0.` when
+  /// the player is not initialized or the aspect ratio would be less than or equal to 0.0.
   double get aspectRatio {
-    if (size == null || size.width == 0 || size.height == 0) {
+    if (!isInitialized || size.width == 0 || size.height == 0) {
       return 1.0;
     }
     final double aspectRatio = size.width / size.height;
@@ -134,10 +138,6 @@ class VlcPlayerValue {
     return aspectRatio;
   }
 
-   void setInitialized(bool initialized) {
-    _initialized = initialized;
-  }
-
   /// Returns a new instance that has the same values as this current instance,
   /// except for any overrides passed in as arguments to [copyWidth].
   VlcPlayerValue copyWith({
@@ -145,6 +145,7 @@ class VlcPlayerValue {
     Size size,
     Duration position,
     PlayingState playingState,
+    bool isInitialized,
     bool isPlaying,
     bool isLooping,
     bool isBuffering,
@@ -167,6 +168,7 @@ class VlcPlayerValue {
       size: size ?? this.size,
       position: position ?? this.position,
       playingState: playingState ?? this.playingState,
+      isInitialized: isInitialized ?? this.isInitialized,
       isPlaying: isPlaying ?? this.isPlaying,
       isLooping: isLooping ?? this.isLooping,
       isBuffering: isBuffering ?? this.isBuffering,
@@ -183,7 +185,7 @@ class VlcPlayerValue {
       videoTracksCount: videoTracksCount ?? this.videoTracksCount,
       activeVideoTrack: activeVideoTrack ?? this.activeVideoTrack,
       errorDescription: errorDescription ?? this.errorDescription,
-    ).._initialized = this._initialized;
+    );
   }
 
   @override
@@ -193,6 +195,7 @@ class VlcPlayerValue {
         'size: $size, '
         'position: $position, '
         'playingState: $playingState, '
+        'isInitialized $isInitialized, '
         'isPlaying: $isPlaying, '
         'isLooping: $isLooping, '
         'bufferPercent: $bufferPercent, '

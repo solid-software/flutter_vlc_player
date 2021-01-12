@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'vlc_player_platform.dart';
 import 'vlc_player_controller.dart';
 
 class VlcPlayer extends StatefulWidget {
@@ -37,23 +38,24 @@ class _VlcPlayerState extends State<VlcPlayer>
     _listener = () {
       if (!mounted) return;
       //
-      final bool isInitialized = widget.controller.value.initialized;
-      if (isInitialized != _initialized) {
+      final bool isInitialized = widget.controller.value.isInitialized;
+      if (isInitialized != _isInitialized) {
         setState(() {
-          _initialized = isInitialized;
+          _isInitialized = isInitialized;
         });
       }
     };
   }
 
   VoidCallback _listener;
-  bool _initialized;
+
+  bool _isInitialized;
 
   @override
   void initState() {
     super.initState();
-    _initialized = widget.controller.value.initialized;
-    // Need to listen for initialization events since the actual texture ID
+    _isInitialized = widget.controller.value.isInitialized;
+    // Need to listen for initialization events since the actual initialization value
     // becomes available after asynchronous initialization finishes.
     widget.controller.addListener(_listener);
   }
@@ -61,11 +63,11 @@ class _VlcPlayerState extends State<VlcPlayer>
   @override
   void didUpdateWidget(VlcPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // if (oldWidget.controller != widget.controller) {
-    //   oldWidget.controller.removeListener(_listener);
-    //   _initialized = widget.controller.value.initialized;
-    //   widget.controller.addListener(_listener);
-    // }
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_listener);
+      _isInitialized = widget.controller.value.isInitialized;
+      widget.controller.addListener(_listener);
+    }
   }
 
   @override
@@ -82,29 +84,17 @@ class _VlcPlayerState extends State<VlcPlayer>
       child: Stack(
         children: <Widget>[
           Offstage(
-            offstage: _initialized,
+            offstage: _isInitialized,
             child: widget.placeholder ?? Container(),
           ),
           Offstage(
-            offstage: !_initialized,
-            child: widget.controller
-                .getVlcPlayerPlatform()
-                .buildView(onPlatformViewCreated),
+            offstage: !_isInitialized,
+            child: vlcPlayerPlatform
+                .buildView(widget.controller.onPlatformViewCreated),
           ),
         ],
       ),
     );
-  }
-
-  Future<void> onPlatformViewCreated(int viewId) async {
-    if (viewId == null) return;
-    widget.controller.setViewId(viewId);
-    // we should initialize controller after view becomes ready
-    if (widget.controller.autoInitialize) {
-      await widget.controller.initialize();
-    }
-    //
-    widget.controller.setIsReadyToInitalize(true);
   }
 
   @override
