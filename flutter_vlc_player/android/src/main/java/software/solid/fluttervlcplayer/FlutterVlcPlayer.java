@@ -309,16 +309,19 @@ final class FlutterVlcPlayer implements PlatformView {
                 media = new Media(libVLC, context.getAssets().openFd(url));
             else
                 media = new Media(libVLC, Uri.parse(url));
-            if (hwAcc != HwAcc.AUTOMATIC.getNumericType()) {
-                if (hwAcc == HwAcc.DISABLED.getNumericType()) {
+            final HwAcc hwAcc = HwAcc.fromValue(hwAccValue);
+            switch (hwAcc) {
+                case DISABLED:
                     media.setHWDecoderEnabled(false, false);
-                } else if (hwAcc == HwAcc.FULL.getNumericType() || hwAcc == HwAcc.DECODING.getNumericType()) {
+                    break;
+                case DECODING:
+                case FULL:
                     media.setHWDecoderEnabled(true, true);
-                    if (hwAcc == HwAcc.DECODING.getNumericType()) {
-                        media.addOption(":no-mediacodec-dr");
-                        media.addOption(":no-omxil-dr");
-                    }
-                }
+                    break;
+            }
+            if (hwAcc == HwAcc.DECODING) {
+                media.addOption(":no-mediacodec-dr");
+                media.addOption(":no-omxil-dr");
             }
             mediaPlayer.setMedia(media);
             media.release();
