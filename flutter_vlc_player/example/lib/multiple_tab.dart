@@ -10,103 +10,65 @@ class MultipleTab extends StatefulWidget {
 }
 
 class _MultipleTabState extends State<MultipleTab> {
-  VlcPlayerController _controller_1;
-  VlcPlayerController _controller_2;
-  VlcPlayerController _controller_3;
+  List<VlcPlayerController> controllers;
+  List<String> urls = [
+    'https://www.tomandjerryonline.com/Videos/Ford%20Mondeo%20-%20Tom%20and%20Jerry.mov',
+    'https://www.tomandjerryonline.com/Videos/TomAndJerryTales_HQ.wmv',
+    'https://www.tomandjerryonline.com/Videos/tomamdjerrymilkAd.mov'
+  ];
 
-  String url_1 = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
-  String url_2 = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4';
-  String url_3 = 'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4';
-
-  GlobalKey _key_1 = GlobalKey<VlcPlayerWithControlsState>();
-  GlobalKey _key_2 = GlobalKey<VlcPlayerWithControlsState>();
-  GlobalKey _key_3 = GlobalKey<VlcPlayerWithControlsState>();
+  bool showPlayerControls = true;
 
   @override
   void initState() {
     super.initState();
-
-    _controller_1 = VlcPlayerController.network(
-      url_1,
-      hwAcc: HwAcc.FULL,
-      autoPlay: true,
-      onInit: () async {},
-      options: VlcPlayerOptions(
-        advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(2000),
-        ]),
-        rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(true),
-        ]),
-      ),
-    );
-    //
-    _controller_2 = VlcPlayerController.network(
-      url_2,
-      hwAcc: HwAcc.FULL,
-      autoPlay: true,
-      onInit: () async {},
-      options: VlcPlayerOptions(
-        advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(2000),
-        ]),
-        rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(true),
-        ]),
-      ),
-    );
-    //
-    _controller_3 = VlcPlayerController.network(
-      url_3,
-      hwAcc: HwAcc.FULL,
-      autoPlay: true,
-      onInit: () async {},
-      options: VlcPlayerOptions(
-        advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(2000),
-        ]),
-        rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(true),
-        ]),
-      ),
-    );
+    controllers = List<VlcPlayerController>();
+    for (var i = 0; i < urls.length; i++) {
+      VlcPlayerController controller = VlcPlayerController.network(
+        urls[i],
+        hwAcc: HwAcc.FULL,
+        autoPlay: false,
+        onInit: () async {},
+        options: VlcPlayerOptions(
+          advanced: VlcAdvancedOptions([
+            VlcAdvancedOptions.networkCaching(2000),
+          ]),
+          rtp: VlcRtpOptions([
+            VlcRtpOptions.rtpOverRtsp(true),
+          ]),
+        ),
+      );
+      controllers.add(controller);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: [
-          Container(
-            height: 400,
-            child:
-                VlcPlayerWithControls(key: _key_1, controller: _controller_1),
-          ),
-          SizedBox(height: 20),
-          Container(
-            height: 400,
-            child:
-                VlcPlayerWithControls(key: _key_2, controller: _controller_2),
-          ),
-          SizedBox(height: 20),
-          Container(
-            height: 400,
-            child:
-                VlcPlayerWithControls(key: _key_3, controller: _controller_3),
-          ),
-        ],
+      child: ListView.separated(
+        itemCount: controllers.length,
+        separatorBuilder: (_, index) {
+          return Divider(height: 5, thickness: 5, color: Colors.grey);
+        },
+        itemBuilder: (_, index) {
+          return Container(
+            height: showPlayerControls ? 400 : 300,
+            child: VlcPlayerWithControls(
+              controller: controllers[index],
+              showControls: showPlayerControls,
+            ),
+          );
+        },
       ),
     );
   }
 
   @override
   void dispose() {
-    _controller_1.stopRendererScanning();
-    _controller_1.removeListener(() {});
-    _controller_2.stopRendererScanning();
-    _controller_2.removeListener(() {});
-    _controller_3.stopRendererScanning();
-    _controller_3.removeListener(() {});
+    for (var i = 0; i < controllers.length; i++) {
+      controllers[i].stopRendererScanning();
+      controllers[i].removeListener(() {});
+    }
     super.dispose();
   }
 }

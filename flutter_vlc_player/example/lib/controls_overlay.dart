@@ -14,49 +14,76 @@ class ControlsOverlay extends StatelessWidget {
         AnimatedSwitcher(
           duration: Duration(milliseconds: 50),
           reverseDuration: Duration(milliseconds: 200),
-          child: controller.value.isPlaying
-              ? SizedBox.shrink()
-              : SizedBox.expand(
-                  child: Container(
-                    color: Colors.black45,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            if (controller.value.duration != null)
-                              await controller.seekTo(
-                                  controller.value.position -
-                                      Duration(seconds: 10));
-                          },
-                          color: Colors.white,
-                          iconSize: 60.0,
-                          icon: Icon(Icons.replay_10),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            await controller.play();
-                          },
-                          color: Colors.white,
-                          iconSize: 100.0,
-                          icon: Icon(Icons.play_arrow),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            if (controller.value.duration != null)
-                              await controller.seekTo(
-                                  controller.value.position +
-                                      Duration(seconds: 10));
-                          },
-                          color: Colors.white,
-                          iconSize: 60.0,
-                          icon: Icon(Icons.forward_10),
-                        ),
-                      ],
+          child: Builder(
+            builder: (ctx) {
+              switch (controller.value.playingState) {
+                case PlayingState.initializing:
+                  return CircularProgressIndicator();
+
+                case PlayingState.initialized:
+                case PlayingState.stopped:
+                case PlayingState.paused:
+                  return SizedBox.expand(
+                    child: Container(
+                      color: Colors.black45,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            onPressed: () async {
+                              if (controller.value.duration != null)
+                                await controller.seekTo(
+                                    controller.value.position -
+                                        Duration(seconds: 10));
+                            },
+                            color: Colors.white,
+                            iconSize: 60.0,
+                            icon: Icon(Icons.replay_10),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              await controller.play();
+                            },
+                            color: Colors.white,
+                            iconSize: 100.0,
+                            icon: Icon(Icons.play_arrow),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              if (controller.value.duration != null)
+                                await controller.seekTo(
+                                    controller.value.position +
+                                        Duration(seconds: 10));
+                            },
+                            color: Colors.white,
+                            iconSize: 60.0,
+                            icon: Icon(Icons.forward_10),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+
+                case PlayingState.buffering:
+                case PlayingState.playing:
+                  return SizedBox.shrink();
+
+                case PlayingState.error:
+                  return Center(
+                    child: IconButton(
+                      onPressed: () async {
+                        await controller.play();
+                      },
+                      color: Colors.white,
+                      iconSize: 100.0,
+                      icon: Icon(Icons.replay),
+                    ),
+                  );
+              }
+              return SizedBox.shrink();
+            },
+          ),
         ),
         GestureDetector(
           onTap: !controller.value.isPlaying

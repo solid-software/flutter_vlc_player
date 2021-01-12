@@ -199,8 +199,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             spuTracksCount: event.spuTracksCount,
             activeSpuTrack: event.activeSpuTrack,
           );
-          // if (!initializingCompleter.isCompleted)
-          //   initializingCompleter.complete(null);
           break;
 
         case VlcMediaEventType.ended:
@@ -216,6 +214,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         case VlcMediaEventType.timeChanged:
           value = value.copyWith(
             position: event.position,
+            duration: event.duration,
             playbackSpeed: event.playbackSpeed,
             bufferPercent: event.bufferPercent,
           );
@@ -891,6 +890,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _viewId = viewId;
     // do we need to initialize controller after view becomes ready?
     if (autoInitialize) {
+      await Future.delayed(Duration(seconds: 1));
       await initialize();
     }
     _isReadyToInitialize = true;

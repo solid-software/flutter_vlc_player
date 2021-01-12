@@ -2,8 +2,6 @@ import Flutter
 import MobileVLCKit
 import UIKit
 
-
-
 public class SwiftFlutterVlcPlayerPlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -945,8 +943,9 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         }
         
         self.vlcMediaPlayer.media = media
-        if(autoPlay){
-            self.vlcMediaPlayer.play()
+        self.vlcMediaPlayer.play()
+        if(!autoPlay){
+            self.vlcMediaPlayer.stop()
         }
     }
 }
@@ -1085,6 +1084,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
             mediaEventSink([
                 "event": "timeChanged",
                 "position": position,
+                "duration": duration,
                 "speed": speed,
                 "buffer" : buffering,
             ])
@@ -1115,11 +1115,13 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         
         let player = aNotification?.object as? VLCMediaPlayer
         let speed = player?.rate ?? 1
-        
+        let duration =  player?.media?.length.value ?? 0
+
         if let position = player?.time.value {
             mediaEventSink([
                 "event": "timeChanged",
                 "position": position,
+                "duration": duration,
                 "speed": speed,
                 "buffer": 100.0,
             ])

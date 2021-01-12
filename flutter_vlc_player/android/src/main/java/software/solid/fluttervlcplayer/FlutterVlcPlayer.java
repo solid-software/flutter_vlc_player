@@ -194,6 +194,7 @@ final class FlutterVlcPlayer implements PlatformView {
                     @Override
                     public void onEvent(MediaPlayer.Event event) {
                         HashMap<String, Object> eventObject = new HashMap<>();
+                        //
                         switch (event.type) {
 
                             case MediaPlayer.Event.Opening:
@@ -248,6 +249,7 @@ final class FlutterVlcPlayer implements PlatformView {
                             case MediaPlayer.Event.TimeChanged:
                                 eventObject.put("event", "timeChanged");
                                 eventObject.put("position", mediaPlayer.getTime());
+                                eventObject.put("duration", mediaPlayer.getLength());
                                 eventObject.put("speed", mediaPlayer.getRate());
                                 eventObject.put("buffer", event.getBuffering());
                                 mediaEventSink.success(eventObject);
@@ -318,8 +320,10 @@ final class FlutterVlcPlayer implements PlatformView {
             mediaPlayer.setMedia(media);
             media.release();
             //
-            if (autoPlay)
-                mediaPlayer.play();
+            mediaPlayer.play();
+            if (!autoPlay) {
+                mediaPlayer.stop();
+            }
         } catch (IOException e) {
             log(e.getMessage());
         }
