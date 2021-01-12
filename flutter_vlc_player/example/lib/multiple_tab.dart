@@ -29,7 +29,7 @@ class _MultipleTabState extends State<MultipleTab> {
     _controller_1 = VlcPlayerController.network(
       url_1,
       hwAcc: HwAcc.FULL,
-      autoPlay: false,
+      autoPlay: true,
       onInit: () async {},
       options: VlcPlayerOptions(
         advanced: VlcAdvancedOptions([
@@ -44,7 +44,7 @@ class _MultipleTabState extends State<MultipleTab> {
     _controller_2 = VlcPlayerController.network(
       url_2,
       hwAcc: HwAcc.FULL,
-      autoPlay: false,
+      autoPlay: true,
       onInit: () async {},
       options: VlcPlayerOptions(
         advanced: VlcAdvancedOptions([
@@ -59,7 +59,7 @@ class _MultipleTabState extends State<MultipleTab> {
     _controller_3 = VlcPlayerController.network(
       url_3,
       hwAcc: HwAcc.FULL,
-      autoPlay: false,
+      autoPlay: true,
       onInit: () async {},
       options: VlcPlayerOptions(
         advanced: VlcAdvancedOptions([

@@ -102,14 +102,6 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     public void initialize(List<String> options) {
-
-//        options.add("--audio-time-stretch");
-//        options.add("--no-drop-late-frames");
-//        options.add("--no-skip-frames");
-//        options.add("--network-caching=2000");
-//        options.add("--sout-mux-caching=1500");
-//        options.add("--rtsp-tcp");
-//        options.add("-vvv");
         libVLC = new LibVLC(context, options);
         mediaPlayer = new MediaPlayer(libVLC);
         setupVlcMediaPlayer();
@@ -309,8 +301,8 @@ final class FlutterVlcPlayer implements PlatformView {
                 media = new Media(libVLC, context.getAssets().openFd(url));
             else
                 media = new Media(libVLC, Uri.parse(url));
-            final HwAcc hwAcc = HwAcc.fromValue(hwAccValue);
-            switch (hwAcc) {
+            final HwAcc hwAccValue = HwAcc.values()[(int) hwAcc];
+            switch (hwAccValue) {
                 case DISABLED:
                     media.setHWDecoderEnabled(false, false);
                     break;
@@ -319,7 +311,7 @@ final class FlutterVlcPlayer implements PlatformView {
                     media.setHWDecoderEnabled(true, true);
                     break;
             }
-            if (hwAcc == HwAcc.DECODING) {
+            if (hwAccValue == HwAcc.DECODING) {
                 media.addOption(":no-mediacodec-dr");
                 media.addOption(":no-omxil-dr");
             }
