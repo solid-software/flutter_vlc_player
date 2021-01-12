@@ -11,6 +11,8 @@ import 'vlc_player_value.dart';
 import 'vlc_app_life_cycle_observer.dart';
 import 'enums/playing_state.dart';
 
+export '';
+
 final VlcPlayerPlatform _vlcPlayerPlatform = VlcPlayerPlatform.instance
 // This will clear all open videos on the platform when a full restart is
 // performed.
@@ -29,6 +31,10 @@ typedef RendererCallback = void Function(VlcRendererEventType, String, String);
 ///
 /// After [dispose] all further calls are ignored.
 class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
+  VlcPlayerPlatform getVlcPlayerPlatform() {
+    return _vlcPlayerPlatform;
+  }
+
   ///
   /// The name of the asset is given by the [dataSource] argument and must not be
   /// null. The [package] argument must be non-null when the asset comes from a
@@ -114,10 +120,18 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   bool get isReadyToInitialize => _isReadyToInitialize;
   bool _isReadyToInitialize;
 
+  void setIsReadyToInitalize(boolValue) {
+    _isReadyToInitialize = boolValue;
+  }
+
   /// This is just exposed for testing. It shouldn't be used by anyone depending
   /// on the plugin.
   @visibleForTesting
   int get viewId => _viewId;
+
+  void setViewId(viewId) {
+    _viewId = viewId;
+  }
 
   /// The viewId for this controller
   int _viewId;
@@ -281,7 +295,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!initializingCompleter.isCompleted)
       initializingCompleter.complete(null);
     //
-    value._initialized = true;
+    value.setInitialized(true);
     if (_onInit != null) _onInit();
 
     return initializingCompleter.future;
@@ -380,7 +394,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.initialized || _isDisposed) {
       return;
     }
-    value._initialized = false;
+    value.setInitialized(false);
     await _vlcPlayerPlatform.setStreamUrl(
       _viewId,
       uri: dataSource,
@@ -389,7 +403,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       hwAcc: hwAcc ?? HwAcc.AUTO,
       autoPlay: autoPlay ?? true,
     );
-    value._initialized = true;
+    value.setInitialized(true);
     return;
   }
 

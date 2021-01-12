@@ -87,7 +87,9 @@ class _VlcPlayerState extends State<VlcPlayer>
           ),
           Offstage(
             offstage: !_initialized,
-            child: _vlcPlayerPlatform.buildView(onPlatformViewCreated),
+            child: widget.controller
+                .getVlcPlayerPlatform()
+                .buildView(onPlatformViewCreated),
           ),
         ],
       ),
@@ -96,13 +98,13 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   Future<void> onPlatformViewCreated(int viewId) async {
     if (viewId == null) return;
-    widget.controller._viewId = viewId;
+    widget.controller.setViewId(viewId);
     // we should initialize controller after view becomes ready
     if (widget.controller.autoInitialize) {
       await widget.controller.initialize();
     }
     //
-    widget.controller._isReadyToInitialize = true;
+    widget.controller.setIsReadyToInitalize(true);
   }
 
   @override
