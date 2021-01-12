@@ -1,3 +1,14 @@
+## 5.0.0
+Entire rewrite of Flutter VLC Player. Updates to Android v2 plugin. Adds Platform interface. Adds Pigeon for type safe method calls. Credits to credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
+
+## 4.0.3
+Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. Credits to Mitch Ross (https://github.com/mitchross).
+Removed dispose calls on VlcPlayerController from VlcPlayer.
+Fix argument-less functions throwing FlutterMethodNotImplemented.
+
+## 4.0.2
+* Update Cocoapods version for VLCkit on iOS. This fixes issues with iOS 12 and Simulators. Credits to Mitch Ross (https://github.com/mitchross).
+
 ## 4.0.1
 * Improved documentation.
 
