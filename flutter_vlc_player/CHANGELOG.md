@@ -1,5 +1,5 @@
 ## 5.0.0
-Entire rewrite of Flutter VLC Player. Updates to Android v2 plugin. Adds Platform interface. Adds Pigeon for type safe method calls. Credits to credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
+Entire rewrite of Flutter VLC Player. Updates to Android v2 plugin. Adds Platform interface. Adds Pigeon for type safe method calls. Credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
 
 ## 4.0.3
 Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. Credits to Mitch Ross (https://github.com/mitchross).
