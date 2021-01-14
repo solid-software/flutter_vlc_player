@@ -62,12 +62,17 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         return
     }
     
+    func getPlayer(textureId: NSNumber?) -> VLCViewController? {
+      guard textureId != nil else {
+        return nil
+        
+      }
+        return players[Int(truncating: textureId! as NSNumber)]
+    }
+    
     public func create(_ input: CreateMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         var isAssetUrl: Bool = false
         var mediaUrl: String = ""
@@ -97,10 +102,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func dispose(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.dispose()
         players.removeValue(forKey: input.textureId as! Int)
@@ -108,10 +110,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setStreamUrl(_ input: SetMediaMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         var isAssetUrl: Bool = false
         var mediaUrl: String = ""
@@ -140,40 +139,28 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func play(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
         player?.play()
     }
     
     public func pause(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.pause()
     }
     
     public func stop(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
+
         
         player?.stop()
     }
     
     public func isPlaying(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: BooleanMessage = BooleanMessage()
         message.result = player?.isPlaying()
@@ -182,31 +169,22 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setLooping(_ input: LoopingMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         player?.setLooping(isLooping: input.isLooping)
     }
     
     public func seek(to input: PositionMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.seek(position: input.position)
     }
     
     public func position(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> PositionMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: PositionMessage = PositionMessage()
         message.position = player?.position()
         return message
@@ -214,10 +192,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func duration(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DurationMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: DurationMessage = DurationMessage()
         message.duration = player?.duration()
@@ -226,21 +201,15 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setVolume(_ input: VolumeMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setVolume(volume: input.volume)
     }
     
     public func getVolume(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VolumeMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: VolumeMessage = VolumeMessage()
         message.volume = player?.getVolume()
         return message
@@ -248,20 +217,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setPlaybackSpeed(_ input: PlaybackSpeedMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setPlaybackSpeed(speed: input.speed)
     }
     
     public func getPlaybackSpeed(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> PlaybackSpeedMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: PlaybackSpeedMessage = PlaybackSpeedMessage()
         message.speed = player?.getPlaybackSpeed()
@@ -270,10 +233,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func takeSnapshot(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SnapshotMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: SnapshotMessage = SnapshotMessage()
         message.snapshot = player?.takeSnapshot()
@@ -282,11 +242,8 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func getSpuTracksCount(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: TrackCountMessage = TrackCountMessage()
         message.count = player?.getSpuTracksCount()
         return message
@@ -294,11 +251,8 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func getSpuTracks(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SpuTracksMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: SpuTracksMessage = SpuTracksMessage()
         message.subtitles = player?.getSpuTracks()
         return message
@@ -306,20 +260,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setSpuTrack(_ input: SpuTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         player?.setSpuTrack(spuTrackNumber: input.spuTrackNumber)
     }
     
     public func getSpuTrack(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SpuTrackMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: SpuTrackMessage = SpuTrackMessage()
         message.spuTrackNumber = player?.getSpuTrack()
@@ -328,20 +276,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setSpuDelay(_ input: DelayMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setSpuDelay(delay: input.delay)
     }
     
     public func getSpuDelay(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DelayMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: DelayMessage = DelayMessage()
         message.delay = player?.getSpuDelay()
@@ -350,20 +292,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func addSubtitleTrack(_ input: AddSubtitleMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.addSubtitleTrack(uri: input.uri, isSelected: input.isSelected)
     }
     
     public func getAudioTracksCount(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: TrackCountMessage = TrackCountMessage()
         message.count = player?.getAudioTracksCount()
@@ -372,10 +308,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func getAudioTracks(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> AudioTracksMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: AudioTracksMessage = AudioTracksMessage()
         message.audios = player?.getAudioTracks()
@@ -384,20 +317,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setAudioTrack(_ input: AudioTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setAudioTrack(audioTrackNumber: input.audioTrackNumber)
     }
     
     public func getAudioTrack(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> AudioTrackMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: AudioTrackMessage = AudioTrackMessage()
         message.audioTrackNumber = player?.getAudioTrack()
@@ -406,20 +333,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setAudioDelay(_ input: DelayMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setAudioDelay(delay: input.delay)
     }
     
     public func getAudioDelay(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DelayMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: DelayMessage = DelayMessage()
         message.delay = player?.getAudioDelay()
@@ -428,20 +349,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func addAudioTrack(_ input: AddAudioMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.addAudioTrack(uri: input.uri, isSelected: input.isSelected)
     }
     
     public func getVideoTracksCount(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: TrackCountMessage = TrackCountMessage()
         message.count = player?.getVideoTracksCount()
@@ -450,10 +365,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func getVideoTracks(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoTracksMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: VideoTracksMessage = VideoTracksMessage()
         message.videos = player?.getVideoTracks()
@@ -462,20 +374,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setVideoTrack(_ input: VideoTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setVideoTrack(videoTrackNumber: input.videoTrackNumber)
     }
     
     public func getVideoTrack(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoTrackMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: VideoTrackMessage = VideoTrackMessage()
         message.videoTrackNumber = player?.getVideoTrack()
@@ -484,20 +390,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setVideoScale(_ input: VideoScaleMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setVideoScale(scale: input.scale)
     }
     
     public func getVideoScale(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoScaleMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: VideoScaleMessage = VideoScaleMessage()
         message.scale = player?.getVideoScale()
@@ -506,21 +406,15 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func setVideoAspectRatio(_ input: VideoAspectRatioMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.setVideoAspectRatio(aspectRatio: input.aspectRatio)
     }
     
     public func getVideoAspectRatio(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoAspectRatioMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: VideoAspectRatioMessage = VideoAspectRatioMessage()
         message.aspectRatio = player?.getVideoAspectRatio()
         return message
@@ -528,11 +422,8 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func getAvailableRendererServices(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> RendererServicesMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         let message: RendererServicesMessage = RendererServicesMessage()
         message.services = player?.getAvailableRendererServices()
         return message
@@ -540,30 +431,21 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func startRendererScanning(_ input: RendererScanningMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.startRendererScanning()
     }
     
     public func stopRendererScanning(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
-        
+        let player = getPlayer(textureId: input.textureId)
+
         player?.stopRendererScanning()
     }
     
     public func getRendererDevices(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> RendererDevicesMessage? {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         let message: RendererDevicesMessage = RendererDevicesMessage()
         message.rendererDevices = player?.getRendererDevices()
@@ -572,10 +454,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     public func cast(toRenderer input: RenderDeviceMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var player: VLCViewController? = nil
-        if let textureId = input.textureId {
-            player = players[Int(truncating: textureId)]
-        }
+        let player = getPlayer(textureId: input.textureId)
         
         player?.cast(rendererDevice: input.rendererDevice)
     }
