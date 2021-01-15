@@ -22,6 +22,7 @@ class VlcMediaEvent {
     this.spuTracksCount,
     this.activeSpuTrack,
     this.bufferPercent,
+    this.isPlaying,
   });
 
   /// The type of the event.
@@ -71,4 +72,9 @@ class VlcMediaEvent {
   ///
   /// Only used if [eventType] is [VlcMediaEventType.BUFFERING].
   final double bufferPercent;
+
+  /// Returns the playing state of media.
+  ///
+  /// Only used if [eventType] is [VlcMediaEventType.BUFFERING].
+  final bool isPlaying;
 }

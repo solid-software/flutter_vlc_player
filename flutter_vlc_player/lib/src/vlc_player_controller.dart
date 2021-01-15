@@ -167,6 +167,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           value = value.copyWith(
             isPlaying: false,
             isBuffering: true,
+            isEnded: false,
             playingState: PlayingState.buffering,
           );
           break;
@@ -184,11 +185,13 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isPlaying: false,
             isBuffering: false,
             playingState: PlayingState.stopped,
+            position: Duration.zero,
           );
           break;
 
         case VlcMediaEventType.playing:
           value = value.copyWith(
+            isEnded: false,
             isPlaying: true,
             playingState: PlayingState.playing,
             duration: event.duration,
@@ -205,7 +208,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
-            playingState: PlayingState.stopped,
+            isEnded: true,
+            playingState: PlayingState.ended,
             position: event.position,
           );
           break;
@@ -213,10 +217,19 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         case VlcMediaEventType.buffering:
         case VlcMediaEventType.timeChanged:
           value = value.copyWith(
+            isEnded: false,
             position: event.position,
             duration: event.duration,
             playbackSpeed: event.playbackSpeed,
             bufferPercent: event.bufferPercent,
+            size: event.size,
+            audioTracksCount: event.audioTracksCount,
+            activeAudioTrack: event.activeAudioTrack,
+            spuTracksCount: event.spuTracksCount,
+            activeSpuTrack: event.activeSpuTrack,
+            isPlaying: event.isPlaying,
+            playingState:
+                event.isPlaying ? PlayingState.playing : value.playingState,
           );
           break;
 
@@ -227,6 +240,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
+            isEnded: false,
             playingState: PlayingState.error,
           );
           break;
@@ -276,7 +290,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!initializingCompleter.isCompleted)
       initializingCompleter.complete(null);
     //
-    value = value.copyWith(isInitialized: true);
+    value = value.copyWith(
+      isInitialized: true,
+      playingState: PlayingState.initialized,
+    );
+
     if (_onInit != null) _onInit();
 
     return initializingCompleter.future;
@@ -375,6 +393,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return;
     }
+    await vlcPlayerPlatform.stop(_viewId);
     await vlcPlayerPlatform.setStreamUrl(
       _viewId,
       uri: dataSource,

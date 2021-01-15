@@ -523,8 +523,8 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     
     public func setLooping(isLooping: NSNumber?) {
         
-        // self.vlcMediaPlayer.media.addOption()
-        // --loop, --no-loop
+        let enableLooping = isLooping?.boolValue ?? false;
+        self.vlcMediaPlayer.media.addOption(enableLooping ? "--loop" : "--no-loop")
     }
     
     public func seek(position: NSNumber?) {
@@ -774,8 +774,8 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     }
     
     func setMediaPlayerUrl(uri: String, isAssetUrl: Bool, autoPlay: Bool, hwAcc: Int, options: [String]){
-        
         self.vlcMediaPlayer.stop()
+        
         var media: VLCMedia
         if(isAssetUrl){
             guard let path = Bundle.main.path(forResource: uri, ofType: nil)
@@ -822,6 +822,7 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         }
         
         self.vlcMediaPlayer.media = media
+//        self.vlcMediaPlayer.media.parse(withOptions: VLCMediaParsingOptions(VLCMediaParseLocal | VLCMediaFetchLocal | VLCMediaParseNetwork | VLCMediaFetchNetwork))
         self.vlcMediaPlayer.play()
         if(!autoPlay){
             self.vlcMediaPlayer.stop()
@@ -875,8 +876,7 @@ class VLCRendererEventStreamHandler: NSObject, FlutterStreamHandler, VLCRenderer
     }
 }
 
-
-class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate  {
+class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlayerDelegate, VLCMediaDelegate  {
     
     private var mediaEventSink: FlutterEventSink?
     
@@ -898,16 +898,19 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         let player = aNotification?.object as? VLCMediaPlayer
         let media = player?.media
         
-        let tracks: [Any] = media?.tracksInformation ?? [""] // [Any]
-        var track: NSDictionary
-        var height = 0
-        var width = 0
-        if (player?.currentVideoTrackIndex != nil) &&
-            (player?.currentVideoTrackIndex != -1) {
-            track = tracks[0] as! NSDictionary
-            height = (track["height"] as? Int) ?? 0
-            width = (track["width"] as? Int) ?? 0
-        }
+//        let tracks: [Any] = media?.tracksInformation ?? [""] // [Any]
+//        var track: NSDictionary
+//        var height = 0
+//        var width = 0
+//        if (player?.currentVideoTrackIndex != nil) &&
+//            (player?.currentVideoTrackIndex != -1) {
+//            track = tracks[0] as! NSDictionary
+//            height = (track["height"] as? Int) ?? 0
+//            width = (track["width"] as? Int) ?? 0
+//        }
+        
+        let height = player?.videoSize.height ?? 0
+        let width = player?.videoSize.width ?? 0
         let audioTracksCount = player?.numberOfAudioTracks ?? 0
         let activeAudioTrack = player?.currentAudioTrackIndex ?? 0
         let spuTracksCount = player?.numberOfSubtitlesTracks ?? 0
@@ -916,10 +919,10 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         let speed = player?.rate ?? 1
         let position = player?.time?.value?.intValue ?? 0
         let buffering = 100.0
-        
+        let isPlaying = player?.isPlaying ?? false
+                
         switch player?.state
         {
-        
         case .opening:
             mediaEventSink([
                 "event":"opening",
@@ -962,10 +965,17 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         case .buffering:
             mediaEventSink([
                 "event": "timeChanged",
-                "position": position,
-                "duration": duration,
+                "height": height,
+                "width":  width,
                 "speed": speed,
-                "buffer" : buffering,
+                "duration": duration,
+                "position": position,
+                "buffer": buffering,
+                "audioTracksCount": audioTracksCount,
+                "activeAudioTrack": activeAudioTrack,
+                "spuTracksCount": spuTracksCount,
+                "activeSpuTrack": activeSpuTrack,
+                "isPlaying": isPlaying,
             ])
             break
             
@@ -993,16 +1003,32 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         guard let mediaEventSink = self.mediaEventSink else { return }
         
         let player = aNotification?.object as? VLCMediaPlayer
+        //
+        let height = player?.videoSize.height ?? 0
+        let width = player?.videoSize.width ?? 0
         let speed = player?.rate ?? 1
-        let duration =  player?.media?.length.value ?? 0
-
+        let duration = player?.media?.length.value ?? 0
+        let audioTracksCount = player?.numberOfAudioTracks ?? 0
+        let activeAudioTrack = player?.currentAudioTrackIndex ?? 0
+        let spuTracksCount = player?.numberOfSubtitlesTracks ?? 0
+        let activeSpuTrack = player?.currentVideoSubTitleIndex ?? 0
+        let buffering = 100.0
+        let isPlaying = player?.isPlaying ?? false
+        //
         if let position = player?.time.value {
             mediaEventSink([
                 "event": "timeChanged",
-                "position": position,
-                "duration": duration,
+                "height": height,
+                "width":  width,
                 "speed": speed,
-                "buffer": 100.0,
+                "duration": duration,
+                "position": position,
+                "buffer": buffering,
+                "audioTracksCount": audioTracksCount,
+                "activeAudioTrack": activeAudioTrack,
+                "spuTracksCount": spuTracksCount,
+                "activeSpuTrack": activeSpuTrack,
+                "isPlaying": isPlaying,
             ])
         }
     }

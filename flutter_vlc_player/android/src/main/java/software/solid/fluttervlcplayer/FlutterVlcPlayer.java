@@ -97,9 +97,9 @@ final class FlutterVlcPlayer implements PlatformView {
         textureView.setFitsSystemWindows(true);
     }
 
-    private Uri getStreamUri(String streamPath, boolean isLocal) {
-        return isLocal ? Uri.fromFile(new File(streamPath)) : Uri.parse(streamPath);
-    }
+    // private Uri getStreamUri(String streamPath, boolean isLocal) {
+    //     return isLocal ? Uri.fromFile(new File(streamPath)) : Uri.parse(streamPath);
+    // }
 
     public void initialize(List<String> options) {
         libVLC = new LibVLC(context, options);
@@ -195,6 +195,15 @@ final class FlutterVlcPlayer implements PlatformView {
                     public void onEvent(MediaPlayer.Event event) {
                         HashMap<String, Object> eventObject = new HashMap<>();
                         //
+                        // Current video track is only available when the media is playing
+                        int height = 0;
+                        int width = 0;
+                        Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
+                        if (currentVideoTrack != null) {
+                            height = currentVideoTrack.height;
+                            width = currentVideoTrack.width;
+                        }
+                        //
                         switch (event.type) {
 
                             case MediaPlayer.Event.Opening:
@@ -213,15 +222,6 @@ final class FlutterVlcPlayer implements PlatformView {
                                 break;
 
                             case MediaPlayer.Event.Playing:
-                                // Now send playing info:
-                                // Current video track is only available when the media is playing
-                                int height = 0;
-                                int width = 0;
-                                Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
-                                if (currentVideoTrack != null) {
-                                    height = currentVideoTrack.height;
-                                    width = currentVideoTrack.width;
-                                }
                                 eventObject.put("event", "playing");
                                 eventObject.put("height", height);
                                 eventObject.put("width", width);
@@ -239,7 +239,6 @@ final class FlutterVlcPlayer implements PlatformView {
                                 break;
 
                             case MediaPlayer.Event.EndReached:
-                                mediaPlayer.stop();
                                 eventObject.put("event", "ended");
                                 eventObject.put("position", mediaPlayer.getTime());
                                 mediaEventSink.success(eventObject);
@@ -248,10 +247,17 @@ final class FlutterVlcPlayer implements PlatformView {
                             case MediaPlayer.Event.Buffering:
                             case MediaPlayer.Event.TimeChanged:
                                 eventObject.put("event", "timeChanged");
+                                eventObject.put("height", height);
+                                eventObject.put("width", width);
+                                eventObject.put("speed", mediaPlayer.getRate());
                                 eventObject.put("position", mediaPlayer.getTime());
                                 eventObject.put("duration", mediaPlayer.getLength());
-                                eventObject.put("speed", mediaPlayer.getRate());
                                 eventObject.put("buffer", event.getBuffering());
+                                eventObject.put("audioTracksCount", mediaPlayer.getAudioTracksCount());
+                                eventObject.put("activeAudioTrack", mediaPlayer.getAudioTrack());
+                                eventObject.put("spuTracksCount", mediaPlayer.getSpuTracksCount());
+                                eventObject.put("activeSpuTrack", mediaPlayer.getSpuTrack());
+                                eventObject.put("isPlaying", mediaPlayer.isPlaying());
                                 mediaEventSink.success(eventObject);
                                 break;
 
@@ -330,7 +336,10 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void setLooping(boolean value) {
-        //todo: implement it
+        if (mediaPlayer != null) {
+            if (mediaPlayer.getMedia() != null)
+                mediaPlayer.getMedia().addOption(value ? "--loop" : "--no-loop");
+        }
     }
 
     void setVolume(long value) {
