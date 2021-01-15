@@ -19,7 +19,6 @@ class SingleTab extends StatefulWidget {
 class _SingleTabState extends State<SingleTab> {
   VlcPlayerController _controller;
   GlobalKey _key = GlobalKey<VlcPlayerWithControlsState>();
-
   //
   List<VideoData> listVideos;
   int selectedVideoIndex;
@@ -29,10 +28,7 @@ class _SingleTabState extends State<SingleTab> {
     final videoBytes = Uint8List.view(videoData.buffer);
     String dir = (await getTemporaryDirectory()).path;
     File temp = new File('$dir/temp.file');
-
     temp.writeAsBytesSync(videoBytes);
-
-    
     return temp;
   }
 
@@ -49,7 +45,14 @@ class _SingleTabState extends State<SingleTab> {
     listVideos.add(VideoData(
       name: 'Network Video 2',
       path:
-          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+          'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      type: VideoType.network,
+    ));
+    //
+    listVideos.add(VideoData(
+      name: 'HLS Streaming Video 1',
+      path:
+          'http://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel.ism/.m3u8',
       type: VideoType.network,
     ));
     //
@@ -181,9 +184,21 @@ class _SingleTabState extends State<SingleTab> {
                         hwAcc: HwAcc.FULL);
                     break;
                   case VideoType.file:
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Copying file to temporary storage..."),
+                        ),
+                      );
+                    await Future.delayed(Duration(seconds: 1));
+                    // File file = File(video.path);
                     File tempVideo = await _loadVideoToFs();
-
-                   // File file = File(video.path);
+                    await Future.delayed(Duration(seconds: 1));
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Now trying to play..."),
+                        ),
+                      );
+                    await Future.delayed(Duration(seconds: 1));
                     if (await tempVideo.exists())
                       await _controller.setMediaFromFile(tempVideo);
                     else

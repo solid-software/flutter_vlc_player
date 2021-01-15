@@ -69,6 +69,7 @@ class ControlsOverlay extends StatelessWidget {
                 case PlayingState.playing:
                   return SizedBox.shrink();
 
+                case PlayingState.ended:
                 case PlayingState.error:
                   return Center(
                     child: IconButton(

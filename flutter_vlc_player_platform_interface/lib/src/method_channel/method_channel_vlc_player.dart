@@ -132,10 +132,19 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
           case 'timeChanged':
             return VlcMediaEvent(
               mediaEventType: VlcMediaEventType.timeChanged,
+              size: Size(
+                map['width']?.toDouble() ?? 0.0,
+                map['height']?.toDouble() ?? 0.0,
+              ),
+              playbackSpeed: map['speed'] ?? 1.0,
               position: Duration(milliseconds: map['position'] ?? 0),
               duration: Duration(milliseconds: map['duration'] ?? 0),
-              playbackSpeed: map['speed'] ?? 1.0,
+              audioTracksCount: map['audioTracksCount'] ?? 1,
+              activeAudioTrack: map['activeAudioTrack'] ?? 0,
+              spuTracksCount: map['spuTracksCount'] ?? 0,
+              activeSpuTrack: map['activeSpuTrack'] ?? -1,
               bufferPercent: map['buffer'] ?? 100.0,
+              isPlaying: map['isPlaying'] ?? false,
             );
 
           case 'mediaChanged':

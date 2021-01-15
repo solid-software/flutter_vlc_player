@@ -14,7 +14,7 @@ class _MultipleTabState extends State<MultipleTab> {
   List<String> urls = [
     'https://www.tomandjerryonline.com/Videos/Ford%20Mondeo%20-%20Tom%20and%20Jerry.mov',
     'https://www.tomandjerryonline.com/Videos/TomAndJerryTales_HQ.wmv',
-    'https://www.tomandjerryonline.com/Videos/tomamdjerrymilkAd.mov'
+    'https://www.tomandjerryonline.com/Videos/tjpb1.mov'
   ];
 
   bool showPlayerControls = true;

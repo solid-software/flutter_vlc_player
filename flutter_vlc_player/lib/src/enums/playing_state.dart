@@ -3,6 +3,7 @@ enum PlayingState {
   initialized,
   stopped,
   paused,
+  ended,
   buffering,
   playing,
   error,
