@@ -393,6 +393,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return;
     }
+    await vlcPlayerPlatform.stop(_viewId);
     await vlcPlayerPlatform.setStreamUrl(
       _viewId,
       uri: dataSource,
