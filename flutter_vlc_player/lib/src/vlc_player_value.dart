@@ -18,6 +18,7 @@ class VlcPlayerValue {
     this.isPlaying = false,
     this.isLooping = false,
     this.isBuffering = false,
+    this.isEnded = false,
     this.bufferPercent = 0.0,
     this.volume = 100,
     this.playbackSpeed = 1.0,
@@ -71,6 +72,9 @@ class VlcPlayerValue {
 
   /// True if the video is currently buffering.
   final bool isBuffering;
+
+  /// True if the video is ended
+  final bool isEnded;
 
   /// The current volume of the playback.
   final int volume;
@@ -149,6 +153,7 @@ class VlcPlayerValue {
     bool isPlaying,
     bool isLooping,
     bool isBuffering,
+    bool isEnded,
     double bufferPercent,
     int volume,
     double playbackSpeed,
@@ -172,6 +177,7 @@ class VlcPlayerValue {
       isPlaying: isPlaying ?? this.isPlaying,
       isLooping: isLooping ?? this.isLooping,
       isBuffering: isBuffering ?? this.isBuffering,
+      isEnded: isEnded ?? this.isEnded,
       bufferPercent: bufferPercent ?? this.bufferPercent,
       volume: volume ?? this.volume,
       playbackSpeed: playbackSpeed ?? this.playbackSpeed,
@@ -198,8 +204,9 @@ class VlcPlayerValue {
         'isInitialized $isInitialized, '
         'isPlaying: $isPlaying, '
         'isLooping: $isLooping, '
-        'bufferPercent: $bufferPercent, '
         'isBuffering: $isBuffering, '
+        'isEnded: $isEnded, '
+        'bufferPercent: $bufferPercent, '
         'volume: $volume, '
         'playbackSpeed: $playbackSpeed, '
         'audioTracksCount: $audioTracksCount, '

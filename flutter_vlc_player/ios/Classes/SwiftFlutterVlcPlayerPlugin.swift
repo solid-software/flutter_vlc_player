@@ -1007,7 +1007,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         let height = player?.videoSize.height ?? 0
         let width = player?.videoSize.width ?? 0
         let speed = player?.rate ?? 1
-        let duration =  player?.media?.length.value ?? 0
+        let duration = player?.media?.length.value ?? 0
         let audioTracksCount = player?.numberOfAudioTracks ?? 0
         let activeAudioTrack = player?.currentAudioTrackIndex ?? 0
         let spuTracksCount = player?.numberOfSubtitlesTracks ?? 0
