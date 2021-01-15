@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 import 'video_data.dart';
 import 'package:flutter_vlc_player/vlc_player_flutter.dart';
@@ -19,6 +23,18 @@ class _SingleTabState extends State<SingleTab> {
   //
   List<VideoData> listVideos;
   int selectedVideoIndex;
+
+  Future<File> _loadVideoToFs() async {
+    final videoData = await rootBundle.load('assets/sample.mp4');
+    final videoBytes = Uint8List.view(videoData.buffer);
+    String dir = (await getTemporaryDirectory()).path;
+    File temp = new File('$dir/temp.file');
+
+    temp.writeAsBytesSync(videoBytes);
+
+    
+    return temp;
+  }
 
   void fillVideos() {
     listVideos = List<VideoData>();
@@ -39,7 +55,7 @@ class _SingleTabState extends State<SingleTab> {
     //
     listVideos.add(VideoData(
       name: 'File Video 1',
-      path: '/sdcard/test.mp4', // or '/storage/emulated/0/test.mp4'
+      path: "System File Example", 
       type: VideoType.file,
     ));
     //
@@ -51,8 +67,9 @@ class _SingleTabState extends State<SingleTab> {
   }
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
+
     //
     fillVideos();
     selectedVideoIndex = 0;
@@ -164,13 +181,15 @@ class _SingleTabState extends State<SingleTab> {
                         hwAcc: HwAcc.FULL);
                     break;
                   case VideoType.file:
-                    File file = File(video.path);
-                    if (await file.exists())
-                      await _controller.setMediaFromFile(file);
+                    File tempVideo = await _loadVideoToFs();
+
+                   // File file = File(video.path);
+                    if (await tempVideo.exists())
+                      await _controller.setMediaFromFile(tempVideo);
                     else
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("File not exists!"),
+                          content: Text("File load error."),
                         ),
                       );
                     break;
