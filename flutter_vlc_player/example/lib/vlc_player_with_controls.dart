@@ -48,7 +48,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   @override
   void initState() {
     super.initState();
-    //
     _controller = widget.controller;
     _controller.addListener(listener);
   }
@@ -59,7 +58,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     super.dispose();
   }
 
-  void listener () async{
+  void listener() async {
     if (!this.mounted) return;
     //
     if (_controller.value.isInitialized) {
@@ -70,9 +69,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           var strPosition = oPosition.toString().split('.')[0];
           var strDuration = oDuration.toString().split('.')[0];
           position =
-          "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
+              "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
           duration =
-          "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+              "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
         } else {
           position = oPosition.toString().split('.')[0];
           duration = oDuration.toString().split('.')[0];

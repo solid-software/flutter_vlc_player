@@ -185,6 +185,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isPlaying: false,
             isBuffering: false,
             playingState: PlayingState.stopped,
+            position: Duration.zero,
           );
           break;
 

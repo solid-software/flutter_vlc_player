@@ -96,10 +96,4 @@ class _VlcPlayerState extends State<VlcPlayer>
       ),
     );
   }
-
-  @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
 }
