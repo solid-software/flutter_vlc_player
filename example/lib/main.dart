@@ -217,23 +217,31 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               Divider(height: 1),
               Row(
                 children: [
-                  FlatButton(
-                    child: Text("Change URL"),
-                    onPressed: () =>
-                        _videoViewController.setStreamUrl(changeUrl),
+                  Flexible(
+                    child: FlatButton(
+                      child: Text("Change URL"),
+                      onPressed: () =>
+                          _videoViewController.setStreamUrl(changeUrl),
+                    ),
                   ),
-                  FlatButton(
-                      child: Text("+speed"),
-                      onPressed: () =>
-                          _videoViewController.setPlaybackSpeed(2.0)),
-                  FlatButton(
-                      child: Text("Normal"),
-                      onPressed: () =>
-                          _videoViewController.setPlaybackSpeed(1)),
-                  FlatButton(
-                      child: Text("-speed"),
-                      onPressed: () =>
-                          _videoViewController.setPlaybackSpeed(0.5)),
+                  Flexible(
+                    child: FlatButton(
+                        child: Text("+speed"),
+                        onPressed: () =>
+                            _videoViewController.setPlaybackSpeed(2.0)),
+                  ),
+                  Flexible(
+                    child: FlatButton(
+                        child: Text("Normal"),
+                        onPressed: () =>
+                            _videoViewController.setPlaybackSpeed(1)),
+                  ),
+                  Flexible(
+                    child: FlatButton(
+                        child: Text("-speed"),
+                        onPressed: () =>
+                            _videoViewController.setPlaybackSpeed(0.5)),
+                  ),
                 ],
               ),
               Divider(height: 1),
