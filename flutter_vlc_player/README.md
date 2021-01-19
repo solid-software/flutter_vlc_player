@@ -1,11 +1,12 @@
 #  VLC Player Plugin
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
-<p float="left">
-  <img src="https://github.com/solid-software/flutter_vlc_player/blob/master/img_example_v4.jpg?raw=true" height="400">
-  <img src="https://github.com/solid-software/flutter_vlc_player/blob/master/imgpsh_mobile_save.jfif?raw=true" height="400">
-</p>
+<div>
+  <img src="doc/single.jpg" height="400">
+  <img src="doc/multiple.jpg" height="400">
+</div>
 
+<br>
 
 
 ## Installation
