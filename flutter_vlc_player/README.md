@@ -76,15 +76,76 @@ After that you can access the media/subtitle file by
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 
 ```dart
-TBD
+import 'package:flutter/material.dart';
+import 'package:flutter_vlc_player/vlc_player_flutter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key}) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  VlcPlayerController _videoPlayerController;
+
+  Future<void> initializePlayer() async {}
+
+  @override
+  void initState() {
+    super.initState();
+
+    _videoPlayerController = VlcPlayerController.network(
+      'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      hwAcc: HwAcc.FULL,
+      autoPlay: false,
+      options: VlcPlayerOptions(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.stopRendererScanning();
+    _videoPlayerController.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: VlcPlayer(
+            controller: _videoPlayerController,
+            aspectRatio: 16 / 9,
+            placeholder: Center(child: CircularProgressIndicator()),
+          ),
+        ));
+  }
+}
+
 ```
 
 
 
-## API
-```dart
-TBD
-```
 
 
 
@@ -94,12 +155,22 @@ TBD
 ### Version 5.0 Upgrade For Existing Apps
 To upgrade to version 5.0 first you need to migrate the existing project to swift.
 
-    First run 'git clean'
-    Delete existing ios folder from root of flutter project.
-    Run this command flutter create -i swift .
-    Be sure to follow instructions above after for plist and pod file changes.
+1. Clean the repo:
 
-This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
+     ```git clean -xdf```
+     
+2. Delete existing ios folder from root of flutter project. If you have some custom changes made to the iOS app - rename it or copy somewhere outside the project.
+
+3. Re-create the iOS app: This command will create only ios directory with swift support. See https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter
+
+
+    ```flutter create -i swift .```
+
+
+    
+4. Make sure to update the project according to warnings shown by the flutter tools. (Update Info.plist, Podfile).
+
+If you have some changes made to the iOS app, recreate the app using above method and copy in the changed files.
 
 Be sure to follow instructions above after 
 
