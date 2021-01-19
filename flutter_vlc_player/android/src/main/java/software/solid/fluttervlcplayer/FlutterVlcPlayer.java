@@ -52,6 +52,8 @@ final class FlutterVlcPlayer implements PlatformView {
     private List<RendererDiscoverer> rendererDiscoverers;
     private List<RendererItem> rendererItems;
 
+    private boolean isPaused = false;
+
     // Platform view
     @Override
     public View getView() {
@@ -285,12 +287,17 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void play() {
-        mediaPlayer.stop();
+        //to fix video so it can repeat after stopped, we have to put in this change
+        if( !isPaused) {
+            mediaPlayer.stop();
+        }
         mediaPlayer.play();
+        isPaused = false;
     }
 
     void pause() {
         mediaPlayer.pause();
+        isPaused = true;
     }
 
     void stop() {
