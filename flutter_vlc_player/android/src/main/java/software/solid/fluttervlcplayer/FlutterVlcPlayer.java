@@ -285,6 +285,7 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void play() {
+        mediaPlayer.stop();
         mediaPlayer.play();
     }
 
