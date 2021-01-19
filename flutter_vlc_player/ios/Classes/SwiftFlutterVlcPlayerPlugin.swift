@@ -502,7 +502,7 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     }
     
     public func play() {
-        
+        self.vlcMediaPlayer.stop()
         self.vlcMediaPlayer.play()
     }
     
