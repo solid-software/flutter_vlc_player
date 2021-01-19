@@ -470,6 +470,7 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     var rendererEventChannel: FlutterEventChannel
     let rendererEventChannelHandler: VLCRendererEventStreamHandler
     var rendererdiscoverers: [VLCRendererDiscoverer] = [VLCRendererDiscoverer]()
+    var paused = false;
     
     public func view() -> UIView {
         return hostedView
@@ -502,13 +503,19 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     }
     
     public func play() {
-        self.vlcMediaPlayer.stop()
+       //to fix video so it can repeat after stopped, we have to put in this change.
+        if(!paused){
+            self.vlcMediaPlayer.stop()
+        }
+        
         self.vlcMediaPlayer.play()
+        paused = false;
     }
     
     public func pause() {
         
         self.vlcMediaPlayer.pause()
+        paused = true;
     }
     
     public func stop() {
