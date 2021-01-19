@@ -20,7 +20,7 @@ class ControlsOverlay extends StatelessWidget {
                 return Center(
                   child: IconButton(
                     onPressed: () async {
-                      await controller.seekTo(Duration.zero);
+                      await controller.stop();
                       await controller.play();
                     },
                     color: Colors.white,
