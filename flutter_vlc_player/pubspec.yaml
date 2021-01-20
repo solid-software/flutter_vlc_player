@@ -23,10 +23,9 @@ dependencies:
     sdk: flutter
   cryptoutils: ^0.4.0
   meta: ^1.2.4
-  
+
   flutter_vlc_player_platform_interface:
     path: ../flutter_vlc_player_platform_interface
-
 
 dev_dependencies:
   flutter_test:

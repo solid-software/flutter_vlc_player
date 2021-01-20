@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player_example/multiple_tab.dart';
-import 'package:flutter_vlc_player_example/single_tab.dart';
+import 'multiple_tab.dart';
+import 'single_tab.dart';
 
 void main() {
   runApp(
