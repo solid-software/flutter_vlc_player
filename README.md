@@ -2,8 +2,8 @@
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
 <div>
-  <img src="doc/single.jpg" height="400">
-  <img src="doc/multiple.jpg" height="400">
+  <img src="/flutter_vlc_player/doc/single.jpg" height="400">
+  <img src="/flutter_vlc_player/doc/multiple.jpg" height="400">
 </div>
 
 <br>
