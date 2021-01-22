@@ -1,6 +1,6 @@
 name: flutter_vlc_player_platform_interface
 description: A common platform interface for the vlc player plugin.
-homepage: https://github.com/solid-software/flutter_vlc_player
+homepage: https://github.com/solid-software/flutter_vlc_player/flutter_vlc_player_platform_interface
 version: 1.0.0
 
 environment:

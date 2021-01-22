@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Surface;
@@ -35,7 +36,7 @@ import java.util.List;
 final class FlutterVlcPlayer implements PlatformView {
 
     private final String TAG = this.getClass().getSimpleName();
-    private final boolean debug = true;
+    private final boolean debug = false;
     //
     private final Context context;
     private final TextureView textureView;
@@ -118,20 +119,17 @@ final class FlutterVlcPlayer implements PlatformView {
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 log("onSurfaceTextureAvailable");
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mediaPlayer == null)
-                            return;
-                        mediaPlayer.getVLCVout().setWindowSize(width, height);
-                        mediaPlayer.getVLCVout().setVideoSurface(surface);
-                        if (!mediaPlayer.getVLCVout().areViewsAttached())
-                            mediaPlayer.getVLCVout().attachViews();
-                        mediaPlayer.setVideoTrackEnabled(true);
-                        if (wasPlaying)
-                            mediaPlayer.play();
-                        wasPlaying = false;
-                    }
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (mediaPlayer == null)
+                        return;
+                    mediaPlayer.getVLCVout().setWindowSize(width, height);
+                    mediaPlayer.getVLCVout().setVideoSurface(surface);
+                    if (!mediaPlayer.getVLCVout().areViewsAttached())
+                        mediaPlayer.getVLCVout().attachViews();
+                    mediaPlayer.setVideoTrackEnabled(true);
+                    if (wasPlaying)
+                        mediaPlayer.play();
+                    wasPlaying = false;
                 }, 100L);
 
             }
