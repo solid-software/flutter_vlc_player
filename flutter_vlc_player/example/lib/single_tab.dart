@@ -4,11 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_vlc_player/vlc_player_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'video_data.dart';
-import 'package:flutter_vlc_player/vlc_player_flutter.dart';
 import 'vlc_player_with_controls.dart';
 
 class SingleTab extends StatefulWidget {
@@ -18,7 +17,7 @@ class SingleTab extends StatefulWidget {
 
 class _SingleTabState extends State<SingleTab> {
   VlcPlayerController _controller;
-  GlobalKey _key = GlobalKey<VlcPlayerWithControlsState>();
+  final _key = GlobalKey<VlcPlayerWithControlsState>();
   //
   List<VideoData> listVideos;
   int selectedVideoIndex;
@@ -26,14 +25,14 @@ class _SingleTabState extends State<SingleTab> {
   Future<File> _loadVideoToFs() async {
     final videoData = await rootBundle.load('assets/sample.mp4');
     final videoBytes = Uint8List.view(videoData.buffer);
-    String dir = (await getTemporaryDirectory()).path;
-    File temp = new File('$dir/temp.file');
+    var dir = (await getTemporaryDirectory()).path;
+    var temp = File('$dir/temp.file');
     temp.writeAsBytesSync(videoBytes);
     return temp;
   }
 
   void fillVideos() {
-    listVideos = List<VideoData>();
+    listVideos = <VideoData>[];
     //
     listVideos.add(VideoData(
       name: 'Network Video 1',
@@ -44,8 +43,7 @@ class _SingleTabState extends State<SingleTab> {
     //
     listVideos.add(VideoData(
       name: 'Network Video 2',
-      path:
-          'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
       type: VideoType.network,
     ));
     //
@@ -58,7 +56,7 @@ class _SingleTabState extends State<SingleTab> {
     //
     listVideos.add(VideoData(
       name: 'File Video 1',
-      path: "System File Example", 
+      path: 'System File Example',
       type: VideoType.file,
     ));
     //
@@ -70,14 +68,14 @@ class _SingleTabState extends State<SingleTab> {
   }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
     //
     fillVideos();
     selectedVideoIndex = 0;
     //
-    VideoData initVideo = listVideos[selectedVideoIndex];
+    var initVideo = listVideos[selectedVideoIndex];
     switch (initVideo.type) {
       case VideoType.network:
         _controller = VlcPlayerController.network(
@@ -100,7 +98,7 @@ class _SingleTabState extends State<SingleTab> {
         );
         break;
       case VideoType.file:
-        File file = File(initVideo.path);
+        var file = File(initVideo.path);
         _controller = VlcPlayerController.file(
           file,
           onInit: () async {
@@ -114,7 +112,6 @@ class _SingleTabState extends State<SingleTab> {
       case VideoType.asset:
         _controller = VlcPlayerController.asset(
           initVideo.path,
-          // package: "test",
           onInit: () async {
             await _controller.startRendererScanning();
           },
@@ -140,7 +137,7 @@ class _SingleTabState extends State<SingleTab> {
           itemCount: listVideos.length,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            VideoData video = listVideos[index];
+            var video = listVideos[index];
             IconData iconData;
             switch (video.type) {
               case VideoType.network:
@@ -185,28 +182,28 @@ class _SingleTabState extends State<SingleTab> {
                     break;
                   case VideoType.file:
                     Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Copying file to temporary storage..."),
-                        ),
-                      );
+                      SnackBar(
+                        content: Text('Copying file to temporary storage...'),
+                      ),
+                    );
                     await Future.delayed(Duration(seconds: 1));
-                    // File file = File(video.path);
-                    File tempVideo = await _loadVideoToFs();
+                    var tempVideo = await _loadVideoToFs();
                     await Future.delayed(Duration(seconds: 1));
                     Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Now trying to play..."),
-                        ),
-                      );
+                      SnackBar(
+                        content: Text('Now trying to play...'),
+                      ),
+                    );
                     await Future.delayed(Duration(seconds: 1));
-                    if (await tempVideo.exists())
+                    if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
-                    else
+                    } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("File load error."),
+                          content: Text('File load error.'),
                         ),
                       );
+                    }
                     break;
                   case VideoType.asset:
                     await _controller.setMediaFromAsset(video.path);

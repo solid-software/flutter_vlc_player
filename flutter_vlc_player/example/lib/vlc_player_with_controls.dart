@@ -1,8 +1,8 @@
 import 'dart:typed_data';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_vlc_player/vlc_player_flutter.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_vlc_player/vlc_player_flutter.dart';
 
 import 'controls_overlay.dart';
 
@@ -12,7 +12,7 @@ class VlcPlayerWithControls extends StatefulWidget {
 
   VlcPlayerWithControls({
     Key key,
-    this.controller,
+    @required this.controller,
     this.showControls = true,
   })  : assert(controller != null, 'You must provide a vlc controller'),
         super(key: key);
@@ -33,8 +33,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   //
   double sliderValue = 0.0;
   double volumeValue = 50;
-  String position = "";
-  String duration = "";
+  String position = '';
+  String duration = '';
   int numberOfCaptions = 0;
   int numberOfAudioTracks = 0;
 
@@ -59,7 +59,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   }
 
   void listener() async {
-    if (!this.mounted) return;
+    if (!mounted) return;
     //
     if (_controller.value.isInitialized) {
       var oPosition = _controller.value.position;
@@ -177,8 +177,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           color: Colors.white,
                           onPressed: () async {
                             playbackSpeedIndex++;
-                            if (playbackSpeedIndex >= playbackSpeeds.length)
+                            if (playbackSpeedIndex >= playbackSpeeds.length) {
                               playbackSpeedIndex = 0;
+                            }
                             return await _controller.setPlaybackSpeed(
                                 playbackSpeeds.elementAt(playbackSpeedIndex));
                           },
@@ -381,14 +382,14 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   void _getSubtitleTracks() async {
     if (!_controller.value.isPlaying) return;
 
-    Map<int, String> subtitleTracks = await _controller.getSpuTracks();
+    var subtitleTracks = await _controller.getSpuTracks();
     //
-    if (subtitleTracks != null && subtitleTracks.length > 0) {
-      int selectedSubId = await showDialog(
+    if (subtitleTracks != null && subtitleTracks.isNotEmpty) {
+      var selectedSubId = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Select Subtitle"),
+            title: Text('Select Subtitle'),
             content: Container(
               width: double.maxFinite,
               height: 250,
@@ -423,14 +424,14 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   void _getAudioTracks() async {
     if (!_controller.value.isPlaying) return;
 
-    Map<int, String> audioTracks = await _controller.getAudioTracks();
+    var audioTracks = await _controller.getAudioTracks();
     //
-    if (audioTracks != null && audioTracks.length > 0) {
-      int selectedAudioTrackId = await showDialog(
+    if (audioTracks != null && audioTracks.isNotEmpty) {
+      var selectedAudioTrackId = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Select Audio"),
+            title: Text('Select Audio'),
             content: Container(
               width: double.maxFinite,
               height: 250,
@@ -458,20 +459,21 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           );
         },
       );
-      if (selectedAudioTrackId != null)
+      if (selectedAudioTrackId != null) {
         await _controller.setAudioTrack(selectedAudioTrackId);
+      }
     }
   }
 
   void _getRendererDevices() async {
-    Map<String, String> castDevices = await _controller.getRendererDevices();
+    var castDevices = await _controller.getRendererDevices();
     //
-    if (castDevices != null && castDevices.length > 0) {
-      String selectedCastDeviceName = await showDialog(
+    if (castDevices != null && castDevices.isNotEmpty) {
+      var selectedCastDeviceName = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Display Devices"),
+            title: Text('Display Devices'),
             content: Container(
               width: double.maxFinite,
               height: 250,
@@ -502,20 +504,20 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       await _controller.castToRenderer(selectedCastDeviceName);
     } else {
       Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("No Display Device Found!")));
+          .showSnackBar(SnackBar(content: Text('No Display Device Found!')));
     }
   }
 
   void _createCameraImage() async {
-    Uint8List snapshot = await _controller.takeSnapshot();
+    var snapshot = await _controller.takeSnapshot();
     _overlayEntry?.remove();
     _overlayEntry = _createSnapshotThumbnail(snapshot);
     Overlay.of(context).insert(_overlayEntry);
   }
 
   OverlayEntry _createSnapshotThumbnail(Uint8List snapshot) {
-    double right = initSnapshotRightPosition;
-    double bottom = initSnapshotBottomPosition;
+    var right = initSnapshotRightPosition;
+    var bottom = initSnapshotBottomPosition;
     return OverlayEntry(
       builder: (context) => Positioned(
         right: right,

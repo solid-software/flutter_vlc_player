@@ -135,7 +135,7 @@ class VlcPlayerValue {
     if (!isInitialized || size.width == 0 || size.height == 0) {
       return 1.0;
     }
-    final double aspectRatio = size.width / size.height;
+    final aspectRatio = size.width / size.height;
     if (aspectRatio <= 0) {
       return 1.0;
     }

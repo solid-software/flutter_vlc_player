@@ -120,11 +120,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// This is a callback that will be executed once the platform view has been initialized.
   /// If you want the media to play as soon as the platform view has initialized, you could just call
   /// [VlcPlayerController.play] in this callback. (see the example)
-  VoidCallback _onInit;
+  final _onInit;
 
   /// This is a callback that will be executed every time a new renderer cast device attached/detached
   /// It should be defined as "void Function(VlcRendererEventType, String, String)", where the VlcRendererEventType is an enum { attached, detached } and the next two String arguments are unique-id and name of renderer device, respectively.
-  RendererCallback _onRendererHandler;
+  final _onRendererHandler;
 
   bool _isDisposed = false;
   Completer<void> _creatingCompleter;
@@ -135,7 +135,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Attempts to open the given [url] and load metadata about the video.
   Future<void> initialize() async {
     if (value.isInitialized) {
-      throw new Exception('Already Initialized');
+      throw Exception('Already Initialized');
     }
 
     _lifeCycleObserver = VlcAppLifeCycleObserver(this);
@@ -144,16 +144,16 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
     await vlcPlayerPlatform.create(
       viewId: _viewId,
-      uri: this.dataSource,
-      type: this.dataSourceType,
-      package: this.package,
-      hwAcc: this.hwAcc ?? HwAcc.AUTO,
-      autoPlay: this.autoPlay ?? true,
-      options: this.options,
+      uri: dataSource,
+      type: dataSourceType,
+      package: package,
+      hwAcc: hwAcc ?? HwAcc.AUTO,
+      autoPlay: autoPlay ?? true,
+      options: options,
     );
 
     _creatingCompleter.complete(null);
-    final Completer<void> initializingCompleter = Completer<void>();
+    final initializingCompleter = Completer<void>();
 
     // listen for media events
     void mediaEventListener(VlcMediaEvent event) {
@@ -250,7 +250,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     }
 
     void errorListener(Object obj) {
-      final PlatformException e = obj as PlatformException;
+      final e = obj as PlatformException;
       value = VlcPlayerValue.erroneous(e.message);
       if (!initializingCompleter.isCompleted) {
         initializingCompleter.completeError(obj);
@@ -268,14 +268,16 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       }
       switch (event.eventType) {
         case VlcRendererEventType.attached:
-          if (_onRendererHandler != null)
+          if (_onRendererHandler != null) {
             _onRendererHandler(VlcRendererEventType.attached, event.rendererId,
                 event.rendererName);
+          }
           break;
         case VlcRendererEventType.detached:
-          if (_onRendererHandler != null)
+          if (_onRendererHandler != null) {
             _onRendererHandler(VlcRendererEventType.detached, event.rendererId,
                 event.rendererName);
+          }
           break;
         case VlcRendererEventType.unknown:
           break;
@@ -286,8 +288,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         .rendererEventsFor(_viewId)
         .listen(rendererEventListener);
 
-    if (!initializingCompleter.isCompleted)
+    if (!initializingCompleter.isCompleted) {
       initializingCompleter.complete(null);
+    }
     //
     value = value.copyWith(
       isInitialized: true,
@@ -325,7 +328,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     bool autoPlay,
     HwAcc hwAcc,
   }) async {
-    this._dataSourceType = DataSourceType.asset;
+    _dataSourceType = DataSourceType.asset;
     this.package = package;
     await _setStreamUrl(
       dataSource,
@@ -345,8 +348,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     bool autoPlay,
     HwAcc hwAcc,
   }) async {
-    this._dataSourceType = DataSourceType.network;
-    this.package = null;
+    _dataSourceType = DataSourceType.network;
+    package = null;
     await _setStreamUrl(
       dataSource,
       dataSourceType: DataSourceType.network,
@@ -365,9 +368,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     bool autoPlay,
     HwAcc hwAcc,
   }) async {
-    this._dataSourceType = DataSourceType.file;
-    this.package = null;
-    String dataSource = 'file://${file.path}';
+    _dataSourceType = DataSourceType.file;
+    package = null;
+    var dataSource = 'file://${file.path}';
     await _setStreamUrl(
       dataSource,
       dataSourceType: DataSourceType.file,
@@ -474,7 +477,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// Get the video timestamp in millisecond
   Future<int> getTime() async {
-    Duration position = await getPosition();
+    var position = await getPosition();
     return position.inMilliseconds;
   }
 
@@ -483,7 +486,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    Duration position = await vlcPlayerPlatform.getPosition(_viewId);
+    var position = await vlcPlayerPlatform.getPosition(_viewId);
     value = value.copyWith(position: position);
     return position;
   }
@@ -505,7 +508,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return value.volume;
     }
-    int volume = await vlcPlayerPlatform.getVolume(_viewId);
+    var volume = await vlcPlayerPlatform.getVolume(_viewId);
     value = value.copyWith(volume: volume.clamp(0, 100));
     return volume;
   }
@@ -515,7 +518,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return Duration.zero;
     }
-    Duration duration = await vlcPlayerPlatform.getDuration(_viewId);
+    var duration = await vlcPlayerPlatform.getDuration(_viewId);
     value = value.copyWith(duration: duration);
     return duration;
   }
@@ -560,7 +563,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       return value.playbackSpeed;
     }
     //
-    double speed = await vlcPlayerPlatform.getPlaybackSpeed(_viewId);
+    var speed = await vlcPlayerPlatform.getPlaybackSpeed(_viewId);
     value = value.copyWith(playbackSpeed: speed);
     return speed;
   }
@@ -570,7 +573,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int spuTracksCount = await vlcPlayerPlatform.getSpuTracksCount(_viewId);
+    var spuTracksCount = await vlcPlayerPlatform.getSpuTracksCount(_viewId);
     value = value.copyWith(spuTracksCount: spuTracksCount);
     return spuTracksCount;
   }
@@ -599,7 +602,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int activeSpuTrack = await vlcPlayerPlatform.getSpuTrack(_viewId);
+    var activeSpuTrack = await vlcPlayerPlatform.getSpuTrack(_viewId);
     value = value.copyWith(activeSpuTrack: activeSpuTrack);
     return activeSpuTrack;
   }
@@ -619,7 +622,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int spuDelay = await vlcPlayerPlatform.getSpuDelay(_viewId);
+    var spuDelay = await vlcPlayerPlatform.getSpuDelay(_viewId);
     value = value.copyWith(spuDelay: spuDelay);
     return spuDelay;
   }
@@ -676,7 +679,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int audioTracksCount = await vlcPlayerPlatform.getAudioTracksCount(_viewId);
+    var audioTracksCount = await vlcPlayerPlatform.getAudioTracksCount(_viewId);
     value = value.copyWith(audioTracksCount: audioTracksCount);
     return audioTracksCount;
   }
@@ -696,7 +699,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int activeAudioTrack = await vlcPlayerPlatform.getAudioTrack(_viewId);
+    var activeAudioTrack = await vlcPlayerPlatform.getAudioTrack(_viewId);
     value = value.copyWith(activeAudioTrack: activeAudioTrack);
     return activeAudioTrack;
   }
@@ -725,7 +728,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int audioDelay = await vlcPlayerPlatform.getAudioDelay(_viewId);
+    var audioDelay = await vlcPlayerPlatform.getAudioDelay(_viewId);
     value = value.copyWith(audioDelay: audioDelay);
     return audioDelay;
   }
@@ -782,7 +785,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int videoTracksCount = await vlcPlayerPlatform.getVideoTracksCount(_viewId);
+    var videoTracksCount = await vlcPlayerPlatform.getVideoTracksCount(_viewId);
     value = value.copyWith(videoTracksCount: videoTracksCount);
     return videoTracksCount;
   }
@@ -810,7 +813,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    int activeVideoTrack = await vlcPlayerPlatform.getVideoTrack(_viewId);
+    var activeVideoTrack = await vlcPlayerPlatform.getVideoTrack(_viewId);
     value = value.copyWith(activeVideoTrack: activeVideoTrack);
     return activeVideoTrack;
   }
@@ -830,7 +833,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (!value.isInitialized || _isDisposed) {
       return null;
     }
-    double videoScale = await vlcPlayerPlatform.getVideoScale(_viewId);
+    var videoScale = await vlcPlayerPlatform.getVideoScale(_viewId);
     value = value.copyWith(videoScale: videoScale);
     return videoScale;
   }

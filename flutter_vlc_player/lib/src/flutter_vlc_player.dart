@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import 'vlc_player_platform.dart';
 import 'vlc_player_controller.dart';
+import 'vlc_player_platform.dart';
 
 class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;
@@ -38,7 +38,7 @@ class _VlcPlayerState extends State<VlcPlayer>
     _listener = () {
       if (!mounted) return;
       //
-      final bool isInitialized = widget.controller.value.isInitialized;
+      final isInitialized = widget.controller.value.isInitialized;
       if (isInitialized != _isInitialized) {
         setState(() {
           _isInitialized = isInitialized;
