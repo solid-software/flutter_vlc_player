@@ -7,20 +7,19 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../vlc_player_flutter_platform_interface.dart';
-import '../utils/options/vlc_player_options.dart';
+import '../../flutter_vlc_player_platform_interface.dart';
 import '../enums/hardware_acceleration.dart';
 import '../enums/media_event_type.dart';
 import '../enums/renderer_event_type.dart';
 import '../events/media_event.dart';
 import '../events/renderer_event.dart';
-
 import '../messages/messages.dart';
 import '../platform_interface/vlc_player_platform_interface.dart';
+import '../utils/options/vlc_player_options.dart';
 
 /// An implementation of [VlcPlayerPlatform] that uses method channels.
 class MethodChannelVlcPlayer extends VlcPlayerPlatform {
-  VlcPlayerApi _api = VlcPlayerApi();
+  final _api = VlcPlayerApi();
 
   EventChannel _mediaEventChannelFor(int textureId) {
     return EventChannel('flutter_video_plugin/getVideoEvents_$textureId');
@@ -45,7 +44,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     HwAcc hwAcc,
     VlcPlayerOptions options,
   }) async {
-    CreateMessage message = CreateMessage();
+    var message = CreateMessage();
     message.textureId = viewId;
     message.uri = uri;
     message.type = type.index;
@@ -82,7 +81,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
         creationParamsCodec: const StandardMessageCodec(),
       );
     }
-    return new Text('Requested platform is not yet supported by this plugin');
+    return Text('Requested platform is not yet supported by this plugin');
   }
 
   @override
@@ -175,7 +174,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     bool autoPlay,
     HwAcc hwAcc,
   }) async {
-    SetMediaMessage message = SetMediaMessage();
+    var message = SetMediaMessage();
     message.textureId = textureId;
     message.uri = uri;
     message.type = type.index;
@@ -209,7 +208,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<bool> isPlaying(int textureId) async {
-    BooleanMessage response =
+    var response =
         await _api.isPlaying(TextureMessage()..textureId = textureId);
     return response.result;
   }
@@ -223,15 +222,13 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<Duration> getPosition(int textureId) async {
-    PositionMessage response =
-        await _api.position(TextureMessage()..textureId = textureId);
+    var response = await _api.position(TextureMessage()..textureId = textureId);
     return Duration(milliseconds: response.position);
   }
 
   @override
   Future<Duration> getDuration(int textureId) async {
-    DurationMessage response =
-        await _api.duration(TextureMessage()..textureId = textureId);
+    var response = await _api.duration(TextureMessage()..textureId = textureId);
     return Duration(milliseconds: response.duration);
   }
 
@@ -244,7 +241,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getVolume(int textureId) async {
-    VolumeMessage response =
+    var response =
         await _api.getVolume(TextureMessage()..textureId = textureId);
     return response.volume;
   }
@@ -259,28 +256,28 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<double> getPlaybackSpeed(int textureId) async {
-    PlaybackSpeedMessage response =
+    var response =
         await _api.getPlaybackSpeed(TextureMessage()..textureId = textureId);
     return response.speed;
   }
 
   @override
   Future<int> getSpuTracksCount(int textureId) async {
-    TrackCountMessage response =
+    var response =
         await _api.getSpuTracksCount(TextureMessage()..textureId = textureId);
     return response.count;
   }
 
   @override
   Future<Map<int, String>> getSpuTracks(int textureId) async {
-    SpuTracksMessage response =
+    var response =
         await _api.getSpuTracks(TextureMessage()..textureId = textureId);
     return response.subtitles.cast<int, String>();
   }
 
   @override
   Future<int> getSpuTrack(int textureId) async {
-    SpuTrackMessage response =
+    var response =
         await _api.getSpuTrack(TextureMessage()..textureId = textureId);
     return response.spuTrackNumber;
   }
@@ -301,7 +298,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getSpuDelay(int textureId) async {
-    DelayMessage response =
+    var response =
         await _api.getSpuDelay(TextureMessage()..textureId = textureId);
     return response.delay;
   }
@@ -313,7 +310,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     @required DataSourceType type,
     bool isSelected,
   }) async {
-    AddSubtitleMessage message = AddSubtitleMessage();
+    var message = AddSubtitleMessage();
     message.textureId = textureId;
     message.uri = uri;
     message.type = type.index;
@@ -323,21 +320,21 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getAudioTracksCount(int textureId) async {
-    TrackCountMessage response =
+    var response =
         await _api.getAudioTracksCount(TextureMessage()..textureId = textureId);
     return response.count;
   }
 
   @override
   Future<Map<int, String>> getAudioTracks(int textureId) async {
-    AudioTracksMessage response =
+    var response =
         await _api.getAudioTracks(TextureMessage()..textureId = textureId);
     return response.audios.cast<int, String>();
   }
 
   @override
   Future<int> getAudioTrack(int textureId) async {
-    AudioTrackMessage response =
+    var response =
         await _api.getAudioTrack(TextureMessage()..textureId = textureId);
     return response.audioTrackNumber;
   }
@@ -358,7 +355,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getAudioDelay(int textureId) async {
-    DelayMessage response =
+    var response =
         await _api.getAudioDelay(TextureMessage()..textureId = textureId);
     return response.delay;
   }
@@ -370,7 +367,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     @required DataSourceType type,
     bool isSelected,
   }) async {
-    AddAudioMessage message = AddAudioMessage();
+    var message = AddAudioMessage();
     message.textureId = textureId;
     message.uri = uri;
     message.type = type.index;
@@ -380,14 +377,14 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getVideoTracksCount(int textureId) async {
-    TrackCountMessage response =
+    var response =
         await _api.getVideoTracksCount(TextureMessage()..textureId = textureId);
     return response.count;
   }
 
   @override
   Future<Map<int, String>> getVideoTracks(int textureId) async {
-    VideoTracksMessage response =
+    var response =
         await _api.getVideoTracks(TextureMessage()..textureId = textureId);
     return response.videos.cast<int, String>();
   }
@@ -401,7 +398,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int> getVideoTrack(int textureId) async {
-    VideoTrackMessage response =
+    var response =
         await _api.getVideoTrack(TextureMessage()..textureId = textureId);
     return response.videoTrackNumber;
   }
@@ -415,7 +412,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<double> getVideoScale(int textureId) async {
-    VideoScaleMessage response =
+    var response =
         await _api.getVideoScale(TextureMessage()..textureId = textureId);
     return response.scale;
   }
@@ -429,23 +426,23 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<String> getVideoAspectRatio(int textureId) async {
-    VideoAspectRatioMessage response =
+    var response =
         await _api.getVideoAspectRatio(TextureMessage()..textureId = textureId);
     return response.aspectRatio;
   }
 
   @override
   Future<Uint8List> takeSnapshot(int textureId) async {
-    SnapshotMessage response =
+    var response =
         await _api.takeSnapshot(TextureMessage()..textureId = textureId);
     var base64String = response.snapshot;
-    Uint8List imageBytes = CryptoUtils.base64StringToBytes(base64String);
+    var imageBytes = CryptoUtils.base64StringToBytes(base64String);
     return imageBytes;
   }
 
   @override
   Future<List<String>> getAvailableRendererServices(int textureId) async {
-    RendererServicesMessage response = await _api
+    var response = await _api
         .getAvailableRendererServices(TextureMessage()..textureId = textureId);
     return response.services.cast<String>();
   }
@@ -466,7 +463,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<Map<String, String>> getRendererDevices(int textureId) async {
-    RendererDevicesMessage response =
+    var response =
         await _api.getRendererDevices(TextureMessage()..textureId = textureId);
     return response.rendererDevices.cast<String, String>();
   }

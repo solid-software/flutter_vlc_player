@@ -1,8 +1,8 @@
+import 'vlc_advanced_options.dart';
 import 'vlc_audio_options.dart';
 import 'vlc_rtp_options.dart';
 import 'vlc_stream_output_options.dart';
 import 'vlc_video_options.dart';
-import 'vlc_advanced_options.dart';
 
 class VlcPlayerOptions {
   VlcPlayerOptions({
@@ -22,7 +22,7 @@ class VlcPlayerOptions {
   final List<String> extras;
 
   List<String> get() {
-    List<String> options = List<String>();
+    var options = <String>[];
     if (advanced != null) options.addAll(advanced.options);
     if (audio != null) options.addAll(audio.options);
     if (video != null) options.addAll(video.options);
