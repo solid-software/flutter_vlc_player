@@ -4,13 +4,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platform_interface.dart';
 
-import 'package:flutter_vlc_player_platform_interface/vlc_player_flutter_platform_interface.dart';
-
+import 'enums/playing_state.dart';
+import 'vlc_app_life_cycle_observer.dart';
 import 'vlc_player_platform.dart';
 import 'vlc_player_value.dart';
-import 'vlc_app_life_cycle_observer.dart';
-import 'enums/playing_state.dart';
 
 typedef RendererCallback = void Function(VlcRendererEventType, String, String);
 
