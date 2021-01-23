@@ -1,3 +1,6 @@
+## 5.0.2
+Fix homepage link.
+
 ## 5.0.1
 Fix pub.dev image links.
 
