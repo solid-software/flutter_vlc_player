@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cryptoutils/utils.dart';
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -431,12 +432,13 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     return response.aspectRatio;
   }
 
+
   @override
   Future<Uint8List> takeSnapshot(int textureId) async {
     var response =
         await _api.takeSnapshot(TextureMessage()..textureId = textureId);
     var base64String = response.snapshot;
-    var imageBytes = CryptoUtils.base64StringToBytes(base64String);
+    var imageBytes = base64Decode(base64String);
     return imageBytes;
   }
 
