@@ -52,6 +52,7 @@ final class FlutterVlcPlayer implements PlatformView {
     private MediaPlayer mediaPlayer;
     private List<RendererDiscoverer> rendererDiscoverers;
     private List<RendererItem> rendererItems;
+    private boolean isDisposed = false;
 
     // Platform view
     @Override
@@ -61,6 +62,9 @@ final class FlutterVlcPlayer implements PlatformView {
 
     @Override
     public void dispose() {
+        if (isDisposed)
+            return;
+        //
         textureEntry.release();
         mediaEventChannel.setStreamHandler(null);
         rendererEventChannel.setStreamHandler(null);
@@ -68,9 +72,13 @@ final class FlutterVlcPlayer implements PlatformView {
             mediaPlayer.stop();
             mediaPlayer.getVLCVout().detachViews();
             mediaPlayer.release();
+            mediaPlayer = null;
         }
-        if (libVLC != null)
+        if (libVLC != null) {
             libVLC.release();
+            libVLC = null;
+        }
+        isDisposed = true;
     }
 
     // VLC Player
@@ -550,10 +558,12 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void stopRendererScanning() {
+        if (isDisposed)
+            return;
+        //
         for (RendererDiscoverer rendererDiscoverer : rendererDiscoverers) {
             rendererDiscoverer.stop();
             rendererDiscoverer.setEventListener(null);
-
         }
         rendererDiscoverers.clear();
         rendererItems.clear();
@@ -585,6 +595,9 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void castToRenderer(String rendererDevice) {
+        if(isDisposed)
+            return;
+        //
         boolean isPlaying = mediaPlayer.isPlaying();
         if (isPlaying)
             mediaPlayer.pause();
