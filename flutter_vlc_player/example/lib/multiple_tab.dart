@@ -64,11 +64,12 @@ class _MultipleTabState extends State<MultipleTab> {
   }
 
   @override
-  void dispose() {
-    for (var i = 0; i < controllers.length; i++) {
-      controllers[i].stopRendererScanning();
-      controllers[i].removeListener(() {});
-    }
+  void dispose() async {
     super.dispose();
+    for (var i = 0; i < controllers.length; i++) {
+      controllers[i].removeListener(() {});
+      await controllers[i].stopRendererScanning();
+      await controllers[i].dispose();
+    }
   }
 }

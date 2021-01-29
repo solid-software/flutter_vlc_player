@@ -82,8 +82,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void dispose(Messages.TextureMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
-        player.dispose();
+        // the player has been already disposed by platform we just remove it from players list
         vlcPlayers.remove(arg.getTextureId());
     }
 

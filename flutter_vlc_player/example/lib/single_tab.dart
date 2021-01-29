@@ -18,6 +18,7 @@ class SingleTab extends StatefulWidget {
 class _SingleTabState extends State<SingleTab> {
   VlcPlayerController _controller;
   final _key = GlobalKey<VlcPlayerWithControlsState>();
+
   //
   List<VideoData> listVideos;
   int selectedVideoIndex;
@@ -221,9 +222,10 @@ class _SingleTabState extends State<SingleTab> {
   }
 
   @override
-  void dispose() {
-    _controller.stopRendererScanning();
-    _controller.removeListener(() {});
+  void dispose() async {
     super.dispose();
+    _controller.removeListener(() {});
+    await _controller.stopRendererScanning();
+    await _controller.dispose();
   }
 }
