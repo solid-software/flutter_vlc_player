@@ -9,8 +9,6 @@ import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.view.FlutterNativeView;
 
 public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
 
@@ -37,12 +35,9 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
                         VIEW_TYPE,
                         flutterVlcPlayerFactory
                 );
-        registrar.addViewDestroyListener(new PluginRegistry.ViewDestroyListener() {
-            @Override
-            public boolean onViewDestroy(FlutterNativeView view) {
-                stopListening();
-                return false;
-            }
+        registrar.addViewDestroyListener(view -> {
+            stopListening();
+            return false;
         });
         //
         startListening();
