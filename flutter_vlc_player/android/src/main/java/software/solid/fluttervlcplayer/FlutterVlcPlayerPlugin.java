@@ -22,6 +22,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     public FlutterVlcPlayerPlugin() {
     }
 
+    @SuppressWarnings("deprecation")
     public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
         flutterVlcPlayerFactory =
                 new FlutterVlcPlayerFactory(
