@@ -182,7 +182,7 @@ class _SingleTabState extends State<SingleTab> {
                         hwAcc: HwAcc.FULL);
                     break;
                   case VideoType.file:
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Copying file to temporary storage...'),
                       ),
@@ -190,7 +190,7 @@ class _SingleTabState extends State<SingleTab> {
                     await Future.delayed(Duration(seconds: 1));
                     var tempVideo = await _loadVideoToFs();
                     await Future.delayed(Duration(seconds: 1));
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Now trying to play...'),
                       ),
@@ -199,7 +199,7 @@ class _SingleTabState extends State<SingleTab> {
                     if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content: Text('File load error.'),
                         ),
