@@ -65,7 +65,7 @@ In order to load media/subtitle from internal device storage, you should put the
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
-In some cases you also need to add the `android:requestLegacyExternalStorage="true"` flag to the Application tag in AndroidManifest.xml file.
+In some cases you also need to add the `android:requestLegacyExternalStorage="true"` flag to the Application tag in AndroidManifest.xml file to avoid acess denied errors. Android 10 apps can't acess storage without that flag. [reference](https://stackoverflow.com/a/60917774/14919621)
 
 After that you can access the media/subtitle file by 
 
