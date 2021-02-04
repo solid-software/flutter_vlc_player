@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Improve the interface to support more reliable memory management.
+
 ## 1.0.1
 
 - Add pedantic, fix build issues.
