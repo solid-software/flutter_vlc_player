@@ -127,7 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() async {
     super.dispose();
-    _videoPlayerController.removeListener(() {});
     await _videoPlayerController.stopRendererScanning();
     await _videoViewController.dispose();
   }
