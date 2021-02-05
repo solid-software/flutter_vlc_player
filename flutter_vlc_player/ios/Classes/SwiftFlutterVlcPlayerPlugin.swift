@@ -168,6 +168,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     }
     
     public func isSeekable(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
         let player = getPlayer(textureId: input.textureId)
         
         let message: BooleanMessage = BooleanMessage()
@@ -185,9 +186,8 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     public func seek(to input: PositionMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
         let player = getPlayer(textureId: input.textureId)
-        if(player?.isSeekable() == true){
-            player?.seek(position: input.position)
-        }
+
+        player?.seek(position: input.position)
     }
     
     public func position(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> PositionMessage? {

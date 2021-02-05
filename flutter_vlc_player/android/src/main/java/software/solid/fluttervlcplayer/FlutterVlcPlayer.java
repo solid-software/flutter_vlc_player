@@ -384,9 +384,7 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void seekTo(int location) {
-        if(mediaPlayer.isSeekable()){
-            mediaPlayer.setTime(location);
-        }
+        mediaPlayer.setTime(location);
     }
 
     long getPosition() {
