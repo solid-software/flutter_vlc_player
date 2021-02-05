@@ -1,6 +1,6 @@
 ## 1.0.3
 
-- Added isSeekable method to platform interface
+- Add isSeekable method to platform interface
 
 ## 1.0.2
 
