@@ -214,6 +214,13 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
+  Future<bool> isSeekable(int textureId) async {
+    var response =
+        await _api.isSeekable(TextureMessage()..textureId = textureId);
+    return response.result;
+  }
+
+  @override
   Future<void> seekTo(int textureId, Duration position) async {
     return await _api.seekTo(PositionMessage()
       ..textureId = textureId

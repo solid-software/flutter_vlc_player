@@ -320,6 +320,10 @@ final class FlutterVlcPlayer implements PlatformView {
         return mediaPlayer.isPlaying();
     }
 
+    boolean isSeekable() {
+        return mediaPlayer.isSeekable();
+    }
+
     void setStreamUrl(String url, boolean isAssetUrl, boolean autoPlay, long hwAcc) {
         try {
             mediaPlayer.stop();
@@ -380,7 +384,9 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void seekTo(int location) {
-        mediaPlayer.setTime(location);
+        if(mediaPlayer.isSeekable()){
+            mediaPlayer.setTime(location);
+        }
     }
 
     long getPosition() {
@@ -595,7 +601,7 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void castToRenderer(String rendererDevice) {
-        if(isDisposed)
+        if (isDisposed)
             return;
         //
         boolean isPlaying = mediaPlayer.isPlaying();

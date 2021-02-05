@@ -37,6 +37,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   String duration = '';
   int numberOfCaptions = 0;
   int numberOfAudioTracks = 0;
+  bool validPosition = false;
 
   //
   List<double> playbackSpeeds = [0.5, 1.0, 2.0];
@@ -76,7 +77,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           position = oPosition.toString().split('.')[0];
           duration = oDuration.toString().split('.')[0];
         }
-        sliderValue = _controller.value.position.inSeconds.toDouble();
+        validPosition = oDuration.compareTo(oPosition) >= 0;
+        sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
       }
       numberOfCaptions = _controller.value.spuTracksCount;
       numberOfAudioTracks = _controller.value.audioTracksCount;
@@ -313,16 +315,20 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           inactiveColor: Colors.white70,
                           value: sliderValue,
                           min: 0.0,
-                          max: _controller.value.duration == null
+                          max: (!validPosition &&
+                                  _controller.value.duration == null)
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
-                          onChanged: (progress) {
-                            setState(() {
-                              sliderValue = progress.floor().toDouble();
-                            });
-                            //convert to Milliseconds since VLC requires MS to set time
-                            _controller.setTime(sliderValue.toInt() * 1000);
-                          },
+                          onChanged: !validPosition
+                              ? null
+                              : (progress) {
+                                  setState(() {
+                                    sliderValue = progress.floor().toDouble();
+                                  });
+                                  //convert to Milliseconds since VLC requires MS to set time
+                                  _controller
+                                      .setTime(sliderValue.toInt() * 1000);
+                                },
                         ),
                       ),
                       Text(
