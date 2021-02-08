@@ -599,9 +599,9 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void castToRenderer(String rendererDevice) {
-        if (isDisposed)
+        if (isDisposed) {
             return;
-        //
+        }
         boolean isPlaying = mediaPlayer.isPlaying();
         if (isPlaying)
             mediaPlayer.pause();
