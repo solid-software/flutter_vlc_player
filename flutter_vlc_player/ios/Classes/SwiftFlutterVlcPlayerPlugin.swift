@@ -529,7 +529,7 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         return self.vlcMediaPlayer.isPlaying as NSNumber
     }
     
-    public func isSeekable() -> NSNumber?{
+    public func isSeekable() -> NSNumber? {
         
         return self.vlcMediaPlayer.isSeekable as NSNumber
     }
@@ -1143,6 +1143,5 @@ extension VLCMediaPlayer {
     }
     
 }
-
 
 
