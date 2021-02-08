@@ -319,16 +319,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                                   _controller.value.duration == null)
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
-                          onChanged: !validPosition
-                              ? null
-                              : (progress) {
-                                  setState(() {
-                                    sliderValue = progress.floor().toDouble();
-                                  });
-                                  //convert to Milliseconds since VLC requires MS to set time
-                                  _controller
-                                      .setTime(sliderValue.toInt() * 1000);
-                                },
+                          onChanged:
+                              !validPosition ? null : _onSliderPositionChanged,
                         ),
                       ),
                       Text(
@@ -383,6 +375,14 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         ),
       ],
     );
+  }
+
+  void _onSliderPositionChanged(double progress) {
+    setState(() {
+      sliderValue = progress.floor().toDouble();
+    });
+    //convert to Milliseconds since VLC requires MS to set time
+    _controller.setTime(sliderValue.toInt() * 1000);
   }
 
   void _getSubtitleTracks() async {
