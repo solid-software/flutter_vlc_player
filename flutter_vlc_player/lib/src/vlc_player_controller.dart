@@ -443,6 +443,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     return await vlcPlayerPlatform.isPlaying(_viewId);
   }
 
+  /// Returns true if media is seekable.
+  Future<bool> isSeekable() async {
+    _throwIfNotInitialized('isSeekable');
+    return await vlcPlayerPlatform.isSeekable(_viewId);
+  }
+
   /// Set video timestamp in millisecond
   Future<void> setTime(int time) async {
     return await seekTo(Duration(milliseconds: time));

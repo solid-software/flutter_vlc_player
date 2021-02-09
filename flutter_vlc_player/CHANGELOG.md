@@ -1,3 +1,7 @@
+## 5.0.4
+Added isSeekable method
+Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross).
+
 ## 5.0.3
 Fix memory leak. 
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross).

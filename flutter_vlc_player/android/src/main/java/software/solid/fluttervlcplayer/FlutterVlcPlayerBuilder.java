@@ -134,6 +134,14 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     }
 
     @Override
+    public Messages.BooleanMessage isSeekable(Messages.TextureMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(player.isSeekable());
+        return message;
+    }
+
+    @Override
     public void setLooping(Messages.LoopingMessage arg) {
         FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
         player.setLooping(arg.getIsLooping());
