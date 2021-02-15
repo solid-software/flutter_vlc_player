@@ -533,6 +533,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     // prevent this from happening by not applying the playback speed until
     // the video is manually played from Flutter.
     if (!value.isPlaying) return;
+    value = value.copyWith(playbackSpeed: speed);
     await vlcPlayerPlatform.setPlaybackSpeed(
       _viewId,
       value.playbackSpeed,
