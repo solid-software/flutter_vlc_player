@@ -80,7 +80,7 @@ To start using the plugin, copy this code or follow the example project in 'flut
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/vlc_player_flutter.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 void main() {
   runApp(MyApp());
@@ -110,8 +110,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   VlcPlayerController _videoPlayerController;
 
-  Future<void> initializePlayer() async {}
-
   @override
   void initState() {
     super.initState();
@@ -128,23 +126,23 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() async {
     super.dispose();
     await _videoPlayerController.stopRendererScanning();
-    await _videoViewController.dispose();
+    await _videoPlayerController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: VlcPlayer(
-            controller: _videoPlayerController,
-            aspectRatio: 16 / 9,
-            placeholder: Center(child: CircularProgressIndicator()),
-          ),
-        ));
+      appBar: AppBar(),
+      body: Center(
+        child: VlcPlayer(
+          controller: _videoPlayerController,
+          aspectRatio: 16 / 9,
+          placeholder: Center(child: CircularProgressIndicator()),
+        ),
+      ),
+    );
   }
 }
-
 ```
 
 
