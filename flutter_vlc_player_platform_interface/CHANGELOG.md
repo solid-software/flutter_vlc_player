@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Add vlc subtitle options
+
 ## 1.0.3
 
 - Add isSeekable method to platform interface

@@ -14,3 +14,5 @@ export 'src/utils/options/vlc_player_options.dart';
 export 'src/utils/options/vlc_rtp_options.dart';
 export 'src/utils/options/vlc_stream_output_options.dart';
 export 'src/utils/options/vlc_video_options.dart';
+export 'src/utils/options/vlc_subtitle_options.dart';
+
