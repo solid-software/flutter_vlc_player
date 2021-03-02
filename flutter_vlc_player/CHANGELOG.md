@@ -1,28 +1,38 @@
+## 5.0.5
+* Added Vlc Subtitle Styling. 
+* Split ios swift code into multiple files for better readability.
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
 ## 5.0.4
-Added isSeekable method
+* Added isSeekable method
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross).
 
 ## 5.0.3
-Fix memory leak. 
+* Fix memory leak. 
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross).
 
 ## 5.0.2
-Fix homepage link.
+* Fix homepage link.
 
 ## 5.0.1
-Fix pub.dev image links.
+* Fix pub.dev image links.
 
 ## 5.0.0
-Entire rewrite of Flutter VLC Player. Updates to Android v2 plugin. Adds Platform interface. Adds Pigeon for type safe method calls. 
+* Entire rewrite of Flutter VLC Player.
+* Updates to Android v2 plugin.
+* Adds Platform interface.
+* Adds Pigeon for type safe method calls. 
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
 ## 4.0.3
-Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. Credits to Mitch Ross (https://github.com/mitchross).
-Removed dispose calls on VlcPlayerController from VlcPlayer.
-Fix argument-less functions throwing FlutterMethodNotImplemented.
+* Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. 
+* Removed dispose calls on VlcPlayerController from VlcPlayer.
+* Fix argument-less functions throwing FlutterMethodNotImplemented.
+Credits to Mitch Ross (https://github.com/mitchross).
 
 ## 4.0.2
-* Update Cocoapods version for VLCkit on iOS. This fixes issues with iOS 12 and Simulators. Credits to Mitch Ross (https://github.com/mitchross).
+* Update Cocoapods version for VLCkit on iOS. This fixes issues with iOS 12 and Simulators.
+Credits to Mitch Ross (https://github.com/mitchross).
 
 ## 4.0.1
 * Improved documentation.
