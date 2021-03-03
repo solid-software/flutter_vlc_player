@@ -84,6 +84,11 @@ class _SingleTabState extends State<SingleTab> {
           hwAcc: HwAcc.FULL,
           onInit: () async {
             await _controller.startRendererScanning();
+            // just a sample subtitle file
+            await _controller.addSubtitleFromNetwork(
+              'https://gist.githubusercontent.com/alr2413/9bfc7f3439ea473cbdb3ccb76d7613a3/raw/a172c10aa902078eeda9a1345c79bad9ac367d3d/subtitle_sample.srt',
+              isSelected: true,
+            );
           },
           onRendererHandler: (type, id, name) {
             print('onRendererHandler $type $id $name');
@@ -91,6 +96,14 @@ class _SingleTabState extends State<SingleTab> {
           options: VlcPlayerOptions(
             advanced: VlcAdvancedOptions([
               VlcAdvancedOptions.networkCaching(2000),
+            ]),
+            subtitle: VlcSubtitleOptions([
+              VlcSubtitleOptions.boldStyle(true),
+              VlcSubtitleOptions.fontSize(30),
+              // works only on external subs
+              VlcSubtitleOptions.color(VlcSubtitleColor.Navy),
+              // works only on external subs
+              VlcSubtitleOptions.outlineColor(VlcSubtitleColor.Yellow),
             ]),
             rtp: VlcRtpOptions([
               VlcRtpOptions.rtpOverRtsp(true),

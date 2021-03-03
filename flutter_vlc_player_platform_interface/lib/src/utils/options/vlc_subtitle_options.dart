@@ -1,3 +1,7 @@
+import '../../enums/subtitles/vlc_subtitle_text_direction.dart';
+import '../../enums/subtitles/vlc_subtitle_color.dart';
+import '../../enums/subtitles/vlc_subtitle_thickness.dart';
+
 class VlcSubtitleOptions {
   final List<String> options;
 
@@ -18,6 +22,11 @@ class VlcSubtitleOptions {
     return '--freetype-fontsize=$size';
   }
 
+  /// Set subtitle rel font size
+  static String relFontSize(int size) {
+    return '--freetype-rel-fontsize=$size';
+  }
+
   /// Enable/Disable subtitle bold style
   static String boldStyle(bool enable) {
     return enable ? '--freetype-bold' : '--no-freetype-bold';
@@ -29,13 +38,13 @@ class VlcSubtitleOptions {
   }
 
   /// Set subtitle color
-  static String color(int color) {
-    return '--freetype-color=$color';
+  static String color(VlcSubtitleColor color) {
+    return '--freetype-color=${color.value}';
   }
 
   /// Set subtitle text direction {0 (Left to right), 1 (Right to left), 2 (Auto)}
-  static String textDirection(int direction) {
-    return '--freetype-text-direction=$direction';
+  static String textDirection(VlcSubtitleTextDirection direction) {
+    return '--freetype-text-direction=${direction.value}';
   }
 
   /// Set subtitle background opacity [0 .. 255]
@@ -44,8 +53,8 @@ class VlcSubtitleOptions {
   }
 
   /// Set subtitle background color
-  static String backgroundColor(int color) {
-    return '--freetype-background-color=$color';
+  static String backgroundColor(VlcSubtitleColor color) {
+    return '--freetype-background-color=${color.value}';
   }
 
   /// Set subtitle outline opacity [0 .. 255]
@@ -54,13 +63,13 @@ class VlcSubtitleOptions {
   }
 
   /// Set subtitle outline color
-  static String outlineColor(int color) {
-    return '--freetype-outline-color=$color';
+  static String outlineColor(VlcSubtitleColor color) {
+    return '--freetype-outline-color=${color.value}';
   }
 
   /// Set subtitle outline thickness {0 (None), 2 (Thin), 4 (Normal), 6 (Thick)}
-  static String outlineThickness(double thickness) {
-    return '--freetype-outline-thickness=$thickness';
+  static String outlineThickness(VlcSubtitleThickness thickness) {
+    return '--freetype-outline-thickness=${thickness.value}';
   }
 
   /// Set subtitle shadow opacity [0 .. 255]
@@ -69,8 +78,8 @@ class VlcSubtitleOptions {
   }
 
   /// Set subtitle shadow color
-  static String shadowColor(int color) {
-    return '--freetype-shadow-color=$color';
+  static String shadowColor(VlcSubtitleColor color) {
+    return '--freetype-shadow-color=${color.value}';
   }
 
   /// Set subtitle shadow angle [-360.000000 .. 360.000000]

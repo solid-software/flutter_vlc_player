@@ -22,7 +22,9 @@ dependencies:
   cryptoutils: ^0.4.0
   meta: ^1.2.4
   pedantic: ^1.9.0
-  flutter_vlc_player_platform_interface: ^1.0.4
+#  flutter_vlc_player_platform_interface: ^1.0.4
+  flutter_vlc_player_platform_interface:
+    path: ../flutter_vlc_player_platform_interface
 
 dev_dependencies:
   flutter_test:

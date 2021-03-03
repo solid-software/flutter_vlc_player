@@ -8,13 +8,17 @@ export 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
         VlcMediaEventType,
         VlcRendererEvent,
         VlcRendererEventType,
+        VlcSubtitleColor,
+        VlcSubtitleThickness,
+        VlcSubtitleTextDirection,
         DataSourceType,
         VlcPlayerOptions,
         VlcAdvancedOptions,
         VlcAudioOptions,
         VlcRtpOptions,
         VlcStreamOutputOptions,
-        VlcVideoOptions;
+        VlcVideoOptions,
+        VlcSubtitleOptions;
 
 export 'src/enums/playing_state.dart' show PlayingState;
 export 'src/flutter_vlc_player.dart' show VlcPlayer;

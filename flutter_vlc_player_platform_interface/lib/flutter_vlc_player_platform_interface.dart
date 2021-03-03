@@ -4,6 +4,9 @@ export 'src/enums/hardware_acceleration.dart';
 export 'src/enums/data_source_type.dart';
 export 'src/enums/media_event_type.dart';
 export 'src/enums/renderer_event_type.dart';
+export 'src/enums/subtitles/vlc_subtitle_text_direction.dart';
+export 'src/enums/subtitles/vlc_subtitle_color.dart';
+export 'src/enums/subtitles/vlc_subtitle_thickness.dart';
 
 export 'src/events/media_event.dart';
 export 'src/events/renderer_event.dart';
