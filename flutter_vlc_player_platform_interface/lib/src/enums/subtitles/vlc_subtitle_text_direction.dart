@@ -1,14 +1,14 @@
 enum VlcSubtitleTextDirection {
-  LTR,
-  RTL,
-  AUTO,
+  ltr,
+  rtl,
+  auto,
 }
 
 extension VlcSubtitleTextDirectionExtensionMap on VlcSubtitleTextDirection {
   static const valueMap = {
-    VlcSubtitleTextDirection.LTR: 0,
-    VlcSubtitleTextDirection.RTL: 1,
-    VlcSubtitleTextDirection.AUTO: 2,
+    VlcSubtitleTextDirection.ltr: 0,
+    VlcSubtitleTextDirection.rtl: 1,
+    VlcSubtitleTextDirection.auto: 2,
   };
   int get value => valueMap[this];
 }
