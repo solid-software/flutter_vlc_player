@@ -22,8 +22,8 @@ class VlcSubtitleOptions {
     return '--freetype-fontsize=$size';
   }
 
-  /// Set subtitle rel font size
-  static String relFontSize(int size) {
+  /// Set subtitle relative font size
+  static String relativeFontSize(int size) {
     return '--freetype-rel-fontsize=$size';
   }
 
