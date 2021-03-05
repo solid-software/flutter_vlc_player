@@ -1,7 +1,7 @@
 ## 5.0.5
 * Added Vlc Subtitle Styling. 
 * Split ios swift code into multiple files for better readability.
-Credits to Alireza Setayesh (https://github.com/alr2413).
+Credits to Alireza Setayesh (https://github.com/alr2413) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
 ## 5.0.4
 * Added isSeekable method
