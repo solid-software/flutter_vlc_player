@@ -1,6 +1,6 @@
 import '../../enums/subtitles/vlc_subtitle_text_direction.dart';
-import '../../enums/subtitles/vlc_subtitle_thickness.dart';
-import '../helpers/vlc_subtitle_color.dart';
+import '../helpers/subtitles/vlc_subtitle_thickness.dart';
+import '../helpers/subtitles/vlc_subtitle_color.dart';
 
 class VlcSubtitleOptions {
   final List<String> options;
