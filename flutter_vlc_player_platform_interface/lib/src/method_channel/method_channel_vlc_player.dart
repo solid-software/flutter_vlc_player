@@ -31,8 +31,8 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> init() {
-    return _api.initialize();
+  Future<void> init() async {
+    return await _api.initialize();
   }
 
   @override
@@ -57,8 +57,8 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> dispose(int textureId) {
-    return _api.dispose(TextureMessage()..textureId = textureId);
+  Future<void> dispose(int textureId) async {
+    return await _api.dispose(TextureMessage()..textureId = textureId);
   }
 
   /// This method builds the appropriate platform view where the player
@@ -187,7 +187,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<void> setLooping(int textureId, bool looping) async {
-    return _api.setLooping(LoopingMessage()
+    return await _api.setLooping(LoopingMessage()
       ..textureId = textureId
       ..isLooping = looping);
   }
@@ -215,8 +215,15 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> seekTo(int textureId, Duration position) {
-    return _api.seekTo(PositionMessage()
+  Future<bool> isSeekable(int textureId) async {
+    var response =
+        await _api.isSeekable(TextureMessage()..textureId = textureId);
+    return response.result;
+  }
+
+  @override
+  Future<void> seekTo(int textureId, Duration position) async {
+    return await _api.seekTo(PositionMessage()
       ..textureId = textureId
       ..position = position.inMilliseconds);
   }

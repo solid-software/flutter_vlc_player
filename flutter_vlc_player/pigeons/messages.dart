@@ -153,6 +153,7 @@ abstract class VlcPlayerApi {
   void pause(TextureMessage msg);
   void stop(TextureMessage msg);
   BooleanMessage isPlaying(TextureMessage msg);
+  BooleanMessage isSeekable(TextureMessage msg);
   void setLooping(LoopingMessage msg);
   void seekTo(PositionMessage msg);
   PositionMessage position(TextureMessage msg);

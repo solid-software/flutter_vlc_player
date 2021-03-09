@@ -185,6 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)pause:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(void)stop:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(nullable BooleanMessage *)isPlaying:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable BooleanMessage *)isSeekable:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(void)setLooping:(LoopingMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(void)seekTo:(PositionMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(nullable PositionMessage *)position:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;

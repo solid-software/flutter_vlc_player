@@ -111,6 +111,11 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     throw _unimplemented('isPlaying');
   }
 
+  /// Returns true if media is seekable.
+  Future<bool> isSeekable(int viewId) {
+    throw _unimplemented('isSeekable');
+  }
+
   /// Same as seekTo
   /// Sets the video position to a [Duration] from the start.
   Future<void> setTime(int viewId, Duration position) {

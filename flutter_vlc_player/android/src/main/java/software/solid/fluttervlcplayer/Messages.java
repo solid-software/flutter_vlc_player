@@ -783,6 +783,7 @@ public class Messages {
     void pause(TextureMessage arg);
     void stop(TextureMessage arg);
     BooleanMessage isPlaying(TextureMessage arg);
+    BooleanMessage isSeekable(TextureMessage arg);
     void setLooping(LoopingMessage arg);
     void seekTo(PositionMessage arg);
     PositionMessage position(TextureMessage arg);
@@ -977,6 +978,27 @@ public class Messages {
               @SuppressWarnings("ConstantConditions")
               TextureMessage input = TextureMessage.fromMap((HashMap)message);
               BooleanMessage output = api.isPlaying(input);
+              wrapped.put("result", output.toMap());
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VlcPlayerApi.isSeekable", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            HashMap<String, HashMap> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              TextureMessage input = TextureMessage.fromMap((HashMap)message);
+              BooleanMessage output = api.isSeekable(input);
               wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {

@@ -1,4 +1,6 @@
-#  VLC Player Plugin
+#  Flutter VLC Player Plugin
+[![Join the chat at https://discord.gg/mNY4fjVk](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/mNY4fjVk)
+
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
 <div>
@@ -64,7 +66,7 @@ In order to load media/subtitle from internal device storage, you should put the
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
-In some cases you also need to add the `android:requestLegacyExternalStorage="true"` flag to the Application tag in AndroidManifest.xml file.
+In some cases you also need to add the `android:requestLegacyExternalStorage="true"` flag to the Application tag in AndroidManifest.xml file to avoid acess denied errors. Android 10 apps can't acess storage without that flag. [reference](https://stackoverflow.com/a/60917774/14919621)
 
 After that you can access the media/subtitle file by 
 
@@ -78,7 +80,7 @@ To start using the plugin, copy this code or follow the example project in 'flut
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/vlc_player_flutter.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 void main() {
   runApp(MyApp());
@@ -108,8 +110,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   VlcPlayerController _videoPlayerController;
 
-  Future<void> initializePlayer() async {}
-
   @override
   void initState() {
     super.initState();
@@ -123,26 +123,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void dispose() {
-    _videoPlayerController.stopRendererScanning();
-    _videoPlayerController.removeListener(() {});
+  void dispose() async {
     super.dispose();
+    await _videoPlayerController.stopRendererScanning();
+    await _videoPlayerController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: VlcPlayer(
-            controller: _videoPlayerController,
-            aspectRatio: 16 / 9,
-            placeholder: Center(child: CircularProgressIndicator()),
-          ),
-        ));
+      appBar: AppBar(),
+      body: Center(
+        child: VlcPlayer(
+          controller: _videoPlayerController,
+          aspectRatio: 16 / 9,
+          placeholder: Center(child: CircularProgressIndicator()),
+        ),
+      ),
+    );
   }
 }
-
 ```
 
 

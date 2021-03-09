@@ -140,6 +140,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     public func play(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
         let player = getPlayer(textureId: input.textureId)
+        
         player?.play()
     }
     
@@ -153,7 +154,6 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     public func stop(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
         let player = getPlayer(textureId: input.textureId)
-
         
         player?.stop()
     }
@@ -161,9 +161,18 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     public func isPlaying(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
         
         let player = getPlayer(textureId: input.textureId)
-        
+
         let message: BooleanMessage = BooleanMessage()
         message.result = player?.isPlaying()
+        return message
+    }
+    
+    public func isSeekable(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(textureId: input.textureId)
+        
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.isSeekable()
         return message
     }
     
@@ -177,7 +186,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     public func seek(to input: PositionMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
         let player = getPlayer(textureId: input.textureId)
-        
+
         player?.seek(position: input.position)
     }
     
@@ -518,6 +527,11 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     public func isPlaying() -> NSNumber?{
         
         return self.vlcMediaPlayer.isPlaying as NSNumber
+    }
+    
+    public func isSeekable() -> NSNumber? {
+        
+        return self.vlcMediaPlayer.isSeekable as NSNumber
     }
     
     public func setLooping(isLooping: NSNumber?) {
@@ -1129,6 +1143,5 @@ extension VLCMediaPlayer {
     }
     
 }
-
 
 

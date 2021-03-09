@@ -52,11 +52,33 @@ final class FlutterVlcPlayer implements PlatformView {
     private MediaPlayer mediaPlayer;
     private List<RendererDiscoverer> rendererDiscoverers;
     private List<RendererItem> rendererItems;
+    private boolean isDisposed = false;
 
     // Platform view
     @Override
     public View getView() {
         return textureView;
+    }
+
+    @Override
+    public void dispose() {
+        if (isDisposed)
+            return;
+        //
+        textureEntry.release();
+        mediaEventChannel.setStreamHandler(null);
+        rendererEventChannel.setStreamHandler(null);
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.getVLCVout().detachViews();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        if (libVLC != null) {
+            libVLC.release();
+            libVLC = null;
+        }
+        isDisposed = true;
     }
 
     // VLC Player
@@ -298,6 +320,10 @@ final class FlutterVlcPlayer implements PlatformView {
         return mediaPlayer.isPlaying();
     }
 
+    boolean isSeekable() {
+        return mediaPlayer.isSeekable();
+    }
+
     void setStreamUrl(String url, boolean isAssetUrl, boolean autoPlay, long hwAcc) {
         try {
             mediaPlayer.stop();
@@ -536,10 +562,12 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void stopRendererScanning() {
+        if (isDisposed)
+            return;
+        //
         for (RendererDiscoverer rendererDiscoverer : rendererDiscoverers) {
             rendererDiscoverer.stop();
             rendererDiscoverer.setEventListener(null);
-
         }
         rendererDiscoverers.clear();
         rendererItems.clear();
@@ -571,6 +599,9 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void castToRenderer(String rendererDevice) {
+        if (isDisposed) {
+            return;
+        }
         boolean isPlaying = mediaPlayer.isPlaying();
         if (isPlaying)
             mediaPlayer.pause();
@@ -594,19 +625,6 @@ final class FlutterVlcPlayer implements PlatformView {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-    }
-
-    public void dispose() {
-        textureEntry.release();
-        mediaEventChannel.setStreamHandler(null);
-        rendererEventChannel.setStreamHandler(null);
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.getVLCVout().detachViews();
-            mediaPlayer.release();
-        }
-        if (libVLC != null)
-            libVLC.release();
     }
 
     private void log(String message) {
