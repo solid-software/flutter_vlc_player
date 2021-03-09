@@ -149,8 +149,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       uri: dataSource,
       type: dataSourceType,
       package: package,
-      hwAcc: hwAcc ?? HwAcc.AUTO,
-      autoPlay: autoPlay ?? true,
+      hwAcc: hwAcc,
+      autoPlay: autoPlay,
       options: options,
     );
 
