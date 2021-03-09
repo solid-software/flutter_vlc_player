@@ -50,7 +50,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     message.uri = uri;
     message.type = type.index;
     message.packageName = package;
-    message.hwAcc = hwAcc!.index ?? HwAcc.AUTO.index;
+    message.hwAcc = hwAcc!.index;
     message.autoPlay = autoPlay ?? true;
     message.options = options?.get() ?? [];
     return await _api.create(message);
@@ -180,7 +180,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     message.uri = uri;
     message.type = type.index;
     message.packageName = package;
-    message.hwAcc = hwAcc!.index ?? HwAcc.AUTO.index;
+    message.hwAcc = hwAcc!.index;
     message.autoPlay = autoPlay ?? true;
     return await _api.setStreamUrl(message);
   }

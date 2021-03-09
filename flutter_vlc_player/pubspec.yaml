@@ -5,7 +5,6 @@ homepage: https://github.com/solid-software/flutter_vlc_player/
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"
 
 flutter:
   plugin:
@@ -20,13 +19,14 @@ dependencies:
   flutter:
     sdk: flutter
  
-  meta: ^1.2.4
-  pedantic: ^1.9.0
-  flutter_vlc_player_platform_interface: ^1.0.3
+  meta: ^1.3.0
+  pedantic: ^1.11.0
+  flutter_vlc_player_platform_interface: 
+    path: ../flutter_vlc_player_platform_interface
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pigeon: ^0.1.17
-  plugin_platform_interface: ^1.0.3
+  pigeon: ^0.1.21
+  plugin_platform_interface: ^2.0.0
 
