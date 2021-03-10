@@ -194,6 +194,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           value = value.copyWith(
             isEnded: false,
             isPlaying: true,
+            isBuffering: false,
             playingState: PlayingState.playing,
             duration: event.duration,
             size: event.size,
