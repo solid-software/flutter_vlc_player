@@ -10,5 +10,5 @@ extension VlcSubtitleTextDirectionExtensionMap on VlcSubtitleTextDirection {
     VlcSubtitleTextDirection.rtl: 1,
     VlcSubtitleTextDirection.auto: 2,
   };
-  int get value => valueMap[this];
+  int? get value => valueMap[this];
 }
