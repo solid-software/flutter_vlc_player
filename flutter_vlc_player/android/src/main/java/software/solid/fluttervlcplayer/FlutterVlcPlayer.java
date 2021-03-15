@@ -624,7 +624,7 @@ final class FlutterVlcPlayer implements PlatformView {
         Bitmap bitmap = textureView.getBitmap();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
     }
 
     private void log(String message) {

@@ -49,7 +49,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     message.uri = uri;
     message.type = type.index;
     message.packageName = package;
-    message.hwAcc = hwAcc!.index ?? HwAcc.AUTO.index;
+    message.hwAcc = hwAcc!.index;
     message.autoPlay = autoPlay ?? true;
     message.options = options?.get() ?? [];
     return await _api.create(message);
@@ -179,7 +179,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     message.uri = uri;
     message.type = type.index;
     message.packageName = package;
-    message.hwAcc = hwAcc!.index ?? HwAcc.AUTO.index;
+    message.hwAcc = hwAcc!.index;
     message.autoPlay = autoPlay ?? true;
     return await _api.setStreamUrl(message);
   }
@@ -446,7 +446,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     var response =
         await _api.takeSnapshot(TextureMessage()..textureId = textureId);
     var base64String = response.snapshot!;
-    var imageBytes = base64Decode(base64String);
+    var imageBytes = base64Decode(base64.normalize(base64String));
     return imageBytes;
   }
 
