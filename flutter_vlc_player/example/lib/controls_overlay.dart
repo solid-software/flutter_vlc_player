@@ -52,7 +52,7 @@ class ControlsOverlay extends StatelessWidget {
                                 }
                               },
                               color: Colors.white,
-                              iconSize: 60.0,
+                              iconSize: 48.0,
                               icon: Icon(Icons.replay_10),
                             ),
                             IconButton(
@@ -60,7 +60,7 @@ class ControlsOverlay extends StatelessWidget {
                                 await controller.play();
                               },
                               color: Colors.white,
-                              iconSize: 100.0,
+                              iconSize: 80.0,
                               icon: Icon(Icons.play_arrow),
                             ),
                             IconButton(
@@ -72,7 +72,7 @@ class ControlsOverlay extends StatelessWidget {
                                 }
                               },
                               color: Colors.white,
-                              iconSize: 60.0,
+                              iconSize: 48.0,
                               icon: Icon(Icons.forward_10),
                             ),
                           ],
