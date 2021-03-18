@@ -373,7 +373,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   }
 
   void _togglePlaying() async {
-    return _controller.value.isPlaying
+   _controller.value.isPlaying
         ? await _controller.pause()
         : await _controller.play();
   }
