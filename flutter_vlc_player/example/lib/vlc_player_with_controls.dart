@@ -103,8 +103,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
             child: Wrap(
               alignment: WrapAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                Wrap(
                   children: [
                     Stack(
                       children: [

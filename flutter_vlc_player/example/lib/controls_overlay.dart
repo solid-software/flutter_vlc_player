@@ -24,11 +24,13 @@ class ControlsOverlay extends StatelessWidget {
         builder: (ctx) {
           if (controller.value.isEnded) {
             return Center(
-              child: IconButton(
-                onPressed: _replay,
-                color: _iconColor,
-                iconSize: _replayButtonIconSize,
-                icon: Icon(Icons.replay),
+              child: FittedBox(
+                child: IconButton(
+                  onPressed: _replay,
+                  color: _iconColor,
+                  iconSize: _replayButtonIconSize,
+                  icon: Icon(Icons.replay),
+                ),
               ),
             );
           }
@@ -40,29 +42,31 @@ class ControlsOverlay extends StatelessWidget {
               return SizedBox.expand(
                 child: Container(
                   color: Colors.black45,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                        onPressed: _seekRelative(_seekStepBackward),
-                        color: _iconColor,
-                        iconSize: _seekButtonIconSize,
-                        icon: Icon(Icons.replay_10),
-                      ),
-                      IconButton(
-                        onPressed: _play,
-                        color: _iconColor,
-                        iconSize: _playButtonIconSize,
-                        icon: Icon(Icons.play_arrow),
-                      ),
-                      IconButton(
-                        onPressed: _seekRelative(_seekStepForward),
-                        color: _iconColor,
-                        iconSize: _seekButtonIconSize,
-                        icon: Icon(Icons.forward_10),
-                      ),
-                    ],
+                  child: FittedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: _seekRelative(_seekStepBackward),
+                          color: _iconColor,
+                          iconSize: _seekButtonIconSize,
+                          icon: Icon(Icons.replay_10),
+                        ),
+                        IconButton(
+                          onPressed: _play,
+                          color: _iconColor,
+                          iconSize: _playButtonIconSize,
+                          icon: Icon(Icons.play_arrow),
+                        ),
+                        IconButton(
+                          onPressed: _seekRelative(_seekStepForward),
+                          color: _iconColor,
+                          iconSize: _seekButtonIconSize,
+                          icon: Icon(Icons.forward_10),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -74,11 +78,13 @@ class ControlsOverlay extends StatelessWidget {
             case PlayingState.ended:
             case PlayingState.error:
               return Center(
-                child: IconButton(
-                  onPressed: _replay,
-                  color: _iconColor,
-                  iconSize: _replayButtonIconSize,
-                  icon: Icon(Icons.replay),
+                child: FittedBox(
+                  child: IconButton(
+                    onPressed: _replay,
+                    color: _iconColor,
+                    iconSize: _replayButtonIconSize,
+                    icon: Icon(Icons.replay),
+                  ),
                 ),
               );
             default:
