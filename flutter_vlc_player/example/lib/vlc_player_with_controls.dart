@@ -23,6 +23,8 @@ class VlcPlayerWithControls extends StatefulWidget {
 
 class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     with AutomaticKeepAliveClientMixin {
+  static const _playerControlsBgColor = Colors.black87;
+
   VlcPlayerController _controller;
 
   //
@@ -95,166 +97,159 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       children: [
         Visibility(
           visible: widget.showControls,
-          child: SizedBox(
+          child: Container(
             width: double.infinity,
-            child: Container(
-              color: Colors.black87,
-              child: Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        children: [
-                          IconButton(
-                            tooltip: 'Get Subtitle Tracks',
-                            icon: Icon(Icons.closed_caption),
-                            color: Colors.white,
-                            onPressed: () {
-                              _getSubtitleTracks();
-                            },
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IgnorePointer(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.circular(1),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 2,
-                                ),
-                                child: Text(
-                                  '$numberOfCaptions',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          IconButton(
-                              tooltip: 'Get Audio Tracks',
-                              icon: Icon(Icons.audiotrack),
-                              color: Colors.white,
-                              onPressed: _getAudioTracks),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IgnorePointer(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.circular(1),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 2),
-                                child: Text(
-                                  '$numberOfAudioTracks',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.timer),
-                            color: Colors.white,
-                            onPressed: () async {
-                              playbackSpeedIndex++;
-                              if (playbackSpeedIndex >= playbackSpeeds.length) {
-                                playbackSpeedIndex = 0;
-                              }
-                              return await _controller.setPlaybackSpeed(
-                                  playbackSpeeds.elementAt(playbackSpeedIndex));
-                            },
-                          ),
-                          Positioned(
-                            bottom: 7,
-                            right: 3,
-                            child: IgnorePointer(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.circular(1),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 2,
-                                ),
-                                child: Text(
-                                  '${playbackSpeeds.elementAt(playbackSpeedIndex)}x',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        tooltip: 'Get Snapshot',
-                        icon: Icon(Icons.camera),
-                        color: Colors.white,
-                        onPressed: _createCameraImage,
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.cast),
-                          color: Colors.white,
-                          onPressed: _getRendererDevices),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            color: _playerControlsBgColor,
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
                       children: [
-                        Text(
-                          'Size: ' +
-                              (_controller.value.size?.width?.toInt() ?? 0)
-                                  .toString() +
-                              'x' +
-                              (_controller.value.size?.height?.toInt() ?? 0)
-                                  .toString(),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        IconButton(
+                          tooltip: 'Get Subtitle Tracks',
+                          icon: Icon(Icons.closed_caption),
+                          color: Colors.white,
+                          onPressed: _getSubtitleTracks,
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Status: ' +
-                              _controller.value.playingState
-                                  .toString()
-                                  .split('.')[1],
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white, fontSize: 10),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IgnorePointer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 1,
+                                horizontal: 2,
+                              ),
+                              child: Text(
+                                '$numberOfCaptions',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
+                    Stack(
+                      children: [
+                        IconButton(
+                          tooltip: 'Get Audio Tracks',
+                          icon: Icon(Icons.audiotrack),
+                          color: Colors.white,
+                          onPressed: _getAudioTracks,
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IgnorePointer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 1,
+                                horizontal: 2,
+                              ),
+                              child: Text(
+                                '$numberOfAudioTracks',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Stack(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.timer),
+                          color: Colors.white,
+                          onPressed: _cyclePlaybackSpeed,
+                        ),
+                        Positioned(
+                          bottom: 7,
+                          right: 3,
+                          child: IgnorePointer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 1,
+                                horizontal: 2,
+                              ),
+                              child: Text(
+                                '${playbackSpeeds.elementAt(playbackSpeedIndex)}x',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      tooltip: 'Get Snapshot',
+                      icon: Icon(Icons.camera),
+                      color: Colors.white,
+                      onPressed: _createCameraImage,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.cast),
+                      color: Colors.white,
+                      onPressed: _getRendererDevices,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Size: ' +
+                            (_controller.value.size?.width?.toInt() ?? 0)
+                                .toString() +
+                            'x' +
+                            (_controller.value.size?.height?.toInt() ?? 0)
+                                .toString(),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Status: ' +
+                            _controller.value.playingState
+                                .toString()
+                                .split('.')[1],
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -279,7 +274,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         Visibility(
           visible: widget.showControls,
           child: Container(
-            color: Colors.black87,
+            color: _playerControlsBgColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -288,11 +283,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   icon: _controller.value.isPlaying
                       ? Icon(Icons.pause_circle_outline)
                       : Icon(Icons.play_circle_outline),
-                  onPressed: () async {
-                    return _controller.value.isPlaying
-                        ? await _controller.pause()
-                        : await _controller.play();
-                  },
+                  onPressed: _togglePlaying,
                 ),
                 Expanded(
                   child: Row(
@@ -314,7 +305,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
                           onChanged:
-                              !validPosition ? null : _onSliderPositionChanged,
+                              validPosition ? _onSliderPositionChanged : null,
                         ),
                       ),
                       Text(
@@ -336,7 +327,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         Visibility(
           visible: widget.showControls,
           child: Container(
-            color: Colors.black87,
+            color: _playerControlsBgColor,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -351,12 +342,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     min: 0,
                     max: 100,
                     value: volumeValue,
-                    onChanged: (value) {
-                      setState(() {
-                        volumeValue = value;
-                      });
-                      _controller.setVolume(volumeValue.toInt());
-                    },
+                    onChanged: _setSoundVolume,
                   ),
                 ),
                 Icon(
@@ -369,6 +355,28 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         ),
       ],
     );
+  }
+
+  void _cyclePlaybackSpeed() async {
+    playbackSpeedIndex++;
+    if (playbackSpeedIndex >= playbackSpeeds.length) {
+      playbackSpeedIndex = 0;
+    }
+    return await _controller
+        .setPlaybackSpeed(playbackSpeeds.elementAt(playbackSpeedIndex));
+  }
+
+  void _setSoundVolume(value) {
+    setState(() {
+      volumeValue = value;
+    });
+    _controller.setVolume(volumeValue.toInt());
+  }
+
+  void _togglePlaying() async {
+    return _controller.value.isPlaying
+        ? await _controller.pause()
+        : await _controller.play();
   }
 
   void _onSliderPositionChanged(double progress) {
