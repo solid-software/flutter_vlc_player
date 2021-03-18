@@ -48,7 +48,7 @@ class ControlsOverlay extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         IconButton(
-                          onPressed: _seekRelative(_seekStepBackward),
+                          onPressed: () => _seekRelative(_seekStepBackward),
                           color: _iconColor,
                           iconSize: _seekButtonIconSize,
                           icon: Icon(Icons.replay_10),
@@ -60,7 +60,7 @@ class ControlsOverlay extends StatelessWidget {
                           icon: Icon(Icons.play_arrow),
                         ),
                         IconButton(
-                          onPressed: _seekRelative(_seekStepForward),
+                          onPressed: () => _seekRelative(_seekStepForward),
                           color: _iconColor,
                           iconSize: _seekButtonIconSize,
                           icon: Icon(Icons.forward_10),
@@ -111,11 +111,9 @@ class ControlsOverlay extends StatelessWidget {
   }
 
   /// Returns a callback which seeks the video relative to current playing time.
-  VoidCallback _seekRelative(Duration seekStep) {
-    return () async {
-      if (controller.value.duration != null) {
-        await controller.seekTo(controller.value.position + seekStep);
-      }
-    };
+  Future<void> _seekRelative(Duration seekStep) async {
+    if (controller.value.duration != null) {
+      await controller.seekTo(controller.value.position + seekStep);
+    }
   }
 }
