@@ -49,7 +49,7 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   late VoidCallback _listener;
 
-  bool? _isInitialized;
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -84,11 +84,11 @@ class _VlcPlayerState extends State<VlcPlayer>
       child: Stack(
         children: <Widget>[
           Offstage(
-            offstage: _isInitialized!,
+            offstage: _isInitialized,
             child: widget.placeholder ?? Container(),
           ),
           Offstage(
-            offstage: !_isInitialized!,
+            offstage: _isInitialized,
             child: vlcPlayerPlatform
                 .buildView(widget.controller.onPlatformViewCreated),
           ),
