@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-
 import '../enums/media_event_type.dart';
 
 class VlcMediaEvent {
