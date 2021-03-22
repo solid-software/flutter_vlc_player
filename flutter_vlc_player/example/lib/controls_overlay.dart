@@ -6,112 +6,114 @@ class ControlsOverlay extends StatelessWidget {
 
   final VlcPlayerController controller;
 
+  static const double _playButtonIconSize = 80;
+  static const double _replayButtonIconSize = 100;
+  static const double _seekButtonIconSize = 48;
+
+  static const Duration _seekStepForward = Duration(seconds: 10);
+  static const Duration _seekStepBackward = Duration(seconds: -10);
+
+  static const Color _iconColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: 50),
-          reverseDuration: Duration(milliseconds: 200),
-          child: Builder(
-            builder: (ctx) {
-              if (controller.value.isEnded) {
-                return Center(
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 50),
+      reverseDuration: Duration(milliseconds: 200),
+      child: Builder(
+        builder: (ctx) {
+          if (controller.value.isEnded) {
+            return Center(
+              child: FittedBox(
+                child: IconButton(
+                  onPressed: _replay,
+                  color: _iconColor,
+                  iconSize: _replayButtonIconSize,
+                  icon: Icon(Icons.replay),
+                ),
+              ),
+            );
+          }
+
+          switch (controller.value.playingState) {
+            case PlayingState.initialized:
+            case PlayingState.stopped:
+            case PlayingState.paused:
+              return SizedBox.expand(
+                child: Container(
+                  color: Colors.black45,
+                  child: FittedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () => _seekRelative(_seekStepBackward),
+                          color: _iconColor,
+                          iconSize: _seekButtonIconSize,
+                          icon: Icon(Icons.replay_10),
+                        ),
+                        IconButton(
+                          onPressed: _play,
+                          color: _iconColor,
+                          iconSize: _playButtonIconSize,
+                          icon: Icon(Icons.play_arrow),
+                        ),
+                        IconButton(
+                          onPressed: () => _seekRelative(_seekStepForward),
+                          color: _iconColor,
+                          iconSize: _seekButtonIconSize,
+                          icon: Icon(Icons.forward_10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+
+            case PlayingState.buffering:
+            case PlayingState.playing:
+              return GestureDetector(onTap: _pause);
+
+            case PlayingState.ended:
+            case PlayingState.error:
+              return Center(
+                child: FittedBox(
                   child: IconButton(
-                    onPressed: () async {
-                      await controller.stop();
-                      await controller.play();
-                    },
-                    color: Colors.white,
-                    iconSize: 100.0,
+                    onPressed: _replay,
+                    color: _iconColor,
+                    iconSize: _replayButtonIconSize,
                     icon: Icon(Icons.replay),
                   ),
-                );
-              } else {
-                switch (controller.value.playingState) {
-                  case PlayingState.initializing:
-                    return CircularProgressIndicator();
-
-                  case PlayingState.initialized:
-                  case PlayingState.stopped:
-                  case PlayingState.paused:
-                    return SizedBox.expand(
-                      child: Container(
-                        color: Colors.black45,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            IconButton(
-                              onPressed: () async {
-                                if (controller.value.duration != null) {
-                                  await controller.seekTo(
-                                      controller.value.position -
-                                          Duration(seconds: 10));
-                                }
-                              },
-                              color: Colors.white,
-                              iconSize: 60.0,
-                              icon: Icon(Icons.replay_10),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                await controller.play();
-                              },
-                              color: Colors.white,
-                              iconSize: 100.0,
-                              icon: Icon(Icons.play_arrow),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                if (controller.value.duration != null) {
-                                  await controller.seekTo(
-                                      controller.value.position +
-                                          Duration(seconds: 10));
-                                }
-                              },
-                              color: Colors.white,
-                              iconSize: 60.0,
-                              icon: Icon(Icons.forward_10),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-
-                  case PlayingState.buffering:
-                  case PlayingState.playing:
-                    return SizedBox.shrink();
-
-                  case PlayingState.ended:
-                  case PlayingState.error:
-                    return Center(
-                      child: IconButton(
-                        onPressed: () async {
-                          await controller.play();
-                        },
-                        color: Colors.white,
-                        iconSize: 100.0,
-                        icon: Icon(Icons.replay),
-                      ),
-                    );
-                }
-              }
+                ),
+              );
+            default:
               return SizedBox.shrink();
-            },
-          ),
-        ),
-        GestureDetector(
-          onTap: !controller.value.isPlaying
-              ? null
-              : () async {
-                  if (controller.value.isPlaying) {
-                    await controller.pause();
-                  }
-                },
-        ),
-      ],
+          }
+        },
+      ),
     );
+  }
+
+  Future<void> _play() {
+    return controller.play();
+  }
+
+  Future<void> _replay() async {
+    await controller.stop();
+    await controller.play();
+  }
+
+  Future<void> _pause() async {
+    if (controller.value.isPlaying) {
+      await controller.pause();
+    }
+  }
+
+  /// Returns a callback which seeks the video relative to current playing time.
+  Future<void> _seekRelative(Duration seekStep) async {
+    if (controller.value.duration != null) {
+      await controller.seekTo(controller.value.position + seekStep);
+    }
   }
 }
