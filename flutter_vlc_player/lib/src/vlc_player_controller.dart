@@ -228,7 +228,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             spuTracksCount: event.spuTracksCount,
             activeSpuTrack: event.activeSpuTrack,
             isPlaying: event.isPlaying,
-            playingState: (event.isPlaying != null)
+            playingState: (event.isPlaying ?? false)
                 ? PlayingState.playing
                 : value.playingState,
           );
