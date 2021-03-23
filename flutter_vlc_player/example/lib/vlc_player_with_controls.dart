@@ -373,7 +373,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   }
 
   void _togglePlaying() async {
-   _controller.value.isPlaying
+    _controller.value.isPlaying
         ? await _controller.pause()
         : await _controller.play();
   }
@@ -510,7 +510,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       );
       await _controller.castToRenderer(selectedCastDeviceName);
     } else {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('No Display Device Found!')));
     }
   }
