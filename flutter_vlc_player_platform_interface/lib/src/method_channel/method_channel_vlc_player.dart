@@ -498,7 +498,6 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
               rendererId: map['id'],
               rendererName: map['name'],
             );
-            break;
           //
           case 'detached':
             return VlcRendererEvent(
@@ -506,11 +505,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
               rendererId: map['id'],
               rendererName: map['name'],
             );
-            break;
           //
           default:
             return VlcRendererEvent(eventType: VlcRendererEventType.unknown);
-            break;
         }
       },
     );

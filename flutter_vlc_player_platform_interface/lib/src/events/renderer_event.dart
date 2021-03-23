@@ -1,5 +1,4 @@
 import '../enums/renderer_event_type.dart';
-import 'package:meta/meta.dart';
 
 class VlcRendererEvent {
   /// Creates an instance of [VlcRendererEvent].

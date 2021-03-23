@@ -17,7 +17,7 @@ class CreateMessage {
   List<Object?>? options;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
@@ -32,7 +32,7 @@ class CreateMessage {
     if (message == null) {
       return CreateMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return CreateMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..uri = pigeonMap['uri'] as String?
@@ -48,7 +48,7 @@ class TextureMessage {
   int? textureId;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     return pigeonMap;
   }
@@ -57,9 +57,8 @@ class TextureMessage {
     if (message == null) {
       return TextureMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return TextureMessage()
-      ..textureId = pigeonMap['textureId'] as int?;
+    final pigeonMap = message as Map<Object?, Object?>;
+    return TextureMessage()..textureId = pigeonMap['textureId'] as int?;
   }
 }
 
@@ -72,7 +71,7 @@ class SetMediaMessage {
   int? hwAcc;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
@@ -86,7 +85,7 @@ class SetMediaMessage {
     if (message == null) {
       return SetMediaMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return SetMediaMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..uri = pigeonMap['uri'] as String?
@@ -102,7 +101,7 @@ class BooleanMessage {
   bool? result;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['result'] = result;
     return pigeonMap;
@@ -112,7 +111,7 @@ class BooleanMessage {
     if (message == null) {
       return BooleanMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return BooleanMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..result = pigeonMap['result'] as bool?;
@@ -124,7 +123,7 @@ class LoopingMessage {
   bool? isLooping;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['isLooping'] = isLooping;
     return pigeonMap;
@@ -134,7 +133,7 @@ class LoopingMessage {
     if (message == null) {
       return LoopingMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return LoopingMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..isLooping = pigeonMap['isLooping'] as bool?;
@@ -146,7 +145,7 @@ class PositionMessage {
   int? position;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['position'] = position;
     return pigeonMap;
@@ -156,7 +155,7 @@ class PositionMessage {
     if (message == null) {
       return PositionMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return PositionMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..position = pigeonMap['position'] as int?;
@@ -168,7 +167,7 @@ class DurationMessage {
   int? duration;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['duration'] = duration;
     return pigeonMap;
@@ -178,7 +177,7 @@ class DurationMessage {
     if (message == null) {
       return DurationMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return DurationMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..duration = pigeonMap['duration'] as int?;
@@ -190,7 +189,7 @@ class VolumeMessage {
   int? volume;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['volume'] = volume;
     return pigeonMap;
@@ -200,7 +199,7 @@ class VolumeMessage {
     if (message == null) {
       return VolumeMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return VolumeMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..volume = pigeonMap['volume'] as int?;
@@ -212,7 +211,7 @@ class PlaybackSpeedMessage {
   double? speed;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['speed'] = speed;
     return pigeonMap;
@@ -222,7 +221,7 @@ class PlaybackSpeedMessage {
     if (message == null) {
       return PlaybackSpeedMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return PlaybackSpeedMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..speed = pigeonMap['speed'] as double?;
@@ -234,7 +233,7 @@ class SnapshotMessage {
   String? snapshot;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['snapshot'] = snapshot;
     return pigeonMap;
@@ -244,7 +243,7 @@ class SnapshotMessage {
     if (message == null) {
       return SnapshotMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return SnapshotMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..snapshot = pigeonMap['snapshot'] as String?;
@@ -256,7 +255,7 @@ class TrackCountMessage {
   int? count;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['count'] = count;
     return pigeonMap;
@@ -266,7 +265,7 @@ class TrackCountMessage {
     if (message == null) {
       return TrackCountMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return TrackCountMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..count = pigeonMap['count'] as int?;
@@ -278,7 +277,7 @@ class SpuTracksMessage {
   Map<Object?, Object?>? subtitles;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['subtitles'] = subtitles;
     return pigeonMap;
@@ -288,7 +287,7 @@ class SpuTracksMessage {
     if (message == null) {
       return SpuTracksMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return SpuTracksMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..subtitles = pigeonMap['subtitles'] as Map<Object?, Object?>?;
@@ -300,7 +299,7 @@ class SpuTrackMessage {
   int? spuTrackNumber;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['spuTrackNumber'] = spuTrackNumber;
     return pigeonMap;
@@ -310,7 +309,7 @@ class SpuTrackMessage {
     if (message == null) {
       return SpuTrackMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return SpuTrackMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..spuTrackNumber = pigeonMap['spuTrackNumber'] as int?;
@@ -322,7 +321,7 @@ class DelayMessage {
   int? delay;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['delay'] = delay;
     return pigeonMap;
@@ -332,7 +331,7 @@ class DelayMessage {
     if (message == null) {
       return DelayMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return DelayMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..delay = pigeonMap['delay'] as int?;
@@ -346,7 +345,7 @@ class AddSubtitleMessage {
   bool? isSelected;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
@@ -358,7 +357,7 @@ class AddSubtitleMessage {
     if (message == null) {
       return AddSubtitleMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return AddSubtitleMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..uri = pigeonMap['uri'] as String?
@@ -372,7 +371,7 @@ class AudioTracksMessage {
   Map<Object?, Object?>? audios;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['audios'] = audios;
     return pigeonMap;
@@ -382,7 +381,7 @@ class AudioTracksMessage {
     if (message == null) {
       return AudioTracksMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return AudioTracksMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..audios = pigeonMap['audios'] as Map<Object?, Object?>?;
@@ -394,7 +393,7 @@ class AudioTrackMessage {
   int? audioTrackNumber;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['audioTrackNumber'] = audioTrackNumber;
     return pigeonMap;
@@ -404,7 +403,7 @@ class AudioTrackMessage {
     if (message == null) {
       return AudioTrackMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return AudioTrackMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..audioTrackNumber = pigeonMap['audioTrackNumber'] as int?;
@@ -418,7 +417,7 @@ class AddAudioMessage {
   bool? isSelected;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
@@ -430,7 +429,7 @@ class AddAudioMessage {
     if (message == null) {
       return AddAudioMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return AddAudioMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..uri = pigeonMap['uri'] as String?
@@ -444,7 +443,7 @@ class VideoTracksMessage {
   Map<Object?, Object?>? videos;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['videos'] = videos;
     return pigeonMap;
@@ -454,7 +453,7 @@ class VideoTracksMessage {
     if (message == null) {
       return VideoTracksMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return VideoTracksMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..videos = pigeonMap['videos'] as Map<Object?, Object?>?;
@@ -466,7 +465,7 @@ class VideoTrackMessage {
   int? videoTrackNumber;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['videoTrackNumber'] = videoTrackNumber;
     return pigeonMap;
@@ -476,7 +475,7 @@ class VideoTrackMessage {
     if (message == null) {
       return VideoTrackMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return VideoTrackMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..videoTrackNumber = pigeonMap['videoTrackNumber'] as int?;
@@ -488,7 +487,7 @@ class VideoScaleMessage {
   double? scale;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['scale'] = scale;
     return pigeonMap;
@@ -498,7 +497,7 @@ class VideoScaleMessage {
     if (message == null) {
       return VideoScaleMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return VideoScaleMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..scale = pigeonMap['scale'] as double?;
@@ -510,7 +509,7 @@ class VideoAspectRatioMessage {
   String? aspectRatio;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['aspectRatio'] = aspectRatio;
     return pigeonMap;
@@ -520,7 +519,7 @@ class VideoAspectRatioMessage {
     if (message == null) {
       return VideoAspectRatioMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return VideoAspectRatioMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..aspectRatio = pigeonMap['aspectRatio'] as String?;
@@ -532,7 +531,7 @@ class RendererServicesMessage {
   List<Object?>? services;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['services'] = services;
     return pigeonMap;
@@ -542,7 +541,7 @@ class RendererServicesMessage {
     if (message == null) {
       return RendererServicesMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return RendererServicesMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..services = pigeonMap['services'] as List<Object?>?;
@@ -554,7 +553,7 @@ class RendererScanningMessage {
   String? rendererService;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['rendererService'] = rendererService;
     return pigeonMap;
@@ -564,7 +563,7 @@ class RendererScanningMessage {
     if (message == null) {
       return RendererScanningMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return RendererScanningMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..rendererService = pigeonMap['rendererService'] as String?;
@@ -576,7 +575,7 @@ class RendererDevicesMessage {
   Map<Object?, Object?>? rendererDevices;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['rendererDevices'] = rendererDevices;
     return pigeonMap;
@@ -586,10 +585,11 @@ class RendererDevicesMessage {
     if (message == null) {
       return RendererDevicesMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return RendererDevicesMessage()
       ..textureId = pigeonMap['textureId'] as int?
-      ..rendererDevices = pigeonMap['rendererDevices'] as Map<Object?, Object?>?;
+      ..rendererDevices =
+          pigeonMap['rendererDevices'] as Map<Object?, Object?>?;
   }
 }
 
@@ -598,7 +598,7 @@ class RenderDeviceMessage {
   String? rendererDevice;
 
   Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    final pigeonMap = <Object?, Object?>{};
     pigeonMap['textureId'] = textureId;
     pigeonMap['rendererDevice'] = rendererDevice;
     return pigeonMap;
@@ -608,7 +608,7 @@ class RenderDeviceMessage {
     if (message == null) {
       return RenderDeviceMessage();
     }
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    final pigeonMap = message as Map<Object?, Object?>;
     return RenderDeviceMessage()
       ..textureId = pigeonMap['textureId'] as int?
       ..rendererDevice = pigeonMap['rendererDevice'] as String?;
@@ -617,10 +617,9 @@ class RenderDeviceMessage {
 
 class VlcPlayerApi {
   Future<void> initialize() async {
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.initialize', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(null) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -628,8 +627,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -641,11 +639,10 @@ class VlcPlayerApi {
   }
 
   Future<void> create(CreateMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.create', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -653,8 +650,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -666,11 +662,10 @@ class VlcPlayerApi {
   }
 
   Future<void> dispose(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.dispose', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -678,8 +673,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -691,11 +685,10 @@ class VlcPlayerApi {
   }
 
   Future<void> setStreamUrl(SetMediaMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.setStreamUrl', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -703,8 +696,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -716,11 +708,10 @@ class VlcPlayerApi {
   }
 
   Future<void> play(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.play', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -728,8 +719,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -741,11 +731,10 @@ class VlcPlayerApi {
   }
 
   Future<void> pause(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.pause', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -753,8 +742,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -766,11 +754,10 @@ class VlcPlayerApi {
   }
 
   Future<void> stop(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.stop', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -778,8 +765,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -791,11 +777,10 @@ class VlcPlayerApi {
   }
 
   Future<BooleanMessage> isPlaying(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.isPlaying', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -803,8 +788,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -816,11 +800,10 @@ class VlcPlayerApi {
   }
 
   Future<BooleanMessage> isSeekable(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.isSeekable', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -828,8 +811,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -841,11 +823,10 @@ class VlcPlayerApi {
   }
 
   Future<void> setLooping(LoopingMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.setLooping', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -853,8 +834,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -866,11 +846,10 @@ class VlcPlayerApi {
   }
 
   Future<void> seekTo(PositionMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.seekTo', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -878,8 +857,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -891,11 +869,10 @@ class VlcPlayerApi {
   }
 
   Future<PositionMessage> position(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.position', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -903,8 +880,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -916,11 +892,10 @@ class VlcPlayerApi {
   }
 
   Future<DurationMessage> duration(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.duration', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -928,8 +903,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -941,11 +915,10 @@ class VlcPlayerApi {
   }
 
   Future<void> setVolume(VolumeMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.setVolume', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -953,8 +926,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -966,11 +938,10 @@ class VlcPlayerApi {
   }
 
   Future<VolumeMessage> getVolume(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVolume', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -978,8 +949,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -991,11 +961,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setPlaybackSpeed(PlaybackSpeedMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setPlaybackSpeed', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setPlaybackSpeed',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1003,8 +973,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1016,11 +985,11 @@ class VlcPlayerApi {
   }
 
   Future<PlaybackSpeedMessage> getPlaybackSpeed(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getPlaybackSpeed', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getPlaybackSpeed',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1028,8 +997,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1041,11 +1009,10 @@ class VlcPlayerApi {
   }
 
   Future<SnapshotMessage> takeSnapshot(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.takeSnapshot', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1053,8 +1020,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1066,11 +1032,11 @@ class VlcPlayerApi {
   }
 
   Future<TrackCountMessage> getSpuTracksCount(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getSpuTracksCount', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getSpuTracksCount',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1078,8 +1044,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1091,11 +1056,10 @@ class VlcPlayerApi {
   }
 
   Future<SpuTracksMessage> getSpuTracks(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuTracks', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1103,8 +1067,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1116,11 +1079,10 @@ class VlcPlayerApi {
   }
 
   Future<void> setSpuTrack(SpuTrackMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.setSpuTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1128,8 +1090,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1141,11 +1102,10 @@ class VlcPlayerApi {
   }
 
   Future<SpuTrackMessage> getSpuTrack(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1153,8 +1113,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1166,11 +1125,10 @@ class VlcPlayerApi {
   }
 
   Future<void> setSpuDelay(DelayMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.setSpuDelay', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1178,8 +1136,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1191,11 +1148,10 @@ class VlcPlayerApi {
   }
 
   Future<DelayMessage> getSpuDelay(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuDelay', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1203,8 +1159,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1216,11 +1171,11 @@ class VlcPlayerApi {
   }
 
   Future<void> addSubtitleTrack(AddSubtitleMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.addSubtitleTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.addSubtitleTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1228,8 +1183,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1241,11 +1195,11 @@ class VlcPlayerApi {
   }
 
   Future<TrackCountMessage> getAudioTracksCount(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracksCount', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracksCount',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1253,8 +1207,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1266,11 +1219,11 @@ class VlcPlayerApi {
   }
 
   Future<AudioTracksMessage> getAudioTracks(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracks', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracks',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1278,8 +1231,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1291,11 +1243,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setAudioTrack(AudioTrackMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setAudioTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setAudioTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1303,8 +1255,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1316,11 +1267,11 @@ class VlcPlayerApi {
   }
 
   Future<AudioTrackMessage> getAudioTrack(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getAudioTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1328,8 +1279,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1341,11 +1291,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setAudioDelay(DelayMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setAudioDelay', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setAudioDelay',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1353,8 +1303,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1366,11 +1315,11 @@ class VlcPlayerApi {
   }
 
   Future<DelayMessage> getAudioDelay(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getAudioDelay', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioDelay',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1378,8 +1327,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1391,11 +1339,11 @@ class VlcPlayerApi {
   }
 
   Future<void> addAudioTrack(AddAudioMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.addAudioTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.addAudioTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1403,8 +1351,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1416,11 +1363,11 @@ class VlcPlayerApi {
   }
 
   Future<TrackCountMessage> getVideoTracksCount(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracksCount', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracksCount',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1428,8 +1375,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1441,11 +1387,11 @@ class VlcPlayerApi {
   }
 
   Future<VideoTracksMessage> getVideoTracks(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracks', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracks',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1453,8 +1399,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1466,11 +1411,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setVideoTrack(VideoTrackMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setVideoTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1478,8 +1423,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1491,11 +1435,11 @@ class VlcPlayerApi {
   }
 
   Future<VideoTrackMessage> getVideoTrack(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getVideoTrack', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTrack',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1503,8 +1447,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1516,11 +1459,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setVideoScale(VideoScaleMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setVideoScale', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoScale',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1528,8 +1471,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1541,11 +1483,11 @@ class VlcPlayerApi {
   }
 
   Future<VideoScaleMessage> getVideoScale(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getVideoScale', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoScale',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1553,8 +1495,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1566,11 +1507,11 @@ class VlcPlayerApi {
   }
 
   Future<void> setVideoAspectRatio(VideoAspectRatioMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.setVideoAspectRatio', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoAspectRatio',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1578,8 +1519,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1590,12 +1530,13 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VideoAspectRatioMessage> getVideoAspectRatio(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getVideoAspectRatio', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+  Future<VideoAspectRatioMessage> getVideoAspectRatio(
+      TextureMessage arg) async {
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoAspectRatio',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1603,8 +1544,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1615,12 +1555,13 @@ class VlcPlayerApi {
     }
   }
 
-  Future<RendererServicesMessage> getAvailableRendererServices(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getAvailableRendererServices', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+  Future<RendererServicesMessage> getAvailableRendererServices(
+      TextureMessage arg) async {
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAvailableRendererServices',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1628,8 +1569,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1641,11 +1581,11 @@ class VlcPlayerApi {
   }
 
   Future<void> startRendererScanning(RendererScanningMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.startRendererScanning', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.startRendererScanning',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1653,8 +1593,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1666,11 +1605,11 @@ class VlcPlayerApi {
   }
 
   Future<void> stopRendererScanning(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.stopRendererScanning', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.stopRendererScanning',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1678,8 +1617,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1691,11 +1629,11 @@ class VlcPlayerApi {
   }
 
   Future<RendererDevicesMessage> getRendererDevices(TextureMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.getRendererDevices', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getRendererDevices',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1703,8 +1641,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
@@ -1716,11 +1653,11 @@ class VlcPlayerApi {
   }
 
   Future<void> castToRenderer(RenderDeviceMessage arg) async {
-    final Object encoded = arg.encode();
-    const BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.castToRenderer', StandardMessageCodec());
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(encoded) as Map<Object?, Object?>?;
+    final encoded = arg.encode();
+    const channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.castToRenderer',
+        StandardMessageCodec());
+    final replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1728,8 +1665,7 @@ class VlcPlayerApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error =
-          replyMap['error']! as Map<Object?, Object?>;
+      final error = replyMap['error']! as Map<Object?, Object?>;
       throw PlatformException(
         code: error['code'] as String? ?? 'unknown',
         message: error['message'] as String?,
