@@ -1,6 +1,7 @@
-## 5.0.6
+## 6.0.0
 * Support Flutter V2 Null Safety
 Credits to Mitch Ross (https://github.com/mitchross)
+  
 ## 5.0.5
 * Added Vlc Subtitle Styling. 
 * Split ios swift code into multiple files for better readability.
