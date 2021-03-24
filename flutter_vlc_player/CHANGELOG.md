@@ -1,3 +1,7 @@
+## 6.0.1
+* Fix issue with black screen / offstage
+Credits to Mitch Ross (https://github.com/mitchross)
+
 ## 6.0.0
 * Support Flutter V2 Null Safety
 Credits to Mitch Ross (https://github.com/mitchross)

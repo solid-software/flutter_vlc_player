@@ -88,7 +88,7 @@ class _VlcPlayerState extends State<VlcPlayer>
             child: widget.placeholder ?? Container(),
           ),
           Offstage(
-            offstage: _isInitialized,
+            offstage: !_isInitialized,
             child: vlcPlayerPlatform
                 .buildView(widget.controller.onPlatformViewCreated),
           ),
