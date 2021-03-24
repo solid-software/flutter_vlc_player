@@ -6,19 +6,19 @@ import 'vlc_player_platform.dart';
 class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;
   final double aspectRatio;
-  final Widget placeholder;
+  final Widget? placeholder;
 
   VlcPlayer({
-    Key key,
+    Key? key,
 
     /// The [VlcPlayerController] responsible for the video being rendered in
     /// this widget.
-    @required this.controller,
+    required this.controller,
 
     /// The aspect ratio used to display the video.
     /// This MUST be provided, however it could simply be (parentWidth / parentHeight) - where parentWidth and
     /// parentHeight are the width and height of the parent perhaps as defined by a LayoutBuilder.
-    @required this.aspectRatio,
+    required this.aspectRatio,
 
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
@@ -47,9 +47,9 @@ class _VlcPlayerState extends State<VlcPlayer>
     };
   }
 
-  VoidCallback _listener;
+  late VoidCallback _listener;
 
-  bool _isInitialized;
+  bool _isInitialized = false;
 
   @override
   void initState() {

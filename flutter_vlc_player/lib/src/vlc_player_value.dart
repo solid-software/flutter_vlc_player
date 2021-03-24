@@ -10,7 +10,7 @@ class VlcPlayerValue {
   /// Constructs a video with the given values. Only [duration] is required. The
   /// rest will initialize with default values when unset.
   VlcPlayerValue({
-    @required this.duration,
+    required this.duration,
     this.size = Size.zero,
     this.position = Duration.zero,
     this.playingState = PlayingState.initializing,
@@ -44,7 +44,7 @@ class VlcPlayerValue {
 
   /// Returns an instance with the playing state error
   /// and the given [errorDescription].
-  factory VlcPlayerValue.erroneous(String errorDescription) {
+  factory VlcPlayerValue.erroneous(String? errorDescription) {
     return VlcPlayerValue(
       duration: Duration.zero,
       playingState: PlayingState.error,
@@ -115,7 +115,7 @@ class VlcPlayerValue {
   /// A description of the error if present.
   ///
   /// If [hasError] is false this is [null].
-  final String errorDescription;
+  final String? errorDescription;
 
   /// The [size] of the currently loaded video.
   ///
@@ -145,28 +145,28 @@ class VlcPlayerValue {
   /// Returns a new instance that has the same values as this current instance,
   /// except for any overrides passed in as arguments to [copyWidth].
   VlcPlayerValue copyWith({
-    Duration duration,
-    Size size,
-    Duration position,
-    PlayingState playingState,
-    bool isInitialized,
-    bool isPlaying,
-    bool isLooping,
-    bool isBuffering,
-    bool isEnded,
-    double bufferPercent,
-    int volume,
-    double playbackSpeed,
-    double videoScale,
-    int audioTracksCount,
-    int activeAudioTrack,
-    int audioDelay,
-    int spuTracksCount,
-    int activeSpuTrack,
-    int spuDelay,
-    int videoTracksCount,
-    int activeVideoTrack,
-    String errorDescription,
+    Duration? duration,
+    Size? size,
+    Duration? position,
+    PlayingState? playingState,
+    bool? isInitialized,
+    bool? isPlaying,
+    bool? isLooping,
+    bool? isBuffering,
+    bool? isEnded,
+    double? bufferPercent,
+    int? volume,
+    double? playbackSpeed,
+    double? videoScale,
+    int? audioTracksCount,
+    int? activeAudioTrack,
+    int? audioDelay,
+    int? spuTracksCount,
+    int? activeSpuTrack,
+    int? spuDelay,
+    int? videoTracksCount,
+    int? activeVideoTrack,
+    String? errorDescription,
   }) {
     return VlcPlayerValue(
       duration: duration ?? this.duration,

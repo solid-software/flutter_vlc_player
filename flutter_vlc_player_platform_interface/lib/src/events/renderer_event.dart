@@ -1,5 +1,4 @@
 import '../enums/renderer_event_type.dart';
-import 'package:meta/meta.dart';
 
 class VlcRendererEvent {
   /// Creates an instance of [VlcRendererEvent].
@@ -8,7 +7,7 @@ class VlcRendererEvent {
   ///
   /// Depending on the [eventType], the [rendererId], [rendererName]
   VlcRendererEvent({
-    @required this.eventType,
+    required this.eventType,
     this.rendererId,
     this.rendererName,
   });
@@ -17,8 +16,8 @@ class VlcRendererEvent {
   final VlcRendererEventType eventType;
 
   /// The identifier of renderer device
-  final String rendererId;
+  final String? rendererId;
 
   /// The name of cast device
-  final String rendererName;
+  final String? rendererName;
 }

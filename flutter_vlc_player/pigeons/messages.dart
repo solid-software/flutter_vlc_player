@@ -1,145 +1,145 @@
 import 'package:pigeon/pigeon_lib.dart';
 
 class TextureMessage {
-  int textureId;
+  int? textureId;
 }
 
 class CreateMessage {
-  int textureId;
-  String uri;
-  int type;
-  String packageName;
-  bool autoPlay;
-  int hwAcc;
-  List<String> options;
+  int? textureId;
+  String? uri;
+  int? type;
+  String? packageName;
+  bool? autoPlay;
+  int? hwAcc;
+  List<String>? options;
 }
 
 class SetMediaMessage {
-  int textureId;
-  String uri;
-  int type;
-  String packageName;
-  bool autoPlay;
-  int hwAcc;
+  int? textureId;
+  String? uri;
+  int? type;
+  String? packageName;
+  bool? autoPlay;
+  int? hwAcc;
 }
 
 class BooleanMessage {
-  int textureId;
-  bool result;
+  int? textureId;
+  bool? result;
 }
 
 class LoopingMessage {
-  int textureId;
-  bool isLooping;
+  int? textureId;
+  bool? isLooping;
 }
 
 class VolumeMessage {
-  int textureId;
-  int volume;
+  int? textureId;
+  int? volume;
 }
 
 class PlaybackSpeedMessage {
-  int textureId;
-  double speed;
+  int? textureId;
+  double? speed;
 }
 
 class PositionMessage {
-  int textureId;
-  int position;
+  int? textureId;
+  int? position;
 }
 
 class DurationMessage {
-  int textureId;
-  int duration;
+  int? textureId;
+  int? duration;
 }
 
 class DelayMessage {
-  int textureId;
-  int delay;
+  int? textureId;
+  int? delay;
 }
 
 class TrackCountMessage {
-  int textureId;
-  int count;
+  int? textureId;
+  int? count;
 }
 
 class SnapshotMessage {
-  int textureId;
-  String snapshot;
+  int? textureId;
+  String? snapshot;
 }
 
 class SpuTracksMessage {
-  int textureId;
-  Map subtitles;
+  int? textureId;
+  Map? subtitles;
 }
 
 class SpuTrackMessage {
-  int textureId;
-  int spuTrackNumber;
+  int? textureId;
+  int? spuTrackNumber;
 }
 
 class AddSubtitleMessage {
-  int textureId;
-  String uri;
-  int type;
-  bool isSelected;
+  int? textureId;
+  String? uri;
+  int? type;
+  bool? isSelected;
 }
 
 class AudioTracksMessage {
-  int textureId;
-  Map audios;
+  int? textureId;
+  Map? audios;
 }
 
 class AudioTrackMessage {
-  int textureId;
-  int audioTrackNumber;
+  int? textureId;
+  int? audioTrackNumber;
 }
 
 class AddAudioMessage {
-  int textureId;
-  String uri;
-  int type;
-  bool isSelected;
+  int? textureId;
+  String? uri;
+  int? type;
+  bool? isSelected;
 }
 
 class VideoTracksMessage {
-  int textureId;
-  Map videos;
+  int? textureId;
+  Map? videos;
 }
 
 class VideoTrackMessage {
-  int textureId;
-  int videoTrackNumber;
+  int? textureId;
+  int? videoTrackNumber;
 }
 
 class VideoScaleMessage {
-  int textureId;
-  double scale;
+  int? textureId;
+  double? scale;
 }
 
 class VideoAspectRatioMessage {
-  int textureId;
-  String aspectRatio;
+  int? textureId;
+  String? aspectRatio;
 }
 
 class RendererServicesMessage {
-  int textureId;
-  List<String> services;
+  int? textureId;
+  List<String>? services;
 }
 
 class RendererScanningMessage {
-  int textureId;
-  String rendererService;
+  int? textureId;
+  String? rendererService;
 }
 
 class RendererDevicesMessage {
-  int textureId;
-  Map rendererDevices;
+  int? textureId;
+  Map? rendererDevices;
 }
 
 class RenderDeviceMessage {
-  int textureId;
-  String rendererDevice;
+  int? textureId;
+  String? rendererDevice;
 }
 
 @HostApi(dartHostTestHandler: 'TestHostVlcPlayerApi')
@@ -202,8 +202,8 @@ void configurePigeon(PigeonOptions opts) {
       '../flutter_vlc_player_platform_interface/lib/src/messages/messages.dart';
   opts.objcHeaderOut = 'ios/Classes/messages.h';
   opts.objcSourceOut = 'ios/Classes/messages.m';
-  opts.objcOptions.prefix = '';
+  opts.objcOptions!.prefix = '';
   opts.javaOut =
       'android/src/main/java/software/solid/fluttervlcplayer/Messages.java';
-  opts.javaOptions.package = 'software.solid.fluttervlcplayer';
+  opts.javaOptions!.package = 'software.solid.fluttervlcplayer';
 }

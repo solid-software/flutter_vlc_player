@@ -92,6 +92,14 @@ class _SingleTabState extends State<SingleTab> {
             advanced: VlcAdvancedOptions([
               VlcAdvancedOptions.networkCaching(2000),
             ]),
+            subtitle: VlcSubtitleOptions([
+              VlcSubtitleOptions.boldStyle(true),
+              VlcSubtitleOptions.fontSize(30),
+              VlcSubtitleOptions.outlineColor(VlcSubtitleColor.yellow),
+              VlcSubtitleOptions.outlineThickness(VlcSubtitleThickness.normal),
+              // works only on externally added subtitles
+              VlcSubtitleOptions.color(VlcSubtitleColor.navy),
+            ]),
             rtp: VlcRtpOptions([
               VlcRtpOptions.rtpOverRtsp(true),
             ]),
@@ -182,7 +190,7 @@ class _SingleTabState extends State<SingleTab> {
                         hwAcc: HwAcc.FULL);
                     break;
                   case VideoType.file:
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Copying file to temporary storage...'),
                       ),
@@ -190,7 +198,7 @@ class _SingleTabState extends State<SingleTab> {
                     await Future.delayed(Duration(seconds: 1));
                     var tempVideo = await _loadVideoToFs();
                     await Future.delayed(Duration(seconds: 1));
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Now trying to play...'),
                       ),
@@ -199,7 +207,7 @@ class _SingleTabState extends State<SingleTab> {
                     if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
                     } else {
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('File load error.'),
                         ),

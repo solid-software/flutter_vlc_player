@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../flutter_vlc_player_platform_interface.dart';
@@ -58,13 +56,13 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
 
   /// Creates an instance of a vlc player
   Future<void> create({
-    @required int viewId,
-    @required String uri,
-    @required DataSourceType type,
-    String package,
-    bool autoPlay,
-    HwAcc hwAcc,
-    VlcPlayerOptions options,
+    required int viewId,
+    required String uri,
+    required DataSourceType type,
+    String? package,
+    bool? autoPlay,
+    HwAcc? hwAcc,
+    VlcPlayerOptions? options,
   }) {
     throw _unimplemented('create');
   }
@@ -77,11 +75,11 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   /// Set/Change video streaming url
   Future<void> setStreamUrl(
     int viewId, {
-    @required String uri,
-    @required DataSourceType type,
-    String package,
-    bool autoPlay,
-    HwAcc hwAcc,
+    required String uri,
+    required DataSourceType type,
+    String? package,
+    bool? autoPlay,
+    HwAcc? hwAcc,
   }) {
     throw _unimplemented('setStreamUrl');
   }
@@ -107,12 +105,12 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns true if media is playing.
-  Future<bool> isPlaying(int viewId) {
+  Future<bool?> isPlaying(int viewId) {
     throw _unimplemented('isPlaying');
   }
 
   /// Returns true if media is seekable.
-  Future<bool> isSeekable(int viewId) {
+  Future<bool?> isSeekable(int viewId) {
     throw _unimplemented('isSeekable');
   }
 
@@ -149,7 +147,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns current vlc volume level within a range between 0 and 100.
-  Future<int> getVolume(int viewId) {
+  Future<int?> getVolume(int viewId) {
     throw _unimplemented('getVolume');
   }
 
@@ -159,12 +157,12 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns the vlc playback speed.
-  Future<double> getPlaybackSpeed(int viewId) {
+  Future<double?> getPlaybackSpeed(int viewId) {
     throw _unimplemented('getPlaybackSpeed');
   }
 
   /// Return the number of subtitle tracks (both embedded and inserted)
-  Future<int> getSpuTracksCount(int viewId) {
+  Future<int?> getSpuTracksCount(int viewId) {
     throw _unimplemented('getSpuTracksCount');
   }
 
@@ -181,7 +179,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns the selected spu track index
-  Future<int> getSpuTrack(int viewId) {
+  Future<int?> getSpuTrack(int viewId) {
     throw _unimplemented('getSpuTrack');
   }
 
@@ -192,7 +190,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns the amount of subtitle time delay.
-  Future<int> getSpuDelay(int viewId) {
+  Future<int?> getSpuDelay(int viewId) {
     throw _unimplemented('getSpuDelay');
   }
 
@@ -202,15 +200,15 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   /// [isSelected] - Set true if you wanna force the added subtitle to start display on media.
   Future<void> addSubtitleTrack(
     int viewId, {
-    @required String uri,
-    @required DataSourceType type,
-    bool isSelected,
+    required String uri,
+    required DataSourceType type,
+    bool? isSelected,
   }) {
     throw _unimplemented('addSubtitleTrack');
   }
 
   /// Returns the number of audio tracks
-  Future<int> getAudioTracksCount(int viewId) {
+  Future<int?> getAudioTracksCount(int viewId) {
     throw _unimplemented('getAudioTracksCount');
   }
 
@@ -221,7 +219,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns selected audio track index
-  Future<int> getAudioTrack(int viewId) {
+  Future<int?> getAudioTrack(int viewId) {
     throw _unimplemented('getAudioTrack');
   }
 
@@ -238,7 +236,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns the amount of audio track time delay.
-  Future<int> getAudioDelay(int viewId) {
+  Future<int?> getAudioDelay(int viewId) {
     throw _unimplemented('getAudioDelay');
   }
 
@@ -248,15 +246,15 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   /// [isSelected] - Set true if you wanna force the added subtitle to start display on media.
   Future<void> addAudioTrack(
     int viewId, {
-    @required String uri,
-    @required DataSourceType type,
-    bool isSelected,
+    required String uri,
+    required DataSourceType type,
+    bool? isSelected,
   }) {
     throw _unimplemented('addAudioTrack');
   }
 
   /// Returns the number of video tracks
-  Future<int> getVideoTracksCount(int viewId) {
+  Future<int?> getVideoTracksCount(int viewId) {
     throw _unimplemented('getVideoTracksCount');
   }
 
@@ -273,7 +271,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns selected video track index
-  Future<int> getVideoTrack(int viewId) {
+  Future<int?> getVideoTrack(int viewId) {
     throw _unimplemented('getVideoTrack');
   }
 
@@ -284,7 +282,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns video scale
-  Future<double> getVideoScale(int viewId) {
+  Future<double?> getVideoScale(int viewId) {
     throw _unimplemented('getVideoScale');
   }
 
@@ -295,7 +293,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns video aspect ratio
-  Future<String> getVideoAspectRatio(int viewId) {
+  Future<String?> getVideoAspectRatio(int viewId) {
     throw _unimplemented('getVideoAspectRatio');
   }
 
@@ -310,7 +308,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Start vlc renderer discovery to find external display devices (chromecast)
-  Future<void> startRendererScanning(int viewId, {String rendererService}) {
+  Future<void> startRendererScanning(int viewId, {String? rendererService}) {
     throw _unimplemented('startRendererScanning');
   }
 
