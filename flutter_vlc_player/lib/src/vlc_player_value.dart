@@ -7,6 +7,9 @@ import 'enums/playing_state.dart';
 /// The duration, current position, buffering state, error state and settings
 /// of a [VlcPlayerController].
 class VlcPlayerValue {
+  /// Define Empty String
+  static const String emptyString = '';
+
   /// Constructs a video with the given values. Only [duration] is required. The
   /// rest will initialize with default values when unset.
   VlcPlayerValue({
@@ -31,7 +34,7 @@ class VlcPlayerValue {
     this.spuDelay = 0,
     this.videoTracksCount = 1,
     this.activeVideoTrack = 0,
-    this.errorDescription,
+    this.errorDescription = VlcPlayerValue.emptyString,
   });
 
   /// Returns an instance with a `null` [Duration].
@@ -49,7 +52,7 @@ class VlcPlayerValue {
       duration: Duration.zero,
       playingState: PlayingState.error,
       isInitialized: false,
-      errorDescription: errorDescription,
+      errorDescription: errorDescription ?? VlcPlayerValue.emptyString,
     );
   }
 
@@ -114,8 +117,8 @@ class VlcPlayerValue {
 
   /// A description of the error if present.
   ///
-  /// If [hasError] is false this is [null].
-  final String? errorDescription;
+  /// If [hasError] is false this is [empty].
+  final String errorDescription;
 
   /// The [size] of the currently loaded video.
   ///
@@ -127,7 +130,7 @@ class VlcPlayerValue {
 
   /// Indicates whether or not the video is in an error state. If this is true
   /// [errorDescription] should have information about the problem.
-  bool get hasError => errorDescription != null;
+  bool get hasError => errorDescription.isNotEmpty;
 
   /// Returns [size.width] / [size.height] when the player is initialized, or `1.0.` when
   /// the player is not initialized or the aspect ratio would be less than or equal to 0.0.

@@ -38,7 +38,7 @@ class _SingleTabState extends State<SingleTab> {
     listVideos.add(VideoData(
       name: 'Network Video 1',
       path:
-          'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp42',
+          'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4',
       type: VideoType.network,
     ));
     //

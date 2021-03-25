@@ -162,7 +162,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isBuffering: true,
             isEnded: false,
             playingState: PlayingState.buffering,
-            errorDescription: null,
+            errorDescription: VlcPlayerValue.emptyString,
           );
           break;
 
@@ -196,7 +196,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             activeAudioTrack: event.activeAudioTrack,
             spuTracksCount: event.spuTracksCount,
             activeSpuTrack: event.activeSpuTrack,
-            errorDescription: null,
+            errorDescription: VlcPlayerValue.emptyString,
           );
           break;
 
@@ -228,7 +228,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: (event.isPlaying ?? false)
                 ? PlayingState.playing
                 : value.playingState,
-            errorDescription: null,
+            errorDescription: VlcPlayerValue.emptyString,
           );
           break;
 
@@ -237,11 +237,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
         case VlcMediaEventType.error:
           value = value.copyWith(
-              isPlaying: false,
-              isBuffering: false,
-              isEnded: false,
-              playingState: PlayingState.error,
-              errorDescription: 'VLC encountered an error!');
+            isPlaying: false,
+            isBuffering: false,
+            isEnded: false,
+            playingState: PlayingState.error,
+            errorDescription: 'VLC encountered an error!',
+          );
           break;
 
         case VlcMediaEventType.unknown:
