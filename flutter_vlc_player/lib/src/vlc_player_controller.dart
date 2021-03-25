@@ -35,11 +35,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    this.onInit,
+    this.onRendererHandler,
   })  : _dataSourceType = DataSourceType.asset,
-        _onInit = onInit,
-        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// Constructs a [VlcPlayerController] playing a video from obtained from
@@ -53,12 +51,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    this.onInit,
+    this.onRendererHandler,
   })  : package = null,
         _dataSourceType = DataSourceType.network,
-        _onInit = onInit,
-        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// Constructs a [VlcPlayerController] playing a video from a file.
@@ -71,13 +67,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    this.onInit,
+    this.onRendererHandler,
   })  : dataSource = 'file://${file.path}',
         package = null,
         _dataSourceType = DataSourceType.file,
-        _onInit = onInit,
-        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// The URI to the video file. This will be in different formats depending on
@@ -120,11 +114,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// This is a callback that will be executed once the platform view has been initialized.
   /// If you want the media to play as soon as the platform view has initialized, you could just call
   /// [VlcPlayerController.play] in this callback. (see the example)
-  final _onInit;
+  VoidCallback? onInit;
 
   /// This is a callback that will be executed every time a new renderer cast device attached/detached
   /// It should be defined as "void Function(VlcRendererEventType, String, String)", where the VlcRendererEventType is an enum { attached, detached } and the next two String arguments are unique-id and name of renderer device, respectively.
-  final _onRendererHandler;
+  RendererCallback? onRendererHandler;
 
   bool _isDisposed = false;
 
@@ -168,6 +162,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isBuffering: true,
             isEnded: false,
             playingState: PlayingState.buffering,
+            errorDescription: null,
           );
           break;
 
@@ -201,6 +196,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             activeAudioTrack: event.activeAudioTrack,
             spuTracksCount: event.spuTracksCount,
             activeSpuTrack: event.activeSpuTrack,
+            errorDescription: null,
           );
           break;
 
@@ -218,6 +214,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         case VlcMediaEventType.timeChanged:
           value = value.copyWith(
             isEnded: false,
+            isBuffering: (event.mediaEventType == VlcMediaEventType.buffering),
             position: event.position,
             duration: event.duration,
             playbackSpeed: event.playbackSpeed,
@@ -231,6 +228,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: (event.isPlaying ?? false)
                 ? PlayingState.playing
                 : value.playingState,
+            errorDescription: null,
           );
           break;
 
@@ -239,11 +237,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
         case VlcMediaEventType.error:
           value = value.copyWith(
-            isPlaying: false,
-            isBuffering: false,
-            isEnded: false,
-            playingState: PlayingState.error,
-          );
+              isPlaying: false,
+              isBuffering: false,
+              isEnded: false,
+              playingState: PlayingState.error,
+              errorDescription: 'VLC encountered an error!');
           break;
 
         case VlcMediaEventType.unknown:
@@ -270,15 +268,15 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       }
       switch (event.eventType) {
         case VlcRendererEventType.attached:
-          if (_onRendererHandler != null) {
-            _onRendererHandler(VlcRendererEventType.attached, event.rendererId,
-                event.rendererName);
+          if (onRendererHandler != null) {
+            onRendererHandler!(VlcRendererEventType.attached, event.rendererId!,
+                event.rendererName!);
           }
           break;
         case VlcRendererEventType.detached:
-          if (_onRendererHandler != null) {
-            _onRendererHandler(VlcRendererEventType.detached, event.rendererId,
-                event.rendererName);
+          if (onRendererHandler != null) {
+            onRendererHandler!(VlcRendererEventType.detached, event.rendererId!,
+                event.rendererName!);
           }
           break;
         case VlcRendererEventType.unknown:
@@ -297,7 +295,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       playingState: PlayingState.initialized,
     );
 
-    if (_onInit != null) _onInit();
+    if (onInit != null) onInit!();
 
     return initializingCompleter.future;
   }
@@ -799,18 +797,24 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     return await vlcPlayerPlatform.takeSnapshot(_viewId);
   }
 
+  /// Get list of available renderer services which is supported by vlc library
+  Future<List<String>> getAvailableRendererServices() async {
+    _throwIfNotInitialized('getAvailableRendererServices');
+    return await vlcPlayerPlatform.getAvailableRendererServices(_viewId);
+  }
+
   /// Start vlc cast discovery to find external display devices (chromecast)
   /// By setting serviceName, the vlc discovers renderer with that service
   Future<void> startRendererScanning({String? rendererService}) async {
     _throwIfNotInitialized('startRendererScanning');
-    return await vlcPlayerPlatform.startRendererScanning(viewId!,
+    return await vlcPlayerPlatform.startRendererScanning(_viewId,
         rendererService: rendererService ?? '');
   }
 
   /// Stop vlc cast and scan
   Future<void> stopRendererScanning() async {
     _throwIfNotInitialized('stopRendererScanning');
-    return await vlcPlayerPlatform.stopRendererScanning(viewId!);
+    return await vlcPlayerPlatform.stopRendererScanning(_viewId);
   }
 
   /// Returns all detected renderer devices as array of <String, String>

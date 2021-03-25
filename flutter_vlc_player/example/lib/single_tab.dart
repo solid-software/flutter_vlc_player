@@ -38,7 +38,7 @@ class _SingleTabState extends State<SingleTab> {
     listVideos.add(VideoData(
       name: 'Network Video 1',
       path:
-          'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4',
+          'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp42',
       type: VideoType.network,
     ));
     //
@@ -186,8 +186,10 @@ class _SingleTabState extends State<SingleTab> {
               onTap: () async {
                 switch (video.type) {
                   case VideoType.network:
-                    await _controller.setMediaFromNetwork(video.path,
-                        hwAcc: HwAcc.FULL);
+                    await _controller.setMediaFromNetwork(
+                      video.path,
+                      hwAcc: HwAcc.FULL,
+                    );
                     break;
                   case VideoType.file:
                     ScaffoldMessenger.of(context).showSnackBar(
