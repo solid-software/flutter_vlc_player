@@ -131,7 +131,7 @@ class VlcPlayerValue {
 
   /// Indicates whether or not the video is in an error state. If this is true
   /// [errorDescription] should have information about the problem.
-  bool get hasError => errorDescription.isNotEmpty;
+  bool get hasError => errorDescription != VlcPlayerValue.noError;
 
   /// Returns [size.width] / [size.height] when the player is initialized, or `1.0.` when
   /// the player is not initialized or the aspect ratio would be less than or equal to 0.0.
