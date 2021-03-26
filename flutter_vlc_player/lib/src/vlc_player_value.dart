@@ -7,8 +7,9 @@ import 'enums/playing_state.dart';
 /// The duration, current position, buffering state, error state and settings
 /// of a [VlcPlayerController].
 class VlcPlayerValue {
-  /// Define Empty String
-  static const String emptyString = '';
+  /// Define no error string
+  static const String noError = '';
+  static const String unknownError = 'An Unknown Error Occurred!';
 
   /// Constructs a video with the given values. Only [duration] is required. The
   /// rest will initialize with default values when unset.
@@ -34,7 +35,7 @@ class VlcPlayerValue {
     this.spuDelay = 0,
     this.videoTracksCount = 1,
     this.activeVideoTrack = 0,
-    this.errorDescription = VlcPlayerValue.emptyString,
+    this.errorDescription = VlcPlayerValue.noError,
   });
 
   /// Returns an instance with a `null` [Duration].
@@ -52,7 +53,7 @@ class VlcPlayerValue {
       duration: Duration.zero,
       playingState: PlayingState.error,
       isInitialized: false,
-      errorDescription: errorDescription ?? VlcPlayerValue.emptyString,
+      errorDescription: errorDescription ?? VlcPlayerValue.unknownError,
     );
   }
 
