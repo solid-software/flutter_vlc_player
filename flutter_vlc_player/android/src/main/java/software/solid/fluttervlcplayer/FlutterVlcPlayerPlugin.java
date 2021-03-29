@@ -22,19 +22,21 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
 
     @SuppressWarnings("deprecation")
     public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
-        flutterVlcPlayerFactory =
-                new FlutterVlcPlayerFactory(
-                        registrar.messenger(),
-                        registrar.textures(),
-                        registrar::lookupKeyForAsset,
-                        registrar::lookupKeyForAsset
-                );
-        registrar
-                .platformViewRegistry()
-                .registerViewFactory(
-                        VIEW_TYPE,
-                        flutterVlcPlayerFactory
-                );
+        if (flutterVlcPlayerFactory == null) {
+            flutterVlcPlayerFactory =
+                    new FlutterVlcPlayerFactory(
+                            registrar.messenger(),
+                            registrar.textures(),
+                            registrar::lookupKeyForAsset,
+                            registrar::lookupKeyForAsset
+                    );
+            registrar
+                    .platformViewRegistry()
+                    .registerViewFactory(
+                            VIEW_TYPE,
+                            flutterVlcPlayerFactory
+                    );
+        }
         registrar.addViewDestroyListener(view -> {
             stopListening();
             return false;
@@ -56,22 +58,24 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        final FlutterInjector injector = FlutterInjector.instance();
-        //
-        flutterVlcPlayerFactory =
-                new FlutterVlcPlayerFactory(
-                        flutterPluginBinding.getBinaryMessenger(),
-                        flutterPluginBinding.getTextureRegistry(),
-                        injector.flutterLoader()::getLookupKeyForAsset,
-                        injector.flutterLoader()::getLookupKeyForAsset
-                );
-        flutterPluginBinding
-                .getPlatformViewRegistry()
-                .registerViewFactory(
-                        VIEW_TYPE,
-                        flutterVlcPlayerFactory
-                );
-        //
+        if (flutterVlcPlayerFactory == null) {
+            final FlutterInjector injector = FlutterInjector.instance();
+            //
+            flutterVlcPlayerFactory =
+                    new FlutterVlcPlayerFactory(
+                            flutterPluginBinding.getBinaryMessenger(),
+                            flutterPluginBinding.getTextureRegistry(),
+                            injector.flutterLoader()::getLookupKeyForAsset,
+                            injector.flutterLoader()::getLookupKeyForAsset
+                    );
+            flutterPluginBinding
+                    .getPlatformViewRegistry()
+                    .registerViewFactory(
+                            VIEW_TYPE,
+                            flutterVlcPlayerFactory
+                    );
+            //
+        }
         startListening();
     }
 
