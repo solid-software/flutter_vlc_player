@@ -118,7 +118,7 @@ class VlcPlayerValue {
 
   /// A description of the error if present.
   ///
-  /// If [hasError] is false this is [empty].
+  /// If [hasError] is false this is [VlcPlayerValue.noError].
   final String errorDescription;
 
   /// The [size] of the currently loaded video.

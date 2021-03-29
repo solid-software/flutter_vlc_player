@@ -214,7 +214,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         case VlcMediaEventType.timeChanged:
           value = value.copyWith(
             isEnded: false,
-            isBuffering: (event.mediaEventType == VlcMediaEventType.buffering),
+            isBuffering: event.mediaEventType == VlcMediaEventType.buffering,
             position: event.position,
             duration: event.duration,
             playbackSpeed: event.playbackSpeed,
