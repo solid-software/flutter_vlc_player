@@ -75,6 +75,43 @@ After that you can access the media/subtitle file by
 
 <hr>
 
+#### Android release build
+
+If you're using multiple plugins that depend on C++ libraries, 
+you might run into some problems building and running the app with this plugin.
+
+In order to fix this, you'll need to update your application's build configs.
+
+1. In `android/app/build.gradle`:
+```groovy
+android {
+    packagingOptions {
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+   
+   buildTypes {
+      release {
+         minifyEnabled true
+         useProguard true
+         proguardFiles getDefaultProguardFile(
+                 'proguard-android-optimize.txt'),
+                 'proguard-rules.pro'
+      }
+   }
+}
+```
+
+2. Create `android/app/proguard-rules.pro`, add the following lines:
+```proguard
+-keep class io.flutter.app.** { *; }
+-keep class io.flutter.plugin.**  { *; }
+-keep class io.flutter.util.**  { *; }
+-keep class io.flutter.view.**  { *; }
+-keep class io.flutter.**  { *; }
+-keep class io.flutter.plugins.**  { *; }
+-keep class org.videolan.libvlc.** { *; }
+```
+
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 
