@@ -75,17 +75,14 @@ After that you can access the media/subtitle file by
 
 <hr>
 
-#### Android release build
-
-If you're using multiple plugins that depend on C++ libraries, 
-you might run into some problems building and running the app with this plugin.
-
-In order to fix this, you'll need to update your application's build configs.
+#### Android build configuration
 
 1. In `android/app/build.gradle`:
 ```groovy
 android {
     packagingOptions {
+       // Fixes duplicate libraries build issue, 
+       // when your project uses >=2 plugins that depend on C++ libs.
         pickFirst 'lib/**/libc++_shared.so'
     }
    
