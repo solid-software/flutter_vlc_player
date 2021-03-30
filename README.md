@@ -82,7 +82,7 @@ After that you can access the media/subtitle file by
 android {
     packagingOptions {
        // Fixes duplicate libraries build issue, 
-       // when your project uses >=2 plugins that depend on C++ libs.
+       // when your project uses more than one plugin that depend on C++ libs.
         pickFirst 'lib/**/libc++_shared.so'
     }
    
