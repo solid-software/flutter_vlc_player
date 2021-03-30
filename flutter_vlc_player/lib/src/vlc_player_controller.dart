@@ -35,9 +35,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    this.onInit,
-    this.onRendererHandler,
+    VoidCallback? onInit,
+    RendererCallback? onRendererHandler,
   })  : _dataSourceType = DataSourceType.asset,
+        _onInit = onInit,
+        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// Constructs a [VlcPlayerController] playing a video from obtained from
@@ -51,10 +53,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    this.onInit,
-    this.onRendererHandler,
+    VoidCallback? onInit,
+    RendererCallback? onRendererHandler,
   })  : package = null,
         _dataSourceType = DataSourceType.network,
+        _onInit = onInit,
+        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// Constructs a [VlcPlayerController] playing a video from a file.
@@ -67,11 +71,13 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    this.onInit,
-    this.onRendererHandler,
+    VoidCallback? onInit,
+    RendererCallback? onRendererHandler,
   })  : dataSource = 'file://${file.path}',
         package = null,
         _dataSourceType = DataSourceType.file,
+        _onInit = onInit,
+        _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
 
   /// The URI to the video file. This will be in different formats depending on
@@ -90,6 +96,15 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
+
+  /// This is a callback that will be executed once the platform view has been initialized.
+  /// If you want the media to play as soon as the platform view has initialized, you could just call
+  /// [VlcPlayerController.play] in this callback. (see the example)
+  final VoidCallback? _onInit;
+
+  /// This is a callback that will be executed every time a new renderer cast device attached/detached
+  /// It should be defined as "void Function(VlcRendererEventType, String, String)", where the VlcRendererEventType is an enum { attached, detached } and the next two String arguments are unique-id and name of renderer device, respectively.
+  final RendererCallback? _onRendererHandler;
 
   /// Only set for [asset] videos. The package that the asset was loaded from.
   String? package;
@@ -111,14 +126,31 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// The viewId for this controller
   late int _viewId;
 
-  /// This is a callback that will be executed once the platform view has been initialized.
-  /// If you want the media to play as soon as the platform view has initialized, you could just call
-  /// [VlcPlayerController.play] in this callback. (see the example)
-  VoidCallback? onInit;
+  /// List of onInit listeners
+  final List<VoidCallback> _onInitListeners = [];
 
-  /// This is a callback that will be executed every time a new renderer cast device attached/detached
-  /// It should be defined as "void Function(VlcRendererEventType, String, String)", where the VlcRendererEventType is an enum { attached, detached } and the next two String arguments are unique-id and name of renderer device, respectively.
-  RendererCallback? onRendererHandler;
+  /// add a listener to be notified on controller initialization
+  void addOnInitListener(VoidCallback listener) {
+    _onInitListeners.add(listener);
+  }
+
+  /// remove an onInit attached listener
+  void removeOnInitListener(VoidCallback listener) {
+    _onInitListeners.remove(listener);
+  }
+
+  /// List of onRenderer listeners
+  final List<RendererCallback> _onRendererListeners = [];
+
+  /// add a listener to be notified when a cast renderer device gets attached/detached
+  void addOnRendererListener(RendererCallback listener) {
+    _onRendererListeners.add(listener);
+  }
+
+  /// remove a renderer attached listener
+  void removeOnRendererListener(RendererCallback listener) {
+    _onRendererListeners.remove(listener);
+  }
 
   bool _isDisposed = false;
 
@@ -269,16 +301,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       }
       switch (event.eventType) {
         case VlcRendererEventType.attached:
-          if (onRendererHandler != null) {
-            onRendererHandler!(VlcRendererEventType.attached, event.rendererId!,
-                event.rendererName!);
-          }
-          break;
         case VlcRendererEventType.detached:
-          if (onRendererHandler != null) {
-            onRendererHandler!(VlcRendererEventType.detached, event.rendererId!,
-                event.rendererName!);
-          }
+          _notifyOnRendererListeners(
+            event.eventType,
+            event.rendererId,
+            event.rendererName,
+          );
           break;
         case VlcRendererEventType.unknown:
           break;
@@ -296,11 +324,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       playingState: PlayingState.initialized,
     );
 
-    if (onInit != null) onInit!();
+    _notifyOnInitListeners();
 
     return initializingCompleter.future;
   }
 
+  /// Dispose controller
   @override
   Future<void> dispose() async {
     if (_isDisposed) {
@@ -312,6 +341,26 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     //
 
     await vlcPlayerPlatform.dispose(_viewId);
+  }
+
+  /// notify onInit callback & all registered listeners
+  void _notifyOnInitListeners() {
+    if (_onInit != null) {
+      _onInit!();
+    }
+    _onInitListeners.forEach((listener) => listener());
+  }
+
+  /// notify onRendererHandler callback & all registered listeners
+  void _notifyOnRendererListeners(
+    VlcRendererEventType type,
+    String? id,
+    String? name,
+  ) {
+    if (_onRendererHandler != null) {
+      _onRendererHandler!(type, id!, name!);
+    }
+    _onRendererListeners.forEach((listener) => listener(type, id!, name!));
   }
 
   /// This stops playback and changes the data source. Once the new data source has been loaded, the playback state will revert to
