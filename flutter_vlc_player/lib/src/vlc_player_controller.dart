@@ -35,8 +35,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    @deprecated VoidCallback? onInit,
+    @deprecated RendererCallback? onRendererHandler,
   })  : _dataSourceType = DataSourceType.asset,
         _onInit = onInit,
         _onRendererHandler = onRendererHandler,
@@ -53,8 +53,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    @deprecated VoidCallback? onInit,
+    @deprecated RendererCallback? onRendererHandler,
   })  : package = null,
         _dataSourceType = DataSourceType.network,
         _onInit = onInit,
@@ -71,8 +71,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.hwAcc = HwAcc.AUTO,
     this.autoPlay = true,
     this.options,
-    VoidCallback? onInit,
-    RendererCallback? onRendererHandler,
+    @deprecated VoidCallback? onInit,
+    @deprecated RendererCallback? onRendererHandler,
   })  : dataSource = 'file://${file.path}',
         package = null,
         _dataSourceType = DataSourceType.file,
@@ -97,11 +97,13 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
 
+  /// This parameter is deprecated, please, use the [addOnInitListener] method instead.
   /// This is a callback that will be executed once the platform view has been initialized.
   /// If you want the media to play as soon as the platform view has initialized, you could just call
   /// [VlcPlayerController.play] in this callback. (see the example)
   final VoidCallback? _onInit;
 
+  /// This parameter is deprecated, please, use the [addOnRendererEventListener] method instead.
   /// This is a callback that will be executed every time a new renderer cast device attached/detached
   /// It should be defined as "void Function(VlcRendererEventType, String, String)", where the VlcRendererEventType is an enum { attached, detached } and the next two String arguments are unique-id and name of renderer device, respectively.
   final RendererCallback? _onRendererHandler;
@@ -129,32 +131,32 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// List of onInit listeners
   final List<VoidCallback> _onInitListeners = [];
 
-  /// add a listener to be notified on controller initialization
-  void addOnInitListener(VoidCallback listener) {
-    _onInitListeners.add(listener);
-  }
-
-  /// remove an onInit attached listener
-  void removeOnInitListener(VoidCallback listener) {
-    _onInitListeners.remove(listener);
-  }
-
   /// List of onRenderer listeners
-  final List<RendererCallback> _onRendererListeners = [];
-
-  /// add a listener to be notified when a cast renderer device gets attached/detached
-  void addOnRendererListener(RendererCallback listener) {
-    _onRendererListeners.add(listener);
-  }
-
-  /// remove a renderer attached listener
-  void removeOnRendererListener(RendererCallback listener) {
-    _onRendererListeners.remove(listener);
-  }
+  final List<RendererCallback> _onRendererEventListeners = [];
 
   bool _isDisposed = false;
 
   VlcAppLifeCycleObserver? _lifeCycleObserver;
+
+  /// Register a [VoidCallback] closure to be called when the controller gets initialized
+  void addOnInitListener(VoidCallback listener) {
+    _onInitListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of onInit closures
+  void removeOnInitListener(VoidCallback listener) {
+    _onInitListeners.remove(listener);
+  }
+
+  /// Register a [RendererCallback] closure to be called when a cast renderer device gets attached/detached
+  void addOnRendererEventListener(RendererCallback listener) {
+    _onRendererEventListeners.add(listener);
+  }
+
+  /// Remove a previously registered closure from the list of OnRendererEvent closures
+  void removeOnRendererEventListener(RendererCallback listener) {
+    _onRendererEventListeners.remove(listener);
+  }
 
   /// Attempts to open the given [url] and load metadata about the video.
   Future<void> initialize() async {
@@ -335,15 +337,16 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_isDisposed) {
       return;
     }
+    _onInitListeners.clear();
+    _onRendererEventListeners.clear();
     _lifeCycleObserver?.dispose();
     _isDisposed = true;
     super.dispose();
     //
-
     await vlcPlayerPlatform.dispose(_viewId);
   }
 
-  /// notify onInit callback & all registered listeners
+  /// Notify onInit callback & all registered listeners
   void _notifyOnInitListeners() {
     if (_onInit != null) {
       _onInit!();
@@ -351,7 +354,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _onInitListeners.forEach((listener) => listener());
   }
 
-  /// notify onRendererHandler callback & all registered listeners
+  /// Notify onRendererHandler callback & all registered listeners
   void _notifyOnRendererListeners(
     VlcRendererEventType type,
     String? id,
@@ -360,7 +363,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_onRendererHandler != null) {
       _onRendererHandler!(type, id!, name!);
     }
-    _onRendererListeners.forEach((listener) => listener(type, id!, name!));
+    _onRendererEventListeners.forEach((listener) => listener(type, id!, name!));
   }
 
   /// This stops playback and changes the data source. Once the new data source has been loaded, the playback state will revert to
