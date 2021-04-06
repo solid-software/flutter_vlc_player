@@ -50,8 +50,8 @@ final class FlutterVlcPlayer implements PlatformView {
     //
     private LibVLC libVLC;
     private MediaPlayer mediaPlayer;
-    private List<RendererDiscoverer> rendererDiscoverers;
-    private List<RendererItem> rendererItems;
+    private List<RendererDiscoverer> rendererDiscoverers = new ArrayList<>();;
+    private List<RendererItem> rendererItems = new ArrayList<>();;
     private boolean isDisposed = false;
 
     // Platform view
