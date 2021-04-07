@@ -75,6 +75,34 @@ After that you can access the media/subtitle file by
 
 <hr>
 
+#### Android build configuration
+
+1. In `android/app/build.gradle`:
+```groovy
+android {
+    packagingOptions {
+       // Fixes duplicate libraries build issue, 
+       // when your project uses more than one plugin that depend on C++ libs.
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+   
+   buildTypes {
+      release {
+         minifyEnabled true
+         useProguard true
+         proguardFiles getDefaultProguardFile(
+                 'proguard-android-optimize.txt'),
+                 'proguard-rules.pro'
+      }
+   }
+}
+```
+
+2. Create `android/app/proguard-rules.pro`, add the following lines:
+```proguard
+-keep class org.videolan.libvlc.** { *; }
+```
+
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 
