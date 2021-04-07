@@ -22,7 +22,7 @@ class ControlsOverlay extends StatelessWidget {
       reverseDuration: Duration(milliseconds: 200),
       child: Builder(
         builder: (ctx) {
-          if (controller.value.isEnded) {
+          if (controller.value.isEnded || controller.value.hasError) {
             return Center(
               child: FittedBox(
                 child: IconButton(

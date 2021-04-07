@@ -28,7 +28,6 @@ class _MultipleTabState extends State<MultipleTab> {
         urls[i],
         hwAcc: HwAcc.FULL,
         autoPlay: false,
-        onInit: () async {},
         options: VlcPlayerOptions(
           advanced: VlcAdvancedOptions([
             VlcAdvancedOptions.networkCaching(2000),

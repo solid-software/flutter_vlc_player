@@ -82,12 +82,6 @@ class _SingleTabState extends State<SingleTab> {
         _controller = VlcPlayerController.network(
           initVideo.path,
           hwAcc: HwAcc.FULL,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
           options: VlcPlayerOptions(
             advanced: VlcAdvancedOptions([
               VlcAdvancedOptions.networkCaching(2000),
@@ -110,27 +104,21 @@ class _SingleTabState extends State<SingleTab> {
         var file = File(initVideo.path);
         _controller = VlcPlayerController.file(
           file,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
         );
         break;
       case VideoType.asset:
         _controller = VlcPlayerController.asset(
           initVideo.path,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
           options: VlcPlayerOptions(),
         );
         break;
     }
+    _controller.addOnInitListener(() async {
+      await _controller.startRendererScanning();
+    });
+    _controller.addOnRendererEventListener((type, id, name) {
+      print('OnRendererEventListener $type $id $name');
+    });
   }
 
   @override
@@ -186,8 +174,10 @@ class _SingleTabState extends State<SingleTab> {
               onTap: () async {
                 switch (video.type) {
                   case VideoType.network:
-                    await _controller.setMediaFromNetwork(video.path,
-                        hwAcc: HwAcc.FULL);
+                    await _controller.setMediaFromNetwork(
+                      video.path,
+                      hwAcc: HwAcc.FULL,
+                    );
                     break;
                   case VideoType.file:
                     ScaffoldMessenger.of(context).showSnackBar(

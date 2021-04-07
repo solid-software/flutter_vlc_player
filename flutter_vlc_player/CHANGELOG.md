@@ -1,3 +1,8 @@
+## 6.0.2
+* Fix issue with vlc error event
+* Added onInit & onRenderer listeners
+Credits to Alireza Setayesh (https://github.com/alr2413) and solid-vovabeloded (https://github.com/solid-vovabeloded).
+
 ## 6.0.1
 * Fix issue with black screen / offstage
 Credits to Mitch Ross (https://github.com/mitchross)
