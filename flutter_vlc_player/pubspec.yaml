@@ -27,9 +27,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pigeon: 
-    git:
-      url: https://github.com/gaaclarke/packages.git
-      path: packages/pigeon
-      ref: pigeon-2-0-0
+  pigeon: ^0.2.1
   plugin_platform_interface: ^2.0.0
