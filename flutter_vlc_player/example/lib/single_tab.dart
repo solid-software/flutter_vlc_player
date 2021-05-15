@@ -172,6 +172,8 @@ class _SingleTabState extends State<SingleTab> {
                 ),
               ),
               onTap: () async {
+                await _controller.stopRecording();
+                //
                 switch (video.type) {
                   case VideoType.network:
                     await _controller.setMediaFromNetwork(
@@ -222,6 +224,7 @@ class _SingleTabState extends State<SingleTab> {
   @override
   void dispose() async {
     super.dispose();
+    await _controller.stopRecording();
     await _controller.stopRendererScanning();
     await _controller.dispose();
   }

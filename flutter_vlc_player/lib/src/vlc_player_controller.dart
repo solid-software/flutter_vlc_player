@@ -277,6 +277,14 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         case VlcMediaEventType.mediaChanged:
           break;
 
+        case VlcMediaEventType.recording:
+          value = value.copyWith(
+            playingState: PlayingState.recording,
+            isRecording: event.isRecording,
+            recordPath: event.recordPath,
+          );
+          break;
+
         case VlcMediaEventType.error:
           value = value.copyWith(
             isPlaying: false,
@@ -891,6 +899,24 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   Future<void> castToRenderer(String castDevice) async {
     _throwIfNotInitialized('castToRenderer');
     return await vlcPlayerPlatform.castToRenderer(_viewId, castDevice);
+  }
+
+  /// Returns true if media is start recording.
+  Future<bool?> startRecording(String saveDirectory) async {
+    _throwIfNotInitialized('startRecording');
+    return await _record(saveDirectory);
+  }
+
+  /// Returns true if media is stop recording.
+  Future<bool?> stopRecording() async {
+    _throwIfNotInitialized('stopRecording');
+    return await _record(null);
+  }
+
+  /// Returns true if media is start/stop recording.
+  Future<bool?> _record(String? saveDirectory) async {
+    _throwIfNotInitialized('addAudioTrack');
+    return await vlcPlayerPlatform.record(_viewId, saveDirectory);
   }
 
   /// [functionName] - name of function

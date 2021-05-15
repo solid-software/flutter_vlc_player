@@ -4,6 +4,7 @@ enum VlcMediaEventType {
   paused,
   stopped,
   buffering,
+  recording,
   timeChanged,
   mediaChanged,
   ended,

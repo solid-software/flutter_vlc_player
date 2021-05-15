@@ -142,6 +142,11 @@ class RenderDeviceMessage {
   String? rendererDevice;
 }
 
+class RecordMessage {
+  int? textureId;
+  String? saveDirectory;
+}
+
 @HostApi(dartHostTestHandler: 'TestHostVlcPlayerApi')
 abstract class VlcPlayerApi {
   void initialize();
@@ -194,6 +199,8 @@ abstract class VlcPlayerApi {
   void stopRendererScanning(TextureMessage msg);
   RendererDevicesMessage getRendererDevices(TextureMessage msg);
   void castToRenderer(RenderDeviceMessage msg);
+  // record
+  BooleanMessage record(RecordMessage msg);
 }
 
 // to make changes effect, must run "flutter pub run pigeon \--input pigeons/messages.dart --dart_null_safety"

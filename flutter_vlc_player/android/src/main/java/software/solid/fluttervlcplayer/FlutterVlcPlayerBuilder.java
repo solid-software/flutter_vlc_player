@@ -399,4 +399,12 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         player.castToRenderer(arg.getRendererDevice());
     }
 
+    @Override
+    public Messages.BooleanMessage record(Messages.RecordMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
+        Boolean result = player.record(arg.getSaveDirectory());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(result);
+        return message;
+    }
 }

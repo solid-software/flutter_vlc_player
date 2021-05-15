@@ -289,13 +289,19 @@ final class FlutterVlcPlayer implements PlatformView {
                                 mediaEventSink.success(eventObject);
                                 break;
 
+                            case MediaPlayer.Event.RecordChanged:
+                                eventObject.put("event", "recording");
+                                eventObject.put("isRecording", event.getRecording());
+                                eventObject.put("recordPath", event.getRecordPath());
+                                mediaEventSink.success(eventObject);
+                                break;
+
                             case MediaPlayer.Event.LengthChanged:
                             case MediaPlayer.Event.MediaChanged:
                             case MediaPlayer.Event.ESAdded:
                             case MediaPlayer.Event.ESDeleted:
                             case MediaPlayer.Event.ESSelected:
                             case MediaPlayer.Event.PausableChanged:
-                            case MediaPlayer.Event.RecordChanged:
                             case MediaPlayer.Event.SeekableChanged:
                             case MediaPlayer.Event.PositionChanged:
                             default:
@@ -621,6 +627,10 @@ final class FlutterVlcPlayer implements PlatformView {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+    }
+
+    Boolean record(String directory) {
+        return mediaPlayer.record(directory);
     }
 
     private void log(String message) {

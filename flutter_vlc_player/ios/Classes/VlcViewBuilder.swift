@@ -2,7 +2,7 @@ import Foundation
 import Flutter
 
 public class VLCViewBuilder: NSObject, VlcPlayerApi{
-    
+   
     var players = [Int:VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
@@ -431,5 +431,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         let player = getPlayer(textureId: input.textureId)
         
         player?.cast(rendererDevice: input.rendererDevice)
+    }
+    
+    public func record(_ input: RecordMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(textureId: input.textureId)
+        
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.record(saveDirectory: input.saveDirectory)
+        return message
     }
 }

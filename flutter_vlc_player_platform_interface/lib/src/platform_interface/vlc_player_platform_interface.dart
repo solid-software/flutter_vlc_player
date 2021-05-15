@@ -335,6 +335,12 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     throw _unimplemented('rendererEventsFor');
   }
 
+  /// Returns true if vlc is start/stop recording.
+  /// set saveDirectory to null to stop recording.
+  Future<bool?> record(int viewId, String? saveDirectory){
+    throw _unimplemented('record');
+  }
+
   Object _unimplemented(String methodName) {
     return UnimplementedError('$methodName has not been implemented.');
   }
