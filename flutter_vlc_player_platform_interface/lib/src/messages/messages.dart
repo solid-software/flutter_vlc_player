@@ -1643,10 +1643,34 @@ class VlcPlayerApi {
     }
   }
 
-  Future<BooleanMessage> record(RecordMessage arg) async {
+  Future<BooleanMessage> startRecording(RecordMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.VlcPlayerApi.record', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.VlcPlayerApi.startRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      return BooleanMessage.decode(replyMap['result']!);
+    }
+  }
+
+  Future<BooleanMessage> stopRecording(TextureMessage arg) async {
+    final Object encoded = arg.encode();
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.stopRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {

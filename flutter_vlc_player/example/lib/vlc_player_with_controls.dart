@@ -10,11 +10,13 @@ import 'controls_overlay.dart';
 class VlcPlayerWithControls extends StatefulWidget {
   final VlcPlayerController controller;
   final bool showControls;
+  final Function(String) onStopRecording;
 
   VlcPlayerWithControls({
     Key key,
     @required this.controller,
     this.showControls = true,
+    this.onStopRecording,
   })  : assert(controller != null, 'You must provide a vlc controller'),
         super(key: key);
 
@@ -45,6 +47,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   //
   double recordingTextOpacity = 0;
   DateTime lastRecordingShowTime = DateTime.now();
+  bool isRecording = false;
 
   //
   List<double> playbackSpeeds = [0.5, 1.0, 2.0];
@@ -89,6 +92,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       }
       numberOfCaptions = _controller.value.spuTracksCount;
       numberOfAudioTracks = _controller.value.audioTracksCount;
+      // update recording blink widget
       if (_controller.value.isRecording && _controller.value.isPlaying) {
         if (DateTime.now().difference(lastRecordingShowTime).inSeconds >= 1) {
           lastRecordingShowTime = DateTime.now();
@@ -96,6 +100,16 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         }
       } else {
         recordingTextOpacity = 0;
+      }
+      // check for change in recording state
+      if (isRecording != _controller.value.isRecording) {
+        isRecording = _controller.value.isRecording;
+        if (!isRecording) {
+          if (widget.onStopRecording != null) {
+            print(_controller.value.recordPath);
+            widget.onStopRecording(_controller.value.recordPath);
+          }
+        }
       }
       setState(() {});
     }

@@ -228,7 +228,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)stopRendererScanning:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(nullable RendererDevicesMessage *)getRendererDevices:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(void)castToRenderer:(RenderDeviceMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
--(nullable BooleanMessage *)record:(RecordMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable BooleanMessage *)startRecording:(RecordMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable BooleanMessage *)stopRecording:(TextureMessage*)input error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerApi> _Nullable api);

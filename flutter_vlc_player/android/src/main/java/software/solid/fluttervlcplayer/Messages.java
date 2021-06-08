@@ -847,7 +847,8 @@ public class Messages {
     void stopRendererScanning(TextureMessage arg);
     RendererDevicesMessage getRendererDevices(TextureMessage arg);
     void castToRenderer(RenderDeviceMessage arg);
-    BooleanMessage record(RecordMessage arg);
+    BooleanMessage startRecording(RecordMessage arg);
+    BooleanMessage stopRecording(TextureMessage arg);
 
     /** Sets up an instance of `VlcPlayerApi` to handle messages through the `binaryMessenger`. */
     static void setup(BinaryMessenger binaryMessenger, VlcPlayerApi api) {
@@ -1796,14 +1797,35 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VlcPlayerApi.record", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VlcPlayerApi.startRecording", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
               RecordMessage input = RecordMessage.fromMap((Map<String, Object>)message);
-              BooleanMessage output = api.record(input);
+              BooleanMessage output = api.startRecording(input);
+              wrapped.put("result", output.toMap());
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VlcPlayerApi.stopRecording", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              BooleanMessage output = api.stopRecording(input);
               wrapped.put("result", output.toMap());
             }
             catch (Error | RuntimeException exception) {

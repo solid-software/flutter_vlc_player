@@ -335,10 +335,14 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     throw _unimplemented('rendererEventsFor');
   }
 
-  /// Returns true if vlc is start/stop recording.
-  /// set saveDirectory to null to stop recording.
-  Future<bool?> record(int viewId, String? saveDirectory){
-    throw _unimplemented('record');
+  /// Returns true if vlc starts recording.
+  Future<bool?> startRecording(int viewId, String saveDirectory){
+    throw _unimplemented('startRecording');
+  }
+
+  /// Returns true if vlc stops recording.
+  Future<bool?> stopRecording(int viewId){
+    throw _unimplemented('stopRecording');
   }
 
   Object _unimplemented(String methodName) {

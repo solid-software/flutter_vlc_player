@@ -432,7 +432,7 @@ final class FlutterVlcPlayer implements PlatformView {
         return mediaPlayer.getSpuDelay();
     }
 
-    void addSubtitleTrack(String url, boolean isNetworkUrl, boolean isSelected) {
+    void addSubtitleTrack(String url, boolean isSelected) {
         mediaPlayer.addSlave(Media.Slave.Type.Subtitle, Uri.parse(url), isSelected);
     }
 
@@ -467,7 +467,7 @@ final class FlutterVlcPlayer implements PlatformView {
         return mediaPlayer.getAudioDelay();
     }
 
-    void addAudioTrack(String url, boolean isNetworkUrl, boolean isSelected) {
+    void addAudioTrack(String url, boolean isSelected) {
         mediaPlayer.addSlave(Media.Slave.Type.Audio, Uri.parse(url), isSelected);
     }
 
@@ -627,8 +627,12 @@ final class FlutterVlcPlayer implements PlatformView {
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
     }
 
-    Boolean record(String directory) {
+    Boolean startRecording(String directory) {
         return mediaPlayer.record(directory);
+    }
+
+    Boolean stopRecording() {
+        return mediaPlayer.record(null);
     }
 
     private void log(String message) {

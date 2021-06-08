@@ -1433,13 +1433,30 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.VlcPlayerApi.record"
+        messageChannelWithName:@"dev.flutter.pigeon.VlcPlayerApi.startRecording"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         RecordMessage *input = [RecordMessage fromMap:message];
         FlutterError *error;
-        BooleanMessage *output = [api record:input error:&error];
+        BooleanMessage *output = [api startRecording:input error:&error];
+        callback(wrapResult([output toMap], error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.VlcPlayerApi.stopRecording"
+        binaryMessenger:binaryMessenger];
+    if (api) {
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        TextureMessage *input = [TextureMessage fromMap:message];
+        FlutterError *error;
+        BooleanMessage *output = [api stopRecording:input error:&error];
         callback(wrapResult([output toMap], error));
       }];
     }
