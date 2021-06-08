@@ -316,13 +316,12 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         self.vlcMediaPlayer.play()
     }
     
-    public func record(saveDirectory: String?) -> NSNumber?{
-        if(saveDirectory == nil){
-            return (!self.vlcMediaPlayer.stopRecording()) as NSNumber
-        }
-        else{
-            return (!self.vlcMediaPlayer.startRecording(atPath: saveDirectory)) as NSNumber
-        }
+    public func startRecording(saveDirectory: String) -> NSNumber{
+        return (!self.vlcMediaPlayer.startRecording(atPath: saveDirectory)) as NSNumber
+    }
+    
+    public func stopRecording() -> NSNumber{
+        return (!self.vlcMediaPlayer.stopRecording()) as NSNumber
     }
     
     public func dispose(){
@@ -542,7 +541,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         }
     }
     
-    func mediaPlayerStartedRecording(_ player: VLCMediaPlayer!) {
+    func mediaPlayerStartedRecording(_ player: VLCMediaPlayer?) {
         guard let mediaEventSink = self.mediaEventSink else { return }
                 
         mediaEventSink([
@@ -552,7 +551,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         ])
     }
     
-    func mediaPlayer(_ player: VLCMediaPlayer!, recordingStoppedAtPath path: String!) {
+    func mediaPlayer(_ player: VLCMediaPlayer?, recordingStoppedAtPath path: String?) {
         guard let mediaEventSink = self.mediaEventSink else { return }
         
         mediaEventSink([

@@ -433,12 +433,21 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         player?.cast(rendererDevice: input.rendererDevice)
     }
     
-    public func record(_ input: RecordMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+    public func startRecording(_ input: RecordMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
         
         let player = getPlayer(textureId: input.textureId)
         
         let message: BooleanMessage = BooleanMessage()
-        message.result = player?.record(saveDirectory: input.saveDirectory)
+        message.result = player?.startRecording(saveDirectory: input.saveDirectory!)
+        return message
+    }
+    
+    public func stopRecording(_ input: TextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(textureId: input.textureId)
+        
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.stopRecording()
         return message
     }
 }
