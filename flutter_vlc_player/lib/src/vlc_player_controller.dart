@@ -217,8 +217,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           break;
 
         case VlcMediaEventType.stopped:
-          stopRecording();
-          //
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
@@ -246,8 +244,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           break;
 
         case VlcMediaEventType.ended:
-          stopRecording();
-          //
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
