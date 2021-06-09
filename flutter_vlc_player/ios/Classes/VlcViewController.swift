@@ -316,6 +316,14 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         self.vlcMediaPlayer.play()
     }
     
+    public func startRecording(saveDirectory: String) -> NSNumber{
+        return (!self.vlcMediaPlayer.startRecording(atPath: saveDirectory)) as NSNumber
+    }
+    
+    public func stopRecording() -> NSNumber{
+        return (!self.vlcMediaPlayer.stopRecording()) as NSNumber
+    }
+    
     public func dispose(){
         //todo: dispose player & event handlers
     }
@@ -531,6 +539,26 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         default:
             break
         }
+    }
+    
+    func mediaPlayerStartedRecording(_ player: VLCMediaPlayer?) {
+        guard let mediaEventSink = self.mediaEventSink else { return }
+                
+        mediaEventSink([
+            "event": "recording",
+            "isRecording": true,
+            "recordPath": "",
+        ])
+    }
+    
+    func mediaPlayer(_ player: VLCMediaPlayer?, recordingStoppedAtPath path: String?) {
+        guard let mediaEventSink = self.mediaEventSink else { return }
+        
+        mediaEventSink([
+            "event": "recording",
+            "isRecording": false,
+            "recordPath": path ?? "",
+        ])
     }
     
     func mediaPlayerTimeChanged(_ aNotification: Notification!) {

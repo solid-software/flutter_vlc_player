@@ -142,12 +142,17 @@ class RenderDeviceMessage {
   String? rendererDevice;
 }
 
+class RecordMessage {
+  int? textureId;
+  String? saveDirectory;
+}
+
 @HostApi(dartHostTestHandler: 'TestHostVlcPlayerApi')
 abstract class VlcPlayerApi {
   void initialize();
   void create(CreateMessage msg);
   void dispose(TextureMessage msg);
-  // general
+  // general methods
   void setStreamUrl(SetMediaMessage msg);
   void play(TextureMessage msg);
   void pause(TextureMessage msg);
@@ -163,7 +168,7 @@ abstract class VlcPlayerApi {
   void setPlaybackSpeed(PlaybackSpeedMessage msg);
   PlaybackSpeedMessage getPlaybackSpeed(TextureMessage msg);
   SnapshotMessage takeSnapshot(TextureMessage msg);
-  // captions & subtitles
+  // captions & subtitles methods
   TrackCountMessage getSpuTracksCount(TextureMessage msg);
   SpuTracksMessage getSpuTracks(TextureMessage msg);
   void setSpuTrack(SpuTrackMessage msg);
@@ -171,7 +176,7 @@ abstract class VlcPlayerApi {
   void setSpuDelay(DelayMessage msg);
   DelayMessage getSpuDelay(TextureMessage msg);
   void addSubtitleTrack(AddSubtitleMessage msg);
-  // audios
+  // audios methods
   TrackCountMessage getAudioTracksCount(TextureMessage msg);
   AudioTracksMessage getAudioTracks(TextureMessage msg);
   void setAudioTrack(AudioTrackMessage msg);
@@ -179,7 +184,7 @@ abstract class VlcPlayerApi {
   void setAudioDelay(DelayMessage msg);
   DelayMessage getAudioDelay(TextureMessage msg);
   void addAudioTrack(AddAudioMessage msg);
-  // videos
+  // videos methods
   TrackCountMessage getVideoTracksCount(TextureMessage msg);
   VideoTracksMessage getVideoTracks(TextureMessage msg);
   void setVideoTrack(VideoTrackMessage msg);
@@ -188,12 +193,15 @@ abstract class VlcPlayerApi {
   VideoScaleMessage getVideoScale(TextureMessage msg);
   void setVideoAspectRatio(VideoAspectRatioMessage msg);
   VideoAspectRatioMessage getVideoAspectRatio(TextureMessage msg);
-  // casts & renderers
+  // casts & renderers methods
   RendererServicesMessage getAvailableRendererServices(TextureMessage msg);
   void startRendererScanning(RendererScanningMessage msg);
   void stopRendererScanning(TextureMessage msg);
   RendererDevicesMessage getRendererDevices(TextureMessage msg);
   void castToRenderer(RenderDeviceMessage msg);
+  // recording methods
+  BooleanMessage startRecording(RecordMessage msg);
+  BooleanMessage stopRecording(TextureMessage msg);
 }
 
 // to make changes effect, must run "flutter pub run pigeon \--input pigeons/messages.dart --dart_null_safety"

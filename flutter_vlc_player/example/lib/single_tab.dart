@@ -127,7 +127,26 @@ class _SingleTabState extends State<SingleTab> {
       children: [
         Container(
           height: 400,
-          child: VlcPlayerWithControls(key: _key, controller: _controller),
+          child: VlcPlayerWithControls(
+            key: _key,
+            controller: _controller,
+            onStopRecording: (recordPath) {
+              listVideos.add(VideoData(
+                name: 'Recorded Video',
+                path: recordPath,
+                type: VideoType.recorded,
+              ));
+              //
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'The recorded video file has been added to the end of list.'),
+                ),
+              );
+              //
+              setState(() {});
+            },
+          ),
         ),
         ListView.builder(
           shrinkWrap: true,
@@ -146,8 +165,12 @@ class _SingleTabState extends State<SingleTab> {
               case VideoType.asset:
                 iconData = Icons.all_inbox;
                 break;
+              case VideoType.recorded:
+                iconData = Icons.videocam;
+                break;
             }
             return ListTile(
+              dense: true,
               selected: selectedVideoIndex == index,
               selectedTileColor: Colors.black54,
               leading: Icon(
@@ -172,6 +195,8 @@ class _SingleTabState extends State<SingleTab> {
                 ),
               ),
               onTap: () async {
+                await _controller.stopRecording();
+                //
                 switch (video.type) {
                   case VideoType.network:
                     await _controller.setMediaFromNetwork(
@@ -207,6 +232,10 @@ class _SingleTabState extends State<SingleTab> {
                   case VideoType.asset:
                     await _controller.setMediaFromAsset(video.path);
                     break;
+                  case VideoType.recorded:
+                    var recordedFile = File(video.path);
+                    await _controller.setMediaFromFile(recordedFile);
+                    break;
                 }
                 setState(() {
                   selectedVideoIndex = index;
@@ -222,6 +251,7 @@ class _SingleTabState extends State<SingleTab> {
   @override
   void dispose() async {
     super.dispose();
+    await _controller.stopRecording();
     await _controller.stopRendererScanning();
     await _controller.dispose();
   }

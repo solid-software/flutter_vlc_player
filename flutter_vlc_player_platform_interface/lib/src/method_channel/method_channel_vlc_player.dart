@@ -151,6 +151,13 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
               mediaEventType: VlcMediaEventType.mediaChanged,
             );
 
+          case 'recording':
+            return VlcMediaEvent(
+              mediaEventType: VlcMediaEventType.recording,
+              isRecording: map['isRecording'] ?? false,
+              recordPath: map['recordPath'] ?? '',
+            );
+
           case 'error':
             return VlcMediaEvent(
               mediaEventType: VlcMediaEventType.error,
@@ -511,5 +518,20 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
         }
       },
     );
+  }
+
+  @override
+  Future<bool?> startRecording(int textureId, String saveDirectory) async {
+    var response = await _api.startRecording(RecordMessage()
+      ..textureId = textureId
+      ..saveDirectory = saveDirectory);
+    return response.result;
+  }
+
+  @override
+  Future<bool?> stopRecording(int textureId) async {
+    var response =
+        await _api.stopRecording(TextureMessage()..textureId = textureId);
+    return response.result;
   }
 }

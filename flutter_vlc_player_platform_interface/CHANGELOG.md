@@ -1,3 +1,7 @@
+## 1.0.6
+
+- Added Vlc Recording feature
+
 ## 1.0.5
 
 - Upgrade to Null Safety

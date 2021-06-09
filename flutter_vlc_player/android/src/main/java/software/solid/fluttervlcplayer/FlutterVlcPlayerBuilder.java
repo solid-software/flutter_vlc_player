@@ -252,8 +252,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     @Override
     public void addSubtitleTrack(Messages.AddSubtitleMessage arg) {
         FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
-        boolean isNetworkUrl = arg.getType() == DataSourceType.NETWORK.getNumericType();
-        player.addSubtitleTrack(arg.getUri(), isNetworkUrl, arg.getIsSelected());
+        player.addSubtitleTrack(arg.getUri(), arg.getIsSelected());
     }
 
     @Override
@@ -303,8 +302,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     @Override
     public void addAudioTrack(Messages.AddAudioMessage arg) {
         FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
-        boolean isNetworkUrl = arg.getType() == DataSourceType.NETWORK.getNumericType();
-        player.addAudioTrack(arg.getUri(), isNetworkUrl, arg.getIsSelected());
+        player.addAudioTrack(arg.getUri(), arg.getIsSelected());
     }
 
     @Override
@@ -399,4 +397,21 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         player.castToRenderer(arg.getRendererDevice());
     }
 
+    @Override
+    public Messages.BooleanMessage startRecording(Messages.RecordMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
+        Boolean result = player.startRecording(arg.getSaveDirectory());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(result);
+        return message;
+    }
+
+    @Override
+    public Messages.BooleanMessage stopRecording(Messages.TextureMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getTextureId());
+        Boolean result = player.stopRecording();
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(result);
+        return message;
+    }
 }

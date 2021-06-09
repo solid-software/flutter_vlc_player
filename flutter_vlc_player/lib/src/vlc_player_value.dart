@@ -23,6 +23,7 @@ class VlcPlayerValue {
     this.isLooping = false,
     this.isBuffering = false,
     this.isEnded = false,
+    this.isRecording = false,
     this.bufferPercent = 0.0,
     this.volume = 100,
     this.playbackSpeed = 1.0,
@@ -35,6 +36,7 @@ class VlcPlayerValue {
     this.spuDelay = 0,
     this.videoTracksCount = 1,
     this.activeVideoTrack = 0,
+    this.recordPath = '',
     this.errorDescription = VlcPlayerValue.noError,
   });
 
@@ -80,6 +82,9 @@ class VlcPlayerValue {
   /// True if the video is ended
   final bool isEnded;
 
+  /// True if the video is recording.
+  final bool isRecording;
+
   /// The current volume of the playback.
   final int volume;
 
@@ -115,6 +120,9 @@ class VlcPlayerValue {
 
   /// The index of active video track in media
   final int activeVideoTrack;
+
+  /// The path of recorded file
+  final String recordPath;
 
   /// A description of the error if present.
   ///
@@ -158,6 +166,7 @@ class VlcPlayerValue {
     bool? isLooping,
     bool? isBuffering,
     bool? isEnded,
+    bool? isRecording,
     double? bufferPercent,
     int? volume,
     double? playbackSpeed,
@@ -170,6 +179,7 @@ class VlcPlayerValue {
     int? spuDelay,
     int? videoTracksCount,
     int? activeVideoTrack,
+    String? recordPath,
     String? errorDescription,
   }) {
     return VlcPlayerValue(
@@ -182,6 +192,7 @@ class VlcPlayerValue {
       isLooping: isLooping ?? this.isLooping,
       isBuffering: isBuffering ?? this.isBuffering,
       isEnded: isEnded ?? this.isEnded,
+      isRecording: isRecording ?? this.isRecording,
       bufferPercent: bufferPercent ?? this.bufferPercent,
       volume: volume ?? this.volume,
       playbackSpeed: playbackSpeed ?? this.playbackSpeed,
@@ -194,6 +205,7 @@ class VlcPlayerValue {
       spuDelay: spuDelay ?? this.spuDelay,
       videoTracksCount: videoTracksCount ?? this.videoTracksCount,
       activeVideoTrack: activeVideoTrack ?? this.activeVideoTrack,
+      recordPath: recordPath ?? this.recordPath,
       errorDescription: errorDescription ?? this.errorDescription,
     );
   }
@@ -210,6 +222,7 @@ class VlcPlayerValue {
         'isLooping: $isLooping, '
         'isBuffering: $isBuffering, '
         'isEnded: $isEnded, '
+        'isRecording: $isRecording, '
         'bufferPercent: $bufferPercent, '
         'volume: $volume, '
         'playbackSpeed: $playbackSpeed, '
@@ -217,6 +230,7 @@ class VlcPlayerValue {
         'activeAudioTrack: $activeAudioTrack, '
         'spuTracksCount: $spuTracksCount, '
         'activeSpuTrack: $activeSpuTrack, '
+        'recordPath: $recordPath, '
         'errorDescription: $errorDescription)';
   }
 }
