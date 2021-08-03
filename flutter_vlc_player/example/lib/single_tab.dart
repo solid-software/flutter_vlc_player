@@ -136,7 +136,6 @@ class _SingleTabState extends State<SingleTab> {
                 path: recordPath,
                 type: VideoType.recorded,
               ));
-              //
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
