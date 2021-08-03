@@ -2,7 +2,6 @@ import Foundation
 import Flutter
 
 public class VLCViewBuilder: NSObject, VlcPlayerApi{
-   
     var players = [Int:VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
