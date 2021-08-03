@@ -107,7 +107,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         isRecording = _controller.value.isRecording;
         if (!isRecording) {
           if (widget.onStopRecording != null) {
-            print(_controller.value.recordPath);
             widget.onStopRecording(_controller.value.recordPath);
           }
         }
