@@ -143,7 +143,6 @@ class _SingleTabState extends State<SingleTab> {
                       'The recorded video file has been added to the end of list.'),
                 ),
               );
-              //
               setState(() {});
             },
           ),
