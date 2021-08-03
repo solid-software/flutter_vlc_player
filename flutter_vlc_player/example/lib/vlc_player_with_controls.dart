@@ -45,7 +45,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   int numberOfAudioTracks = 0;
   bool validPosition = false;
 
-  //
   double recordingTextOpacity = 0;
   DateTime lastRecordingShowTime = DateTime.now();
   bool isRecording = false;
