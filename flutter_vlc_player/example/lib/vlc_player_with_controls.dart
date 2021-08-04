@@ -8,10 +8,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'controls_overlay.dart';
 
+typedef onStopRecordingCallback = void Function(String);
+
 class VlcPlayerWithControls extends StatefulWidget {
   final VlcPlayerController controller;
   final bool showControls;
-  final Function(String) onStopRecording;
+  final onStopRecordingCallback onStopRecording;
 
   VlcPlayerWithControls({
     Key key,

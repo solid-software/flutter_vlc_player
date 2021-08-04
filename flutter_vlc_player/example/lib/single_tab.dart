@@ -131,18 +131,19 @@ class _SingleTabState extends State<SingleTab> {
             key: _key,
             controller: _controller,
             onStopRecording: (recordPath) {
-              listVideos.add(VideoData(
-                name: 'Recorded Video',
-                path: recordPath,
-                type: VideoType.recorded,
-              ));
+              setState(() {
+                listVideos.add(VideoData(
+                  name: 'Recorded Video',
+                  path: recordPath,
+                  type: VideoType.recorded,
+                ));
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                       'The recorded video file has been added to the end of list.'),
                 ),
               );
-              setState(() {});
             },
           ),
         ),

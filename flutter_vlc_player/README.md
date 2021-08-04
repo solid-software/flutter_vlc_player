@@ -146,9 +146,10 @@ class _MyHomePageState extends State<MyHomePage> {
 ```
 
 
+### Recording feature
+To start/stop video recording, you have to call the `startRecording(String saveDirectory)` and `stopRecording()` methods, respectively. By calling the stop method you can get the path of recorded file from `vlcPlayerController.value.recordPath`.
 
-
-
+<b>Note</b>: there is a bug in vlc library that if you do not call the `stopRecording()` method and the video reaches to end the recorded video path is not getting updated, because the vlc stop recording event never gets called.
 
 
 ## Upgrade instructions

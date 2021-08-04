@@ -903,6 +903,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     return await vlcPlayerPlatform.castToRenderer(_viewId, castDevice);
   }
 
+  /// [saveDirectory] - directory path of the recorded file
   /// Returns true if media is start recording.
   Future<bool?> startRecording(String saveDirectory) async {
     _throwIfNotInitialized('startRecording');
