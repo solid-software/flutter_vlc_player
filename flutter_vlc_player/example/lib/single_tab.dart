@@ -94,6 +94,9 @@ class _SingleTabState extends State<SingleTab> {
               // works only on externally added subtitles
               VlcSubtitleOptions.color(VlcSubtitleColor.navy),
             ]),
+            http: VlcHttpOptions([
+              VlcHttpOptions.httpReconnect(true),
+            ]),
             rtp: VlcRtpOptions([
               VlcRtpOptions.rtpOverRtsp(true),
             ]),
@@ -111,6 +114,8 @@ class _SingleTabState extends State<SingleTab> {
           initVideo.path,
           options: VlcPlayerOptions(),
         );
+        break;
+      case VideoType.recorded:
         break;
     }
     _controller.addOnInitListener(() async {

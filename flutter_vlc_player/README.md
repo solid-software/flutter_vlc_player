@@ -71,7 +71,38 @@ After that you can access the media/subtitle file by
     "/storage/emulated/0/{FilePath}"
     "/sdcard/{FilePath}"
 
+<br>
 <hr>
+<br>
+
+#### Android build configuration
+
+1. In `android/app/build.gradle`:
+```groovy
+android {
+    packagingOptions {
+       // Fixes duplicate libraries build issue, 
+       // when your project uses more than one plugin that depend on C++ libs.
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+   
+   buildTypes {
+      release {
+         minifyEnabled true
+         useProguard true
+         proguardFiles getDefaultProguardFile(
+                 'proguard-android-optimize.txt'),
+                 'proguard-rules.pro'
+      }
+   }
+}
+```
+
+2. Create `android/app/proguard-rules.pro`, add the following lines:
+```proguard
+-keep class org.videolan.libvlc.** { *; }
+```
+
 
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
@@ -149,8 +180,9 @@ class _MyHomePageState extends State<MyHomePage> {
 ### Recording feature
 To start/stop video recording, you have to call the `startRecording(String saveDirectory)` and `stopRecording()` methods, respectively. By calling the stop method you can get the path of recorded file from `vlcPlayerController.value.recordPath`.
 
-<b>Note</b>: there is a bug in vlc library that if you do not call the `stopRecording()` method and the video reaches to end the recorded video path is not getting updated, because the vlc stop recording event never gets called.
-
+<br>
+<hr>
+<br>
 
 ## Upgrade instructions
 
@@ -176,12 +208,23 @@ If you have some changes made to the iOS app, recreate the app using above metho
 
 Be sure to follow instructions above after 
 
-<hr>
+<br>
 
 ### Breaking Changes (from V4 to V5)
 Entire platform has been refactored in v5. It will require a refactor of your app to follow v5. 
 
+<br>
 <hr>
+<br>
+
+
+## Known Issues
+<b>1)</b> there is an issue in the <u>recording feature of underlying vlc library (not the Dart wrapper we're supporting)</u>, that if you do not call the `stopRecording()` method after `startRecording(...)` method and the video reaches to end the recorded video path is not getting updated, because the vlc stop recording event never gets fired.
+
+<br>
+<hr>
+<br>
+
 
 ## Current issues
 Current issues list [is here](https://github.com/solid-software/flutter_vlc_player/issues).   
