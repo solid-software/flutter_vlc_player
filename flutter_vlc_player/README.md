@@ -214,7 +214,10 @@ Entire platform has been refactored in v5. It will require a refactor of your ap
 <hr>
 
 ## Known Issues
-<b>1)</b> there is an issue in the <u>recording feature of underlying vlc library (not the Dart wrapper we're supporting)</u>, that if you do not call the `stopRecording()` method after `startRecording(...)` method and the video reaches to end the recorded video path is not getting updated, because the vlc stop recording event never gets fired.
+<b>1)</b> The video recording feature is problematic in iOS/Android: if the video reaches its end while you're recording it, the underlying `vlckit`/`libvlc` library fails to finalize the recording process, and we cannot retrieve the recorded file. 
+The issue is reported and tracked here: 
+<br>
+[https://code.videolan.org/videolan/VLCKit/-/issues/394](https://code.videolan.org/videolan/VLCKit/-/issues/394) (see last comment from September 22, 2020)
 
 <hr>
 
