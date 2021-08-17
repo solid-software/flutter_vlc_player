@@ -1,6 +1,6 @@
 name: flutter_vlc_player
 description: A VLC-powered alternative to Flutter's video_player. Supports multiple players on one screen.
-version: 6.0.2
+version: 6.0.3
 homepage: https://github.com/solid-software/flutter_vlc_player/
 
 environment:
@@ -21,15 +21,12 @@ dependencies:
     sdk: flutter
  
   meta: ^1.3.0
-  pedantic: ^1.11.0
-  flutter_vlc_player_platform_interface: ^1.0.5
+  flutter_vlc_player_platform_interface: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pigeon: 
-    git:
-      url: https://github.com/gaaclarke/packages.git
-      path: packages/pigeon
-      ref: pigeon-2-0-0
-  plugin_platform_interface: ^2.0.0
+
+  flutter_lints: ^1.0.4
+  pigeon: ^0.2.4
+  plugin_platform_interface: ^2.0.1

@@ -1,3 +1,7 @@
+## 6.0.3
+* Added Vlc Recording feature
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
 ## 6.0.2
 * Fix issue with vlc error event
 * Added onInit & onRenderer listeners

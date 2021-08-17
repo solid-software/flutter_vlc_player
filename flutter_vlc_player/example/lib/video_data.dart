@@ -2,6 +2,7 @@ enum VideoType {
   asset,
   file,
   network,
+  recorded,
 }
 
 class VideoData {

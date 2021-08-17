@@ -6,5 +6,6 @@ enum PlayingState {
   ended,
   buffering,
   playing,
+  recording,
   error,
 }

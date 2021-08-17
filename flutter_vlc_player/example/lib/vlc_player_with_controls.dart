@@ -1,19 +1,25 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'controls_overlay.dart';
+
+typedef onStopRecordingCallback = void Function(String);
 
 class VlcPlayerWithControls extends StatefulWidget {
   final VlcPlayerController controller;
   final bool showControls;
+  final onStopRecordingCallback onStopRecording;
 
   VlcPlayerWithControls({
     Key key,
     @required this.controller,
     this.showControls = true,
+    this.onStopRecording,
   })  : assert(controller != null, 'You must provide a vlc controller'),
         super(key: key);
 
@@ -40,6 +46,10 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   int numberOfCaptions = 0;
   int numberOfAudioTracks = 0;
   bool validPosition = false;
+
+  double recordingTextOpacity = 0;
+  DateTime lastRecordingShowTime = DateTime.now();
+  bool isRecording = false;
 
   //
   List<double> playbackSpeeds = [0.5, 1.0, 2.0];
@@ -84,7 +94,24 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       }
       numberOfCaptions = _controller.value.spuTracksCount;
       numberOfAudioTracks = _controller.value.audioTracksCount;
-      //
+      // update recording blink widget
+      if (_controller.value.isRecording && _controller.value.isPlaying) {
+        if (DateTime.now().difference(lastRecordingShowTime).inSeconds >= 1) {
+          lastRecordingShowTime = DateTime.now();
+          recordingTextOpacity = 1 - recordingTextOpacity;
+        }
+      } else {
+        recordingTextOpacity = 0;
+      }
+      // check for change in recording state
+      if (isRecording != _controller.value.isRecording) {
+        isRecording = _controller.value.isRecording;
+        if (!isRecording) {
+          if (widget.onStopRecording != null) {
+            widget.onStopRecording(_controller.value.recordPath);
+          }
+        }
+      }
       setState(() {});
     }
   }
@@ -213,6 +240,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                       onPressed: _createCameraImage,
                     ),
                     IconButton(
+                      color: Colors.white,
+                      icon: _controller.value.isRecording
+                          ? Icon(Icons.videocam_off_outlined)
+                          : Icon(Icons.videocam_outlined),
+                      onPressed: _toggleRecording,
+                    ),
+                    IconButton(
                       icon: Icon(Icons.cast),
                       color: Colors.white,
                       onPressed: _getRendererDevices,
@@ -265,6 +299,29 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     placeholder: Center(child: CircularProgressIndicator()),
                   ),
                 ),
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: AnimatedOpacity(
+                    opacity: recordingTextOpacity,
+                    duration: Duration(seconds: 1),
+                    child: Container(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Icon(Icons.circle, color: Colors.red),
+                          SizedBox(width: 5),
+                          Text(
+                            'REC',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 ControlsOverlay(controller: _controller),
               ],
             ),
@@ -276,6 +333,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
             color: _playerControlsBgColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
                   color: Colors.white,
@@ -376,6 +434,15 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     _controller.value.isPlaying
         ? await _controller.pause()
         : await _controller.play();
+  }
+
+  void _toggleRecording() async {
+    if (!_controller.value.isRecording) {
+      var saveDirectory = await getTemporaryDirectory();
+      await _controller.startRecording(saveDirectory.path);
+    } else {
+      await _controller.stopRecording();
+    }
   }
 
   void _onSliderPositionChanged(double progress) {

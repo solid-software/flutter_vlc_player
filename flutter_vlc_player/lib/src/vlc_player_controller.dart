@@ -220,6 +220,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
+            isRecording: false,
             playingState: PlayingState.stopped,
             position: Duration.zero,
           );
@@ -247,6 +248,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isPlaying: false,
             isBuffering: false,
             isEnded: true,
+            isRecording: false,
             playingState: PlayingState.ended,
             position: event.position,
           );
@@ -275,6 +277,14 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           break;
 
         case VlcMediaEventType.mediaChanged:
+          break;
+
+        case VlcMediaEventType.recording:
+          value = value.copyWith(
+            playingState: PlayingState.recording,
+            isRecording: event.isRecording,
+            recordPath: event.recordPath,
+          );
           break;
 
         case VlcMediaEventType.error:
@@ -891,6 +901,19 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   Future<void> castToRenderer(String castDevice) async {
     _throwIfNotInitialized('castToRenderer');
     return await vlcPlayerPlatform.castToRenderer(_viewId, castDevice);
+  }
+
+  /// [saveDirectory] - directory path of the recorded file
+  /// Returns true if media is start recording.
+  Future<bool?> startRecording(String saveDirectory) async {
+    _throwIfNotInitialized('startRecording');
+    return await vlcPlayerPlatform.startRecording(_viewId, saveDirectory);
+  }
+
+  /// Returns true if media is stop recording.
+  Future<bool?> stopRecording() async {
+    _throwIfNotInitialized('stopRecording');
+    return await vlcPlayerPlatform.stopRecording(_viewId);
   }
 
   /// [functionName] - name of function

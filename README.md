@@ -103,6 +103,8 @@ android {
 -keep class org.videolan.libvlc.** { *; }
 ```
 
+<br>
+
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 
@@ -172,12 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
+<br>
 
+### Recording feature
+To start/stop video recording, you have to call the `startRecording(String saveDirectory)` and `stopRecording()` methods, respectively. By calling the stop method you can get the path of recorded file from `vlcPlayerController.value.recordPath`.
 
-
-
-
-
+<hr>
 
 ## Upgrade instructions
 
@@ -203,10 +205,18 @@ If you have some changes made to the iOS app, recreate the app using above metho
 
 Be sure to follow instructions above after 
 
-<hr>
+<br>
 
 ### Breaking Changes (from V4 to V5)
 Entire platform has been refactored in v5. It will require a refactor of your app to follow v5. 
+
+<hr>
+
+## Known Issues
+<b>1)</b> The video recording feature is problematic in iOS/Android: if the video reaches its end while you're recording it, the underlying `vlckit`/`libvlc` library fails to finalize the recording process, and we cannot retrieve the recorded file. 
+The issue is reported and tracked here: 
+<br>
+[https://code.videolan.org/videolan/VLCKit/-/issues/394](https://code.videolan.org/videolan/VLCKit/-/issues/394) (see last comment from September 22, 2020)
 
 <hr>
 
