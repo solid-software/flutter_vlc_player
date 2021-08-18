@@ -1,9 +1,13 @@
+## 6.0.4
+* Added VLC http options
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
 ## 6.0.3
-* Added Vlc Recording feature
+* Added VLC recording feature
 Credits to Alireza Setayesh (https://github.com/alr2413).
 
 ## 6.0.2
-* Fix issue with vlc error event
+* Fix issue with VLC error event
 * Added onInit & onRenderer listeners
 Credits to Alireza Setayesh (https://github.com/alr2413) and solid-vovabeloded (https://github.com/solid-vovabeloded).
 
@@ -16,7 +20,7 @@ Credits to Mitch Ross (https://github.com/mitchross)
 Credits to Mitch Ross (https://github.com/mitchross)
   
 ## 5.0.5
-* Added Vlc Subtitle Styling. 
+* Added VLC Subtitle Styling. 
 * Split ios swift code into multiple files for better readability.
 Credits to Alireza Setayesh (https://github.com/alr2413) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
