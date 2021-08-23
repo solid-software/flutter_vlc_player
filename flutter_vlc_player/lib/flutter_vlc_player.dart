@@ -15,6 +15,7 @@ export 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
         VlcPlayerOptions,
         VlcAdvancedOptions,
         VlcAudioOptions,
+        VlcHttpOptions,
         VlcRtpOptions,
         VlcStreamOutputOptions,
         VlcVideoOptions,

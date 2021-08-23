@@ -1,6 +1,10 @@
+## 1.0.7
+
+- Add VLC http options
+
 ## 1.0.6
 
-- Added Vlc Recording feature
+- Added VLC recording feature
 
 ## 1.0.5
 
@@ -8,7 +12,7 @@
 
 ## 1.0.4
 
-- Add vlc subtitle options
+- Add VLC subtitle options
 
 ## 1.0.3
 

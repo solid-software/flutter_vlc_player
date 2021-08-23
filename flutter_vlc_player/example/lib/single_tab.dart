@@ -94,6 +94,9 @@ class _SingleTabState extends State<SingleTab> {
               // works only on externally added subtitles
               VlcSubtitleOptions.color(VlcSubtitleColor.navy),
             ]),
+            http: VlcHttpOptions([
+              VlcHttpOptions.httpReconnect(true),
+            ]),
             rtp: VlcRtpOptions([
               VlcRtpOptions.rtpOverRtsp(true),
             ]),
