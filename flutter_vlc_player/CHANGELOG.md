@@ -1,3 +1,8 @@
+## 6.0.5
+* Fix issue with options applying (Android)
+* Update VLCKit for iOS and Android
+Credits to Vladislav Murashko (https://github.com/mrvancor).
+
 ## 6.0.4
 * Added VLC http options
 Credits to Alireza Setayesh (https://github.com/alr2413).
@@ -46,7 +51,7 @@ Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://gi
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
 ## 4.0.3
-* Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. 
+* Update VLCKit for iOS and Android. Cleanup example Pod file. Clean up example gradle. 
 * Removed dispose calls on VlcPlayerController from VlcPlayer.
 * Fix argument-less functions throwing FlutterMethodNotImplemented.
 Credits to Mitch Ross (https://github.com/mitchross).

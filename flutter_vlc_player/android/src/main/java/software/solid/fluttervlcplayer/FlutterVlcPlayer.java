@@ -50,6 +50,7 @@ final class FlutterVlcPlayer implements PlatformView {
     //
     private LibVLC libVLC;
     private MediaPlayer mediaPlayer;
+    private List<String> options;
     private List<RendererDiscoverer> rendererDiscoverers = new ArrayList<>();
     private List<RendererItem> rendererItems = new ArrayList<>();
     private boolean isDisposed = false;
@@ -125,6 +126,7 @@ final class FlutterVlcPlayer implements PlatformView {
     // }
 
     public void initialize(List<String> options) {
+        this.options = options; 
         libVLC = new LibVLC(context, options);
         mediaPlayer = new MediaPlayer(libVLC);
         setupVlcMediaPlayer();
@@ -352,6 +354,9 @@ final class FlutterVlcPlayer implements PlatformView {
             if (hwAccValue == HwAcc.DECODING) {
                 media.addOption(":no-mediacodec-dr");
                 media.addOption(":no-omxil-dr");
+            }
+            if(options != null) {
+                options.forEach(option -> media.addOption(option));
             }
             mediaPlayer.setMedia(media);
             media.release();
