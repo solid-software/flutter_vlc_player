@@ -1,3 +1,9 @@
+## 6.1.0
+* Breaking Change: Refactored enum parameters to follow dart naming convention 
+* Fixed control overlay issue after upgrading to Flutter 2.8
+* Fixed Dart analysis warnings
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
 ## 6.0.5
 * Fix issue with options applying (Android)
 * Update VLCKit for iOS and Android

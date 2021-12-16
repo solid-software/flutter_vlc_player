@@ -1,17 +1,17 @@
 /// Indicates the current player state.
 enum VlcPlayerState {
   /// The player is currently stopped.
-  STOPPED,
+  stopped,
 
   /// The player is currently paused.
-  PAUSED,
+  paused,
 
   /// The player is currently buffering.
-  BUFFERING,
+  buffering,
 
   /// The player is currently playing.
-  PLAYING,
+  playing,
 
   /// The player is encountered an error.
-  ERROR,
+  error,
 }

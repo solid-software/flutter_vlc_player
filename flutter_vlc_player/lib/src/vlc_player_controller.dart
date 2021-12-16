@@ -32,7 +32,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.dataSource, {
     this.autoInitialize = true,
     this.package,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -52,7 +52,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.network(
     this.dataSource, {
     this.autoInitialize = true,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -72,7 +72,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.file(
     File file, {
     this.autoInitialize = true,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -369,7 +369,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_onInit != null) {
       _onInit!();
     }
-    _onInitListeners.forEach((listener) => listener());
+    for (var listener in _onInitListeners) {
+      listener();
+    }
   }
 
   /// Notify onRendererHandler callback & all registered listeners
@@ -381,7 +383,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_onRendererHandler != null) {
       _onRendererHandler!(type, id!, name!);
     }
-    _onRendererEventListeners.forEach((listener) => listener(type, id!, name!));
+    for (var listener in _onRendererEventListeners) {
+      listener(type, id!, name!);
+    }
   }
 
   /// This stops playback and changes the data source. Once the new data source has been loaded, the playback state will revert to
@@ -465,7 +469,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       uri: dataSource,
       type: dataSourceType,
       package: package,
-      hwAcc: hwAcc ?? HwAcc.AUTO,
+      hwAcc: hwAcc ?? HwAcc.auto,
       autoPlay: autoPlay ?? true,
     );
     return;
@@ -937,7 +941,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _viewId = viewId;
     // do we need to initialize controller after view becomes ready?
     if (autoInitialize) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       await initialize();
     }
     _isReadyToInitialize = true;
