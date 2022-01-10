@@ -18,14 +18,14 @@ public class VLCViewController: NSObject, FlutterPlatformView {
         return hostedView
     }
     
-    init(frame: CGRect, playerId: Int64, messenger:FlutterBinaryMessenger) {
+    init(frame: CGRect, viewId: Int64, messenger:FlutterBinaryMessenger) {
         
         let mediaEventChannel = FlutterEventChannel(
-            name: "flutter_video_plugin/getVideoEvents_\(playerId)",
+            name: "flutter_video_plugin/getVideoEvents_\(viewId)",
             binaryMessenger: messenger
         )
         let rendererEventChannel = FlutterEventChannel(
-            name: "flutter_video_plugin/getRendererEvents_\(playerId)",
+            name: "flutter_video_plugin/getRendererEvents_\(viewId)",
             binaryMessenger: messenger
         )
         
