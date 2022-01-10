@@ -13,10 +13,10 @@ public class VLCViewFactory: NSObject, FlutterPlatformViewFactory {
         super.init()
     }
     
-    public func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
+    public func create(withFrame frame: CGRect, viewIdentifier playerId: Int64, arguments args: Any?) -> FlutterPlatformView {
         
         //        let arguments = args as? NSDictionary ?? [:]
-        return builder.build(frame: frame, viewId: viewId)
+        return builder.build(frame: frame, playerId: playerId)
     }
     
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {

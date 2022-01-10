@@ -31,12 +31,12 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         Messages.VlcPlayerApi.setup(messenger, null);
     }
 
-    FlutterVlcPlayer build(int viewId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName) {
+    FlutterVlcPlayer build(int playerId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName) {
         this.keyForAsset = keyForAsset;
         this.keyForAssetAndPackageName = keyForAssetAndPackageName;
         // only create view for player and attach channel events
-        FlutterVlcPlayer vlcPlayer = new FlutterVlcPlayer(viewId, context, binaryMessenger, textureRegistry);
-        vlcPlayers.append(viewId, vlcPlayer);
+        FlutterVlcPlayer vlcPlayer = new FlutterVlcPlayer(playerId, context, binaryMessenger, textureRegistry);
+        vlcPlayers.append(playerId, vlcPlayer);
         return vlcPlayer;
     }
 

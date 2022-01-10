@@ -29,7 +29,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<void> create({
-    required int viewId,
+    required int playerId,
     required String uri,
     required DataSourceType type,
     String? package,
@@ -78,8 +78,8 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Stream<VlcMediaEvent> mediaEventsFor(int viewId) {
-    return _mediaEventChannelFor(viewId).receiveBroadcastStream().map(
+  Stream<VlcMediaEvent> mediaEventsFor(int playerId) {
+    return _mediaEventChannelFor(playerId).receiveBroadcastStream().map(
       (dynamic event) {
         final Map<dynamic, dynamic> map = event;
         //
@@ -167,7 +167,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<void> setStreamUrl(
-    int viewId, {
+    int playerId, {
     required String uri,
     required DataSourceType type,
     String? package,
@@ -185,7 +185,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setLooping(int viewId, bool looping) async {
+  Future<void> setLooping(int playerId, bool looping) async {
     return await _api.setLooping(LoopingMessage()
       ..viewId = viewId
       ..isLooping = looping);
@@ -219,7 +219,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> seekTo(int viewId, Duration position) async {
+  Future<void> seekTo(int playerId, Duration position) async {
     return await _api.seekTo(PositionMessage()
       ..viewId = viewId
       ..position = position.inMilliseconds);
@@ -238,7 +238,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setVolume(int viewId, int volume) async {
+  Future<void> setVolume(int playerId, int volume) async {
     return await _api.setVolume(VolumeMessage()
       ..viewId = viewId
       ..volume = volume);
@@ -251,7 +251,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setPlaybackSpeed(int viewId, double speed) async {
+  Future<void> setPlaybackSpeed(int playerId, double speed) async {
     assert(speed > 0);
     return await _api.setPlaybackSpeed(PlaybackSpeedMessage()
       ..viewId = viewId
@@ -283,14 +283,14 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setSpuTrack(int viewId, int spuTrackNumber) async {
+  Future<void> setSpuTrack(int playerId, int spuTrackNumber) async {
     return await _api.setSpuTrack(SpuTrackMessage()
       ..viewId = viewId
       ..spuTrackNumber = spuTrackNumber);
   }
 
   @override
-  Future<void> setSpuDelay(int viewId, int delay) async {
+  Future<void> setSpuDelay(int playerId, int delay) async {
     return await _api.setSpuDelay(DelayMessage()
       ..viewId = viewId
       ..delay = delay);
@@ -304,7 +304,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<void> addSubtitleTrack(
-    int viewId, {
+    int playerId, {
     required String uri,
     required DataSourceType type,
     bool? isSelected,
@@ -318,7 +318,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<int?> getAudioTracksCount(int viewId) async {
+  Future<int?> getAudioTracksCount(int playerId) async {
     var response =
         await _api.getAudioTracksCount(ViewMessage()..viewId = viewId);
     return response.count;
@@ -337,14 +337,14 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setAudioTrack(int viewId, int audioTrackNumber) async {
+  Future<void> setAudioTrack(int playerId, int audioTrackNumber) async {
     return await _api.setAudioTrack(AudioTrackMessage()
       ..viewId = viewId
       ..audioTrackNumber = audioTrackNumber);
   }
 
   @override
-  Future<void> setAudioDelay(int viewId, int delay) async {
+  Future<void> setAudioDelay(int playerId, int delay) async {
     return await _api.setAudioDelay(DelayMessage()
       ..viewId = viewId
       ..delay = delay);
@@ -358,7 +358,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<void> addAudioTrack(
-    int viewId, {
+    int playerId, {
     required String uri,
     required DataSourceType type,
     bool? isSelected,
@@ -372,7 +372,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<int?> getVideoTracksCount(int viewId) async {
+  Future<int?> getVideoTracksCount(int playerId) async {
     var response =
         await _api.getVideoTracksCount(ViewMessage()..viewId = viewId);
     return response.count;
@@ -385,7 +385,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setVideoTrack(int viewId, int videoTrackNumber) async {
+  Future<void> setVideoTrack(int playerId, int videoTrackNumber) async {
     return await _api.setVideoTrack(VideoTrackMessage()
       ..viewId = viewId
       ..videoTrackNumber = videoTrackNumber);
@@ -398,7 +398,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setVideoScale(int viewId, double scale) async {
+  Future<void> setVideoScale(int playerId, double scale) async {
     return await _api.setVideoScale(VideoScaleMessage()
       ..viewId = viewId
       ..scale = scale);
@@ -411,14 +411,14 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setVideoAspectRatio(int viewId, String aspect) async {
+  Future<void> setVideoAspectRatio(int playerId, String aspect) async {
     return await _api.setVideoAspectRatio(VideoAspectRatioMessage()
       ..viewId = viewId
       ..aspectRatio = aspect);
   }
 
   @override
-  Future<String?> getVideoAspectRatio(int viewId) async {
+  Future<String?> getVideoAspectRatio(int playerId) async {
     var response =
         await _api.getVideoAspectRatio(ViewMessage()..viewId = viewId);
     return response.aspectRatio;
@@ -443,7 +443,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> startRendererScanning(int viewId,
+  Future<void> startRendererScanning(int playerId,
       {String? rendererService}) async {
     return await _api.startRendererScanning(RendererScanningMessage()
       ..viewId = viewId
@@ -456,22 +456,22 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<Map<String, String>> getRendererDevices(int viewId) async {
+  Future<Map<String, String>> getRendererDevices(int playerId) async {
     var response =
         await _api.getRendererDevices(ViewMessage()..viewId = viewId);
     return response.rendererDevices!.cast<String, String>();
   }
 
   @override
-  Future<void> castToRenderer(int viewId, String rendererDevice) async {
+  Future<void> castToRenderer(int playerId, String rendererDevice) async {
     return await _api.castToRenderer(RenderDeviceMessage()
       ..viewId = viewId
       ..rendererDevice = rendererDevice);
   }
 
   @override
-  Stream<VlcRendererEvent> rendererEventsFor(int viewId) {
-    return _rendererEventChannelFor(viewId).receiveBroadcastStream().map(
+  Stream<VlcRendererEvent> rendererEventsFor(int playerId) {
+    return _rendererEventChannelFor(playerId).receiveBroadcastStream().map(
       (dynamic event) {
         final Map<dynamic, dynamic> map = event;
         //
@@ -498,7 +498,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<bool?> startRecording(int viewId, String saveDirectory) async {
+  Future<bool?> startRecording(int playerId, String saveDirectory) async {
     var response = await _api.startRecording(RecordMessage()
       ..viewId = viewId
       ..saveDirectory = saveDirectory);
