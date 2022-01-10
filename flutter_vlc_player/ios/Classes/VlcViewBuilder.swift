@@ -14,11 +14,11 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         VlcPlayerApiSetup(messenger, self)
     }
     
-    public func build(frame: CGRect, playerId: Int64) -> VLCViewController{
+    public func build(frame: CGRect, viewId: Int64) -> VLCViewController{
         //
         var vlcViewController: VLCViewController
-        vlcViewController = VLCViewController(frame: frame, playerId: playerId, messenger: messenger)
-        players[Int(playerId)] = vlcViewController
+        vlcViewController = VLCViewController(frame: frame, viewId: viewId, messenger: messenger)
+        players[Int(viewId)] = vlcViewController
         return vlcViewController;
     }
     
