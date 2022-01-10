@@ -8,7 +8,7 @@ import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 import 'package:flutter/services.dart';
 
 class CreateMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   String? packageName;
@@ -18,7 +18,7 @@ class CreateMessage {
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
     pigeonMap['packageName'] = packageName;
@@ -31,7 +31,7 @@ class CreateMessage {
   static CreateMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return CreateMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..uri = pigeonMap['uri'] as String?
       ..type = pigeonMap['type'] as int?
       ..packageName = pigeonMap['packageName'] as String?
@@ -41,23 +41,23 @@ class CreateMessage {
   }
 }
 
-class PlayerMessage {
-  int? playerId;
+class ViewMessage {
+  int? viewId;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     return pigeonMap;
   }
 
-  static PlayerMessage decode(Object message) {
+  static ViewMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return PlayerMessage()..playerId = pigeonMap['playerId'] as int?;
+    return ViewMessage()..viewId = pigeonMap['viewId'] as int?;
   }
 }
 
 class SetMediaMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   String? packageName;
@@ -66,7 +66,7 @@ class SetMediaMessage {
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
     pigeonMap['packageName'] = packageName;
@@ -78,7 +78,7 @@ class SetMediaMessage {
   static SetMediaMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return SetMediaMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..uri = pigeonMap['uri'] as String?
       ..type = pigeonMap['type'] as int?
       ..packageName = pigeonMap['packageName'] as String?
@@ -88,12 +88,12 @@ class SetMediaMessage {
 }
 
 class BooleanMessage {
-  int? playerId;
+  int? viewId;
   bool? result;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['result'] = result;
     return pigeonMap;
   }
@@ -101,18 +101,18 @@ class BooleanMessage {
   static BooleanMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return BooleanMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..result = pigeonMap['result'] as bool?;
   }
 }
 
 class LoopingMessage {
-  int? playerId;
+  int? viewId;
   bool? isLooping;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['isLooping'] = isLooping;
     return pigeonMap;
   }
@@ -120,18 +120,18 @@ class LoopingMessage {
   static LoopingMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return LoopingMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..isLooping = pigeonMap['isLooping'] as bool?;
   }
 }
 
 class PositionMessage {
-  int? playerId;
+  int? viewId;
   int? position;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['position'] = position;
     return pigeonMap;
   }
@@ -139,18 +139,18 @@ class PositionMessage {
   static PositionMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return PositionMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..position = pigeonMap['position'] as int?;
   }
 }
 
 class DurationMessage {
-  int? playerId;
+  int? viewId;
   int? duration;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['duration'] = duration;
     return pigeonMap;
   }
@@ -158,18 +158,18 @@ class DurationMessage {
   static DurationMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return DurationMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..duration = pigeonMap['duration'] as int?;
   }
 }
 
 class VolumeMessage {
-  int? playerId;
+  int? viewId;
   int? volume;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['volume'] = volume;
     return pigeonMap;
   }
@@ -177,18 +177,18 @@ class VolumeMessage {
   static VolumeMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return VolumeMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..volume = pigeonMap['volume'] as int?;
   }
 }
 
 class PlaybackSpeedMessage {
-  int? playerId;
+  int? viewId;
   double? speed;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['speed'] = speed;
     return pigeonMap;
   }
@@ -196,18 +196,18 @@ class PlaybackSpeedMessage {
   static PlaybackSpeedMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return PlaybackSpeedMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..speed = pigeonMap['speed'] as double?;
   }
 }
 
 class SnapshotMessage {
-  int? playerId;
+  int? viewId;
   String? snapshot;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['snapshot'] = snapshot;
     return pigeonMap;
   }
@@ -215,18 +215,18 @@ class SnapshotMessage {
   static SnapshotMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return SnapshotMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..snapshot = pigeonMap['snapshot'] as String?;
   }
 }
 
 class TrackCountMessage {
-  int? playerId;
+  int? viewId;
   int? count;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['count'] = count;
     return pigeonMap;
   }
@@ -234,18 +234,18 @@ class TrackCountMessage {
   static TrackCountMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return TrackCountMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..count = pigeonMap['count'] as int?;
   }
 }
 
 class SpuTracksMessage {
-  int? playerId;
+  int? viewId;
   Map<Object?, Object?>? subtitles;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['subtitles'] = subtitles;
     return pigeonMap;
   }
@@ -253,18 +253,18 @@ class SpuTracksMessage {
   static SpuTracksMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return SpuTracksMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..subtitles = pigeonMap['subtitles'] as Map<Object?, Object?>?;
   }
 }
 
 class SpuTrackMessage {
-  int? playerId;
+  int? viewId;
   int? spuTrackNumber;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['spuTrackNumber'] = spuTrackNumber;
     return pigeonMap;
   }
@@ -272,18 +272,18 @@ class SpuTrackMessage {
   static SpuTrackMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return SpuTrackMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..spuTrackNumber = pigeonMap['spuTrackNumber'] as int?;
   }
 }
 
 class DelayMessage {
-  int? playerId;
+  int? viewId;
   int? delay;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['delay'] = delay;
     return pigeonMap;
   }
@@ -291,20 +291,20 @@ class DelayMessage {
   static DelayMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return DelayMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..delay = pigeonMap['delay'] as int?;
   }
 }
 
 class AddSubtitleMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   bool? isSelected;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
     pigeonMap['isSelected'] = isSelected;
@@ -314,7 +314,7 @@ class AddSubtitleMessage {
   static AddSubtitleMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return AddSubtitleMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..uri = pigeonMap['uri'] as String?
       ..type = pigeonMap['type'] as int?
       ..isSelected = pigeonMap['isSelected'] as bool?;
@@ -322,12 +322,12 @@ class AddSubtitleMessage {
 }
 
 class AudioTracksMessage {
-  int? playerId;
+  int? viewId;
   Map<Object?, Object?>? audios;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['audios'] = audios;
     return pigeonMap;
   }
@@ -335,18 +335,18 @@ class AudioTracksMessage {
   static AudioTracksMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return AudioTracksMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..audios = pigeonMap['audios'] as Map<Object?, Object?>?;
   }
 }
 
 class AudioTrackMessage {
-  int? playerId;
+  int? viewId;
   int? audioTrackNumber;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['audioTrackNumber'] = audioTrackNumber;
     return pigeonMap;
   }
@@ -354,20 +354,20 @@ class AudioTrackMessage {
   static AudioTrackMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return AudioTrackMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..audioTrackNumber = pigeonMap['audioTrackNumber'] as int?;
   }
 }
 
 class AddAudioMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   bool? isSelected;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['uri'] = uri;
     pigeonMap['type'] = type;
     pigeonMap['isSelected'] = isSelected;
@@ -377,7 +377,7 @@ class AddAudioMessage {
   static AddAudioMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return AddAudioMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..uri = pigeonMap['uri'] as String?
       ..type = pigeonMap['type'] as int?
       ..isSelected = pigeonMap['isSelected'] as bool?;
@@ -385,12 +385,12 @@ class AddAudioMessage {
 }
 
 class VideoTracksMessage {
-  int? playerId;
+  int? viewId;
   Map<Object?, Object?>? videos;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['videos'] = videos;
     return pigeonMap;
   }
@@ -398,18 +398,18 @@ class VideoTracksMessage {
   static VideoTracksMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return VideoTracksMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..videos = pigeonMap['videos'] as Map<Object?, Object?>?;
   }
 }
 
 class VideoTrackMessage {
-  int? playerId;
+  int? viewId;
   int? videoTrackNumber;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['videoTrackNumber'] = videoTrackNumber;
     return pigeonMap;
   }
@@ -417,18 +417,18 @@ class VideoTrackMessage {
   static VideoTrackMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return VideoTrackMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..videoTrackNumber = pigeonMap['videoTrackNumber'] as int?;
   }
 }
 
 class VideoScaleMessage {
-  int? playerId;
+  int? viewId;
   double? scale;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['scale'] = scale;
     return pigeonMap;
   }
@@ -436,18 +436,18 @@ class VideoScaleMessage {
   static VideoScaleMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return VideoScaleMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..scale = pigeonMap['scale'] as double?;
   }
 }
 
 class VideoAspectRatioMessage {
-  int? playerId;
+  int? viewId;
   String? aspectRatio;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['aspectRatio'] = aspectRatio;
     return pigeonMap;
   }
@@ -455,18 +455,18 @@ class VideoAspectRatioMessage {
   static VideoAspectRatioMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return VideoAspectRatioMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..aspectRatio = pigeonMap['aspectRatio'] as String?;
   }
 }
 
 class RendererServicesMessage {
-  int? playerId;
+  int? viewId;
   List<Object?>? services;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['services'] = services;
     return pigeonMap;
   }
@@ -474,18 +474,18 @@ class RendererServicesMessage {
   static RendererServicesMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return RendererServicesMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..services = pigeonMap['services'] as List<Object?>?;
   }
 }
 
 class RendererScanningMessage {
-  int? playerId;
+  int? viewId;
   String? rendererService;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['rendererService'] = rendererService;
     return pigeonMap;
   }
@@ -493,18 +493,18 @@ class RendererScanningMessage {
   static RendererScanningMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return RendererScanningMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..rendererService = pigeonMap['rendererService'] as String?;
   }
 }
 
 class RendererDevicesMessage {
-  int? playerId;
+  int? viewId;
   Map<Object?, Object?>? rendererDevices;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['rendererDevices'] = rendererDevices;
     return pigeonMap;
   }
@@ -512,19 +512,19 @@ class RendererDevicesMessage {
   static RendererDevicesMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return RendererDevicesMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..rendererDevices =
           pigeonMap['rendererDevices'] as Map<Object?, Object?>?;
   }
 }
 
 class RenderDeviceMessage {
-  int? playerId;
+  int? viewId;
   String? rendererDevice;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['rendererDevice'] = rendererDevice;
     return pigeonMap;
   }
@@ -532,18 +532,18 @@ class RenderDeviceMessage {
   static RenderDeviceMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return RenderDeviceMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..rendererDevice = pigeonMap['rendererDevice'] as String?;
   }
 }
 
 class RecordMessage {
-  int? playerId;
+  int? viewId;
   String? saveDirectory;
 
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['playerId'] = playerId;
+    pigeonMap['viewId'] = viewId;
     pigeonMap['saveDirectory'] = saveDirectory;
     return pigeonMap;
   }
@@ -551,7 +551,7 @@ class RecordMessage {
   static RecordMessage decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return RecordMessage()
-      ..playerId = pigeonMap['playerId'] as int?
+      ..viewId = pigeonMap['viewId'] as int?
       ..saveDirectory = pigeonMap['saveDirectory'] as String?;
   }
 }
@@ -617,7 +617,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<void> dispose(PlayerMessage arg) async {
+  Future<void> dispose(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.dispose', const StandardMessageCodec(),
@@ -670,7 +670,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<void> play(PlayerMessage arg) async {
+  Future<void> play(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.play', const StandardMessageCodec(),
@@ -696,7 +696,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<void> pause(PlayerMessage arg) async {
+  Future<void> pause(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.pause', const StandardMessageCodec(),
@@ -722,7 +722,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<void> stop(PlayerMessage arg) async {
+  Future<void> stop(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.stop', const StandardMessageCodec(),
@@ -748,7 +748,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<BooleanMessage> isPlaying(PlayerMessage arg) async {
+  Future<BooleanMessage> isPlaying(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.isPlaying',
@@ -775,7 +775,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<BooleanMessage> isSeekable(PlayerMessage arg) async {
+  Future<BooleanMessage> isSeekable(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.isSeekable',
@@ -855,7 +855,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<PositionMessage> position(PlayerMessage arg) async {
+  Future<PositionMessage> position(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.position',
@@ -882,7 +882,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<DurationMessage> duration(PlayerMessage arg) async {
+  Future<DurationMessage> duration(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.duration',
@@ -936,7 +936,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VolumeMessage> getVolume(PlayerMessage arg) async {
+  Future<VolumeMessage> getVolume(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVolume',
@@ -990,7 +990,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<PlaybackSpeedMessage> getPlaybackSpeed(PlayerMessage arg) async {
+  Future<PlaybackSpeedMessage> getPlaybackSpeed(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getPlaybackSpeed',
@@ -1017,7 +1017,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<SnapshotMessage> takeSnapshot(PlayerMessage arg) async {
+  Future<SnapshotMessage> takeSnapshot(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.takeSnapshot',
@@ -1044,7 +1044,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<TrackCountMessage> getSpuTracksCount(PlayerMessage arg) async {
+  Future<TrackCountMessage> getSpuTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuTracksCount',
@@ -1071,7 +1071,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<SpuTracksMessage> getSpuTracks(PlayerMessage arg) async {
+  Future<SpuTracksMessage> getSpuTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuTracks',
@@ -1125,7 +1125,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<SpuTrackMessage> getSpuTrack(PlayerMessage arg) async {
+  Future<SpuTrackMessage> getSpuTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuTrack',
@@ -1179,7 +1179,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<DelayMessage> getSpuDelay(PlayerMessage arg) async {
+  Future<DelayMessage> getSpuDelay(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getSpuDelay',
@@ -1233,7 +1233,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<TrackCountMessage> getAudioTracksCount(PlayerMessage arg) async {
+  Future<TrackCountMessage> getAudioTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getAudioTracksCount',
@@ -1260,7 +1260,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<AudioTracksMessage> getAudioTracks(PlayerMessage arg) async {
+  Future<AudioTracksMessage> getAudioTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getAudioTracks',
@@ -1314,7 +1314,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<AudioTrackMessage> getAudioTrack(PlayerMessage arg) async {
+  Future<AudioTrackMessage> getAudioTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getAudioTrack',
@@ -1368,7 +1368,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<DelayMessage> getAudioDelay(PlayerMessage arg) async {
+  Future<DelayMessage> getAudioDelay(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getAudioDelay',
@@ -1422,7 +1422,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<TrackCountMessage> getVideoTracksCount(PlayerMessage arg) async {
+  Future<TrackCountMessage> getVideoTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVideoTracksCount',
@@ -1449,7 +1449,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VideoTracksMessage> getVideoTracks(PlayerMessage arg) async {
+  Future<VideoTracksMessage> getVideoTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVideoTracks',
@@ -1503,7 +1503,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VideoTrackMessage> getVideoTrack(PlayerMessage arg) async {
+  Future<VideoTrackMessage> getVideoTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVideoTrack',
@@ -1557,7 +1557,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VideoScaleMessage> getVideoScale(PlayerMessage arg) async {
+  Future<VideoScaleMessage> getVideoScale(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVideoScale',
@@ -1611,7 +1611,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<VideoAspectRatioMessage> getVideoAspectRatio(PlayerMessage arg) async {
+  Future<VideoAspectRatioMessage> getVideoAspectRatio(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getVideoAspectRatio',
@@ -1639,7 +1639,7 @@ class VlcPlayerApi {
   }
 
   Future<RendererServicesMessage> getAvailableRendererServices(
-      PlayerMessage arg) async {
+      ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getAvailableRendererServices',
@@ -1693,7 +1693,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<void> stopRendererScanning(PlayerMessage arg) async {
+  Future<void> stopRendererScanning(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.stopRendererScanning',
@@ -1720,7 +1720,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<RendererDevicesMessage> getRendererDevices(PlayerMessage arg) async {
+  Future<RendererDevicesMessage> getRendererDevices(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.getRendererDevices',
@@ -1801,7 +1801,7 @@ class VlcPlayerApi {
     }
   }
 
-  Future<BooleanMessage> stopRecording(PlayerMessage arg) async {
+  Future<BooleanMessage> stopRecording(ViewMessage arg) async {
     final Object encoded = arg.encode();
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VlcPlayerApi.stopRecording',

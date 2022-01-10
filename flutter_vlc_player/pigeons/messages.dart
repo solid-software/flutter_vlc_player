@@ -1,11 +1,11 @@
 import 'package:pigeon/pigeon_lib.dart';
 
-class PlayerMessage {
-  int? playerId;
+class ViewMessage {
+  int? viewId;
 }
 
 class CreateMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   String? packageName;
@@ -15,7 +15,7 @@ class CreateMessage {
 }
 
 class SetMediaMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   String? packageName;
@@ -24,126 +24,126 @@ class SetMediaMessage {
 }
 
 class BooleanMessage {
-  int? playerId;
+  int? viewId;
   bool? result;
 }
 
 class LoopingMessage {
-  int? playerId;
+  int? viewId;
   bool? isLooping;
 }
 
 class VolumeMessage {
-  int? playerId;
+  int? viewId;
   int? volume;
 }
 
 class PlaybackSpeedMessage {
-  int? playerId;
+  int? viewId;
   double? speed;
 }
 
 class PositionMessage {
-  int? playerId;
+  int? viewId;
   int? position;
 }
 
 class DurationMessage {
-  int? playerId;
+  int? viewId;
   int? duration;
 }
 
 class DelayMessage {
-  int? playerId;
+  int? viewId;
   int? delay;
 }
 
 class TrackCountMessage {
-  int? playerId;
+  int? viewId;
   int? count;
 }
 
 class SnapshotMessage {
-  int? playerId;
+  int? viewId;
   String? snapshot;
 }
 
 class SpuTracksMessage {
-  int? playerId;
+  int? viewId;
   Map? subtitles;
 }
 
 class SpuTrackMessage {
-  int? playerId;
+  int? viewId;
   int? spuTrackNumber;
 }
 
 class AddSubtitleMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   bool? isSelected;
 }
 
 class AudioTracksMessage {
-  int? playerId;
+  int? viewId;
   Map? audios;
 }
 
 class AudioTrackMessage {
-  int? playerId;
+  int? viewId;
   int? audioTrackNumber;
 }
 
 class AddAudioMessage {
-  int? playerId;
+  int? viewId;
   String? uri;
   int? type;
   bool? isSelected;
 }
 
 class VideoTracksMessage {
-  int? playerId;
+  int? viewId;
   Map? videos;
 }
 
 class VideoTrackMessage {
-  int? playerId;
+  int? viewId;
   int? videoTrackNumber;
 }
 
 class VideoScaleMessage {
-  int? playerId;
+  int? viewId;
   double? scale;
 }
 
 class VideoAspectRatioMessage {
-  int? playerId;
+  int? viewId;
   String? aspectRatio;
 }
 
 class RendererServicesMessage {
-  int? playerId;
+  int? viewId;
   List<String>? services;
 }
 
 class RendererScanningMessage {
-  int? playerId;
+  int? viewId;
   String? rendererService;
 }
 
 class RendererDevicesMessage {
-  int? playerId;
+  int? viewId;
   Map? rendererDevices;
 }
 
 class RenderDeviceMessage {
-  int? playerId;
+  int? viewId;
   String? rendererDevice;
 }
 
 class RecordMessage {
-  int? playerId;
+  int? viewId;
   String? saveDirectory;
 }
 
@@ -151,57 +151,57 @@ class RecordMessage {
 abstract class VlcPlayerApi {
   void initialize();
   void create(CreateMessage msg);
-  void dispose(PlayerMessage msg);
+  void dispose(ViewMessage msg);
   // general methods
   void setStreamUrl(SetMediaMessage msg);
-  void play(PlayerMessage msg);
-  void pause(PlayerMessage msg);
-  void stop(PlayerMessage msg);
-  BooleanMessage isPlaying(PlayerMessage msg);
-  BooleanMessage isSeekable(PlayerMessage msg);
+  void play(ViewMessage msg);
+  void pause(ViewMessage msg);
+  void stop(ViewMessage msg);
+  BooleanMessage isPlaying(ViewMessage msg);
+  BooleanMessage isSeekable(ViewMessage msg);
   void setLooping(LoopingMessage msg);
   void seekTo(PositionMessage msg);
-  PositionMessage position(PlayerMessage msg);
-  DurationMessage duration(PlayerMessage msg);
+  PositionMessage position(ViewMessage msg);
+  DurationMessage duration(ViewMessage msg);
   void setVolume(VolumeMessage msg);
-  VolumeMessage getVolume(PlayerMessage msg);
+  VolumeMessage getVolume(ViewMessage msg);
   void setPlaybackSpeed(PlaybackSpeedMessage msg);
-  PlaybackSpeedMessage getPlaybackSpeed(PlayerMessage msg);
-  SnapshotMessage takeSnapshot(PlayerMessage msg);
+  PlaybackSpeedMessage getPlaybackSpeed(ViewMessage msg);
+  SnapshotMessage takeSnapshot(ViewMessage msg);
   // captions & subtitles methods
-  TrackCountMessage getSpuTracksCount(PlayerMessage msg);
-  SpuTracksMessage getSpuTracks(PlayerMessage msg);
+  TrackCountMessage getSpuTracksCount(ViewMessage msg);
+  SpuTracksMessage getSpuTracks(ViewMessage msg);
   void setSpuTrack(SpuTrackMessage msg);
-  SpuTrackMessage getSpuTrack(PlayerMessage msg);
+  SpuTrackMessage getSpuTrack(ViewMessage msg);
   void setSpuDelay(DelayMessage msg);
-  DelayMessage getSpuDelay(PlayerMessage msg);
+  DelayMessage getSpuDelay(ViewMessage msg);
   void addSubtitleTrack(AddSubtitleMessage msg);
   // audios methods
-  TrackCountMessage getAudioTracksCount(PlayerMessage msg);
-  AudioTracksMessage getAudioTracks(PlayerMessage msg);
+  TrackCountMessage getAudioTracksCount(ViewMessage msg);
+  AudioTracksMessage getAudioTracks(ViewMessage msg);
   void setAudioTrack(AudioTrackMessage msg);
-  AudioTrackMessage getAudioTrack(PlayerMessage msg);
+  AudioTrackMessage getAudioTrack(ViewMessage msg);
   void setAudioDelay(DelayMessage msg);
-  DelayMessage getAudioDelay(PlayerMessage msg);
+  DelayMessage getAudioDelay(ViewMessage msg);
   void addAudioTrack(AddAudioMessage msg);
   // videos methods
-  TrackCountMessage getVideoTracksCount(PlayerMessage msg);
-  VideoTracksMessage getVideoTracks(PlayerMessage msg);
+  TrackCountMessage getVideoTracksCount(ViewMessage msg);
+  VideoTracksMessage getVideoTracks(ViewMessage msg);
   void setVideoTrack(VideoTrackMessage msg);
-  VideoTrackMessage getVideoTrack(PlayerMessage msg);
+  VideoTrackMessage getVideoTrack(ViewMessage msg);
   void setVideoScale(VideoScaleMessage msg);
-  VideoScaleMessage getVideoScale(PlayerMessage msg);
+  VideoScaleMessage getVideoScale(ViewMessage msg);
   void setVideoAspectRatio(VideoAspectRatioMessage msg);
-  VideoAspectRatioMessage getVideoAspectRatio(PlayerMessage msg);
+  VideoAspectRatioMessage getVideoAspectRatio(ViewMessage msg);
   // casts & renderers methods
-  RendererServicesMessage getAvailableRendererServices(PlayerMessage msg);
+  RendererServicesMessage getAvailableRendererServices(ViewMessage msg);
   void startRendererScanning(RendererScanningMessage msg);
-  void stopRendererScanning(PlayerMessage msg);
-  RendererDevicesMessage getRendererDevices(PlayerMessage msg);
+  void stopRendererScanning(ViewMessage msg);
+  RendererDevicesMessage getRendererDevices(ViewMessage msg);
   void castToRenderer(RenderDeviceMessage msg);
   // recording methods
   BooleanMessage startRecording(RecordMessage msg);
-  BooleanMessage stopRecording(PlayerMessage msg);
+  BooleanMessage stopRecording(ViewMessage msg);
 }
 
 // to make changes effect, must run "flutter pub run pigeon \--input pigeons/messages.dart --dart_null_safety"
