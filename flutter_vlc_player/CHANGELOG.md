@@ -3,7 +3,7 @@
 * Fixed control overlay issue after upgrading to Flutter 2.8
 * Fixed Dart analysis warnings
 * Removed unnecessary initialization delay
-Credits to Alireza Setayesh (https://github.com/alr2413), Illia Romanenko (https://github.com/illia-romanenko) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
+Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross), Illia Romanenko (https://github.com/illia-romanenko) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
 ## 6.0.5
 * Fix issue with options applying (Android)
