@@ -1,4 +1,4 @@
-## 1.1.0
+## 2.0.0
 
 - Fix Dart analysis warnings
 - Refactored enum parameters to follow dart naming convention 
