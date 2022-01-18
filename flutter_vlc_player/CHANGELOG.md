@@ -2,6 +2,7 @@
 * **Breaking Change**: Refactored enum parameters to follow dart naming convention 
 * Fixed control overlay issue after upgrading to Flutter 2.8
 * Fixed Dart analysis warnings
+* Removed unnecessary initialization delay
 Credits to Alireza Setayesh (https://github.com/alr2413).
 
 ## 6.0.5
