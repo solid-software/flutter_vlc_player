@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
@@ -81,7 +80,7 @@ class _SingleTabState extends State<SingleTab> {
       case VideoType.network:
         _controller = VlcPlayerController.network(
           initVideo.path,
-          hwAcc: HwAcc.FULL,
+          hwAcc: HwAcc.full,
           options: VlcPlayerOptions(
             advanced: VlcAdvancedOptions([
               VlcAdvancedOptions.networkCaching(2000),
@@ -204,7 +203,7 @@ class _SingleTabState extends State<SingleTab> {
                   case VideoType.network:
                     await _controller.setMediaFromNetwork(
                       video.path,
-                      hwAcc: HwAcc.FULL,
+                      hwAcc: HwAcc.full,
                     );
                     break;
                   case VideoType.file:

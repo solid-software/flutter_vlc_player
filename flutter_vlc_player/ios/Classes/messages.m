@@ -26,8 +26,8 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
 +(CreateMessage*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
 @end
-@interface TextureMessage ()
-+(TextureMessage*)fromMap:(NSDictionary*)dict;
+@interface ViewMessage ()
++(ViewMessage*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
 @end
 @interface SetMediaMessage ()
@@ -134,9 +134,9 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
 @implementation CreateMessage
 +(CreateMessage*)fromMap:(NSDictionary*)dict {
   CreateMessage* result = [[CreateMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.uri = dict[@"uri"];
   if ((NSNull *)result.uri == [NSNull null]) {
@@ -165,30 +165,30 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.packageName ? self.packageName : [NSNull null]), @"packageName", (self.autoPlay ? self.autoPlay : [NSNull null]), @"autoPlay", (self.hwAcc ? self.hwAcc : [NSNull null]), @"hwAcc", (self.options ? self.options : [NSNull null]), @"options", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.packageName ? self.packageName : [NSNull null]), @"packageName", (self.autoPlay ? self.autoPlay : [NSNull null]), @"autoPlay", (self.hwAcc ? self.hwAcc : [NSNull null]), @"hwAcc", (self.options ? self.options : [NSNull null]), @"options", nil];
 }
 @end
 
-@implementation TextureMessage
-+(TextureMessage*)fromMap:(NSDictionary*)dict {
-  TextureMessage* result = [[TextureMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+@implementation ViewMessage
++(ViewMessage*)fromMap:(NSDictionary*)dict {
+  ViewMessage* result = [[ViewMessage alloc] init];
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", nil];
 }
 @end
 
 @implementation SetMediaMessage
 +(SetMediaMessage*)fromMap:(NSDictionary*)dict {
   SetMediaMessage* result = [[SetMediaMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.uri = dict[@"uri"];
   if ((NSNull *)result.uri == [NSNull null]) {
@@ -213,16 +213,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.packageName ? self.packageName : [NSNull null]), @"packageName", (self.autoPlay ? self.autoPlay : [NSNull null]), @"autoPlay", (self.hwAcc ? self.hwAcc : [NSNull null]), @"hwAcc", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.packageName ? self.packageName : [NSNull null]), @"packageName", (self.autoPlay ? self.autoPlay : [NSNull null]), @"autoPlay", (self.hwAcc ? self.hwAcc : [NSNull null]), @"hwAcc", nil];
 }
 @end
 
 @implementation BooleanMessage
 +(BooleanMessage*)fromMap:(NSDictionary*)dict {
   BooleanMessage* result = [[BooleanMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.result = dict[@"result"];
   if ((NSNull *)result.result == [NSNull null]) {
@@ -231,16 +231,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.result ? self.result : [NSNull null]), @"result", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.result ? self.result : [NSNull null]), @"result", nil];
 }
 @end
 
 @implementation LoopingMessage
 +(LoopingMessage*)fromMap:(NSDictionary*)dict {
   LoopingMessage* result = [[LoopingMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.isLooping = dict[@"isLooping"];
   if ((NSNull *)result.isLooping == [NSNull null]) {
@@ -249,16 +249,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.isLooping ? self.isLooping : [NSNull null]), @"isLooping", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.isLooping ? self.isLooping : [NSNull null]), @"isLooping", nil];
 }
 @end
 
 @implementation PositionMessage
 +(PositionMessage*)fromMap:(NSDictionary*)dict {
   PositionMessage* result = [[PositionMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.position = dict[@"position"];
   if ((NSNull *)result.position == [NSNull null]) {
@@ -267,16 +267,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.position ? self.position : [NSNull null]), @"position", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.position ? self.position : [NSNull null]), @"position", nil];
 }
 @end
 
 @implementation DurationMessage
 +(DurationMessage*)fromMap:(NSDictionary*)dict {
   DurationMessage* result = [[DurationMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.duration = dict[@"duration"];
   if ((NSNull *)result.duration == [NSNull null]) {
@@ -285,16 +285,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.duration ? self.duration : [NSNull null]), @"duration", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.duration ? self.duration : [NSNull null]), @"duration", nil];
 }
 @end
 
 @implementation VolumeMessage
 +(VolumeMessage*)fromMap:(NSDictionary*)dict {
   VolumeMessage* result = [[VolumeMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.volume = dict[@"volume"];
   if ((NSNull *)result.volume == [NSNull null]) {
@@ -303,16 +303,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.volume ? self.volume : [NSNull null]), @"volume", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.volume ? self.volume : [NSNull null]), @"volume", nil];
 }
 @end
 
 @implementation PlaybackSpeedMessage
 +(PlaybackSpeedMessage*)fromMap:(NSDictionary*)dict {
   PlaybackSpeedMessage* result = [[PlaybackSpeedMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.speed = dict[@"speed"];
   if ((NSNull *)result.speed == [NSNull null]) {
@@ -321,16 +321,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.speed ? self.speed : [NSNull null]), @"speed", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.speed ? self.speed : [NSNull null]), @"speed", nil];
 }
 @end
 
 @implementation SnapshotMessage
 +(SnapshotMessage*)fromMap:(NSDictionary*)dict {
   SnapshotMessage* result = [[SnapshotMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.snapshot = dict[@"snapshot"];
   if ((NSNull *)result.snapshot == [NSNull null]) {
@@ -339,16 +339,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.snapshot ? self.snapshot : [NSNull null]), @"snapshot", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.snapshot ? self.snapshot : [NSNull null]), @"snapshot", nil];
 }
 @end
 
 @implementation TrackCountMessage
 +(TrackCountMessage*)fromMap:(NSDictionary*)dict {
   TrackCountMessage* result = [[TrackCountMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.count = dict[@"count"];
   if ((NSNull *)result.count == [NSNull null]) {
@@ -357,16 +357,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.count ? self.count : [NSNull null]), @"count", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.count ? self.count : [NSNull null]), @"count", nil];
 }
 @end
 
 @implementation SpuTracksMessage
 +(SpuTracksMessage*)fromMap:(NSDictionary*)dict {
   SpuTracksMessage* result = [[SpuTracksMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.subtitles = dict[@"subtitles"];
   if ((NSNull *)result.subtitles == [NSNull null]) {
@@ -375,16 +375,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.subtitles ? self.subtitles : [NSNull null]), @"subtitles", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.subtitles ? self.subtitles : [NSNull null]), @"subtitles", nil];
 }
 @end
 
 @implementation SpuTrackMessage
 +(SpuTrackMessage*)fromMap:(NSDictionary*)dict {
   SpuTrackMessage* result = [[SpuTrackMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.spuTrackNumber = dict[@"spuTrackNumber"];
   if ((NSNull *)result.spuTrackNumber == [NSNull null]) {
@@ -393,16 +393,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.spuTrackNumber ? self.spuTrackNumber : [NSNull null]), @"spuTrackNumber", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.spuTrackNumber ? self.spuTrackNumber : [NSNull null]), @"spuTrackNumber", nil];
 }
 @end
 
 @implementation DelayMessage
 +(DelayMessage*)fromMap:(NSDictionary*)dict {
   DelayMessage* result = [[DelayMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.delay = dict[@"delay"];
   if ((NSNull *)result.delay == [NSNull null]) {
@@ -411,16 +411,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.delay ? self.delay : [NSNull null]), @"delay", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.delay ? self.delay : [NSNull null]), @"delay", nil];
 }
 @end
 
 @implementation AddSubtitleMessage
 +(AddSubtitleMessage*)fromMap:(NSDictionary*)dict {
   AddSubtitleMessage* result = [[AddSubtitleMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.uri = dict[@"uri"];
   if ((NSNull *)result.uri == [NSNull null]) {
@@ -437,16 +437,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.isSelected ? self.isSelected : [NSNull null]), @"isSelected", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.isSelected ? self.isSelected : [NSNull null]), @"isSelected", nil];
 }
 @end
 
 @implementation AudioTracksMessage
 +(AudioTracksMessage*)fromMap:(NSDictionary*)dict {
   AudioTracksMessage* result = [[AudioTracksMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.audios = dict[@"audios"];
   if ((NSNull *)result.audios == [NSNull null]) {
@@ -455,16 +455,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.audios ? self.audios : [NSNull null]), @"audios", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.audios ? self.audios : [NSNull null]), @"audios", nil];
 }
 @end
 
 @implementation AudioTrackMessage
 +(AudioTrackMessage*)fromMap:(NSDictionary*)dict {
   AudioTrackMessage* result = [[AudioTrackMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.audioTrackNumber = dict[@"audioTrackNumber"];
   if ((NSNull *)result.audioTrackNumber == [NSNull null]) {
@@ -473,16 +473,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.audioTrackNumber ? self.audioTrackNumber : [NSNull null]), @"audioTrackNumber", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.audioTrackNumber ? self.audioTrackNumber : [NSNull null]), @"audioTrackNumber", nil];
 }
 @end
 
 @implementation AddAudioMessage
 +(AddAudioMessage*)fromMap:(NSDictionary*)dict {
   AddAudioMessage* result = [[AddAudioMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.uri = dict[@"uri"];
   if ((NSNull *)result.uri == [NSNull null]) {
@@ -499,16 +499,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.isSelected ? self.isSelected : [NSNull null]), @"isSelected", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.uri ? self.uri : [NSNull null]), @"uri", (self.type ? self.type : [NSNull null]), @"type", (self.isSelected ? self.isSelected : [NSNull null]), @"isSelected", nil];
 }
 @end
 
 @implementation VideoTracksMessage
 +(VideoTracksMessage*)fromMap:(NSDictionary*)dict {
   VideoTracksMessage* result = [[VideoTracksMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.videos = dict[@"videos"];
   if ((NSNull *)result.videos == [NSNull null]) {
@@ -517,16 +517,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.videos ? self.videos : [NSNull null]), @"videos", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.videos ? self.videos : [NSNull null]), @"videos", nil];
 }
 @end
 
 @implementation VideoTrackMessage
 +(VideoTrackMessage*)fromMap:(NSDictionary*)dict {
   VideoTrackMessage* result = [[VideoTrackMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.videoTrackNumber = dict[@"videoTrackNumber"];
   if ((NSNull *)result.videoTrackNumber == [NSNull null]) {
@@ -535,16 +535,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.videoTrackNumber ? self.videoTrackNumber : [NSNull null]), @"videoTrackNumber", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.videoTrackNumber ? self.videoTrackNumber : [NSNull null]), @"videoTrackNumber", nil];
 }
 @end
 
 @implementation VideoScaleMessage
 +(VideoScaleMessage*)fromMap:(NSDictionary*)dict {
   VideoScaleMessage* result = [[VideoScaleMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.scale = dict[@"scale"];
   if ((NSNull *)result.scale == [NSNull null]) {
@@ -553,16 +553,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.scale ? self.scale : [NSNull null]), @"scale", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.scale ? self.scale : [NSNull null]), @"scale", nil];
 }
 @end
 
 @implementation VideoAspectRatioMessage
 +(VideoAspectRatioMessage*)fromMap:(NSDictionary*)dict {
   VideoAspectRatioMessage* result = [[VideoAspectRatioMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.aspectRatio = dict[@"aspectRatio"];
   if ((NSNull *)result.aspectRatio == [NSNull null]) {
@@ -571,16 +571,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.aspectRatio ? self.aspectRatio : [NSNull null]), @"aspectRatio", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.aspectRatio ? self.aspectRatio : [NSNull null]), @"aspectRatio", nil];
 }
 @end
 
 @implementation RendererServicesMessage
 +(RendererServicesMessage*)fromMap:(NSDictionary*)dict {
   RendererServicesMessage* result = [[RendererServicesMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.services = dict[@"services"];
   if ((NSNull *)result.services == [NSNull null]) {
@@ -589,16 +589,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.services ? self.services : [NSNull null]), @"services", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.services ? self.services : [NSNull null]), @"services", nil];
 }
 @end
 
 @implementation RendererScanningMessage
 +(RendererScanningMessage*)fromMap:(NSDictionary*)dict {
   RendererScanningMessage* result = [[RendererScanningMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.rendererService = dict[@"rendererService"];
   if ((NSNull *)result.rendererService == [NSNull null]) {
@@ -607,16 +607,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.rendererService ? self.rendererService : [NSNull null]), @"rendererService", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.rendererService ? self.rendererService : [NSNull null]), @"rendererService", nil];
 }
 @end
 
 @implementation RendererDevicesMessage
 +(RendererDevicesMessage*)fromMap:(NSDictionary*)dict {
   RendererDevicesMessage* result = [[RendererDevicesMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.rendererDevices = dict[@"rendererDevices"];
   if ((NSNull *)result.rendererDevices == [NSNull null]) {
@@ -625,16 +625,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.rendererDevices ? self.rendererDevices : [NSNull null]), @"rendererDevices", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.rendererDevices ? self.rendererDevices : [NSNull null]), @"rendererDevices", nil];
 }
 @end
 
 @implementation RenderDeviceMessage
 +(RenderDeviceMessage*)fromMap:(NSDictionary*)dict {
   RenderDeviceMessage* result = [[RenderDeviceMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.rendererDevice = dict[@"rendererDevice"];
   if ((NSNull *)result.rendererDevice == [NSNull null]) {
@@ -643,16 +643,16 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.rendererDevice ? self.rendererDevice : [NSNull null]), @"rendererDevice", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.rendererDevice ? self.rendererDevice : [NSNull null]), @"rendererDevice", nil];
 }
 @end
 
 @implementation RecordMessage
 +(RecordMessage*)fromMap:(NSDictionary*)dict {
   RecordMessage* result = [[RecordMessage alloc] init];
-  result.textureId = dict[@"textureId"];
-  if ((NSNull *)result.textureId == [NSNull null]) {
-    result.textureId = nil;
+  result.viewId = dict[@"viewId"];
+  if ((NSNull *)result.viewId == [NSNull null]) {
+    result.viewId = nil;
   }
   result.saveDirectory = dict[@"saveDirectory"];
   if ((NSNull *)result.saveDirectory == [NSNull null]) {
@@ -661,7 +661,7 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.textureId ? self.textureId : [NSNull null]), @"textureId", (self.saveDirectory ? self.saveDirectory : [NSNull null]), @"saveDirectory", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.viewId ? self.viewId : [NSNull null]), @"viewId", (self.saveDirectory ? self.saveDirectory : [NSNull null]), @"saveDirectory", nil];
 }
 @end
 
@@ -706,7 +706,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         [api dispose:input error:&error];
         callback(wrapResult(nil, error));
@@ -740,7 +740,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         [api play:input error:&error];
         callback(wrapResult(nil, error));
@@ -757,7 +757,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         [api pause:input error:&error];
         callback(wrapResult(nil, error));
@@ -774,7 +774,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         [api stop:input error:&error];
         callback(wrapResult(nil, error));
@@ -791,7 +791,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         BooleanMessage *output = [api isPlaying:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -808,7 +808,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         BooleanMessage *output = [api isSeekable:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -859,7 +859,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         PositionMessage *output = [api position:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -876,7 +876,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         DurationMessage *output = [api duration:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -910,7 +910,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         VolumeMessage *output = [api getVolume:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -944,7 +944,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         PlaybackSpeedMessage *output = [api getPlaybackSpeed:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -961,7 +961,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         SnapshotMessage *output = [api takeSnapshot:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -978,7 +978,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         TrackCountMessage *output = [api getSpuTracksCount:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -995,7 +995,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         SpuTracksMessage *output = [api getSpuTracks:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1029,7 +1029,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         SpuTrackMessage *output = [api getSpuTrack:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1063,7 +1063,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         DelayMessage *output = [api getSpuDelay:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1097,7 +1097,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         TrackCountMessage *output = [api getAudioTracksCount:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1114,7 +1114,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         AudioTracksMessage *output = [api getAudioTracks:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1148,7 +1148,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         AudioTrackMessage *output = [api getAudioTrack:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1182,7 +1182,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         DelayMessage *output = [api getAudioDelay:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1216,7 +1216,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         TrackCountMessage *output = [api getVideoTracksCount:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1233,7 +1233,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         VideoTracksMessage *output = [api getVideoTracks:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1267,7 +1267,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         VideoTrackMessage *output = [api getVideoTrack:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1301,7 +1301,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         VideoScaleMessage *output = [api getVideoScale:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1335,7 +1335,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         VideoAspectRatioMessage *output = [api getVideoAspectRatio:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1352,7 +1352,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         RendererServicesMessage *output = [api getAvailableRendererServices:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1386,7 +1386,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         [api stopRendererScanning:input error:&error];
         callback(wrapResult(nil, error));
@@ -1403,7 +1403,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         RendererDevicesMessage *output = [api getRendererDevices:input error:&error];
         callback(wrapResult([output toMap], error));
@@ -1454,7 +1454,7 @@ void VlcPlayerApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<VlcPlayerA
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        TextureMessage *input = [TextureMessage fromMap:message];
+        ViewMessage *input = [ViewMessage fromMap:message];
         FlutterError *error;
         BooleanMessage *output = [api stopRecording:input error:&error];
         callback(wrapResult([output toMap], error));

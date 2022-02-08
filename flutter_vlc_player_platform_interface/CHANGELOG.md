@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Fix Dart analysis warnings
+- Refactored enum parameters to follow dart naming convention 
+
 ## 1.0.7
 
 - Add VLC http options

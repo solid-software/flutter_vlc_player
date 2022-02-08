@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _videoPlayerController = VlcPlayerController.network(
       'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      hwAcc: HwAcc.FULL,
+      hwAcc: HwAcc.full,
       autoPlay: false,
       options: VlcPlayerOptions(),
     );

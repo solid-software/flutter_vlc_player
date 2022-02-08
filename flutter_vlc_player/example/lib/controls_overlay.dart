@@ -73,7 +73,12 @@ class ControlsOverlay extends StatelessWidget {
 
             case PlayingState.buffering:
             case PlayingState.playing:
-              return GestureDetector(onTap: _pause);
+              return GestureDetector(
+                onTap: _pause,
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              );
 
             case PlayingState.ended:
             case PlayingState.error:
@@ -87,6 +92,7 @@ class ControlsOverlay extends StatelessWidget {
                   ),
                 ),
               );
+
             default:
               return SizedBox.shrink();
           }

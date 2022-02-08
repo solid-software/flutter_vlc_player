@@ -16,9 +16,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class CreateMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String uri;
     public String getUri() { return uri; }
@@ -46,7 +46,7 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("uri", uri);
       toMapResult.put("type", type);
       toMapResult.put("packageName", packageName);
@@ -57,8 +57,8 @@ public class Messages {
     }
     static CreateMessage fromMap(Map<String, Object> map) {
       CreateMessage fromMapResult = new CreateMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object uri = map.get("uri");
       fromMapResult.uri = (String)uri;
       Object type = map.get("type");
@@ -76,29 +76,29 @@ public class Messages {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class TextureMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+  public static class ViewMessage {
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       return toMapResult;
     }
-    static TextureMessage fromMap(Map<String, Object> map) {
-      TextureMessage fromMapResult = new TextureMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+    static ViewMessage fromMap(Map<String, Object> map) {
+      ViewMessage fromMapResult = new ViewMessage();
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       return fromMapResult;
     }
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class SetMediaMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String uri;
     public String getUri() { return uri; }
@@ -122,7 +122,7 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("uri", uri);
       toMapResult.put("type", type);
       toMapResult.put("packageName", packageName);
@@ -132,8 +132,8 @@ public class Messages {
     }
     static SetMediaMessage fromMap(Map<String, Object> map) {
       SetMediaMessage fromMapResult = new SetMediaMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object uri = map.get("uri");
       fromMapResult.uri = (String)uri;
       Object type = map.get("type");
@@ -150,9 +150,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class BooleanMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Boolean result;
     public Boolean getResult() { return result; }
@@ -160,14 +160,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("result", result);
       return toMapResult;
     }
     static BooleanMessage fromMap(Map<String, Object> map) {
       BooleanMessage fromMapResult = new BooleanMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object result = map.get("result");
       fromMapResult.result = (Boolean)result;
       return fromMapResult;
@@ -176,9 +176,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class LoopingMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Boolean isLooping;
     public Boolean getIsLooping() { return isLooping; }
@@ -186,14 +186,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("isLooping", isLooping);
       return toMapResult;
     }
     static LoopingMessage fromMap(Map<String, Object> map) {
       LoopingMessage fromMapResult = new LoopingMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object isLooping = map.get("isLooping");
       fromMapResult.isLooping = (Boolean)isLooping;
       return fromMapResult;
@@ -202,9 +202,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class PositionMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long position;
     public Long getPosition() { return position; }
@@ -212,14 +212,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("position", position);
       return toMapResult;
     }
     static PositionMessage fromMap(Map<String, Object> map) {
       PositionMessage fromMapResult = new PositionMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object position = map.get("position");
       fromMapResult.position = (position == null) ? null : ((position instanceof Integer) ? (Integer)position : (Long)position);
       return fromMapResult;
@@ -228,9 +228,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class DurationMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long duration;
     public Long getDuration() { return duration; }
@@ -238,14 +238,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("duration", duration);
       return toMapResult;
     }
     static DurationMessage fromMap(Map<String, Object> map) {
       DurationMessage fromMapResult = new DurationMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object duration = map.get("duration");
       fromMapResult.duration = (duration == null) ? null : ((duration instanceof Integer) ? (Integer)duration : (Long)duration);
       return fromMapResult;
@@ -254,9 +254,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class VolumeMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long volume;
     public Long getVolume() { return volume; }
@@ -264,14 +264,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("volume", volume);
       return toMapResult;
     }
     static VolumeMessage fromMap(Map<String, Object> map) {
       VolumeMessage fromMapResult = new VolumeMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object volume = map.get("volume");
       fromMapResult.volume = (volume == null) ? null : ((volume instanceof Integer) ? (Integer)volume : (Long)volume);
       return fromMapResult;
@@ -280,9 +280,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class PlaybackSpeedMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Double speed;
     public Double getSpeed() { return speed; }
@@ -290,14 +290,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("speed", speed);
       return toMapResult;
     }
     static PlaybackSpeedMessage fromMap(Map<String, Object> map) {
       PlaybackSpeedMessage fromMapResult = new PlaybackSpeedMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object speed = map.get("speed");
       fromMapResult.speed = (Double)speed;
       return fromMapResult;
@@ -306,9 +306,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class SnapshotMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String snapshot;
     public String getSnapshot() { return snapshot; }
@@ -316,14 +316,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("snapshot", snapshot);
       return toMapResult;
     }
     static SnapshotMessage fromMap(Map<String, Object> map) {
       SnapshotMessage fromMapResult = new SnapshotMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object snapshot = map.get("snapshot");
       fromMapResult.snapshot = (String)snapshot;
       return fromMapResult;
@@ -332,9 +332,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class TrackCountMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long count;
     public Long getCount() { return count; }
@@ -342,14 +342,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("count", count);
       return toMapResult;
     }
     static TrackCountMessage fromMap(Map<String, Object> map) {
       TrackCountMessage fromMapResult = new TrackCountMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object count = map.get("count");
       fromMapResult.count = (count == null) ? null : ((count instanceof Integer) ? (Integer)count : (Long)count);
       return fromMapResult;
@@ -358,9 +358,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class SpuTracksMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Map<Integer, String> subtitles;
     public Map<Integer, String> getSubtitles() { return subtitles; }
@@ -368,14 +368,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("subtitles", subtitles);
       return toMapResult;
     }
     static SpuTracksMessage fromMap(Map<String, Object> map) {
       SpuTracksMessage fromMapResult = new SpuTracksMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object subtitles = map.get("subtitles");
       fromMapResult.subtitles = (Map<Integer, String>)subtitles;
       return fromMapResult;
@@ -384,9 +384,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class SpuTrackMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long spuTrackNumber;
     public Long getSpuTrackNumber() { return spuTrackNumber; }
@@ -394,14 +394,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("spuTrackNumber", spuTrackNumber);
       return toMapResult;
     }
     static SpuTrackMessage fromMap(Map<String, Object> map) {
       SpuTrackMessage fromMapResult = new SpuTrackMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object spuTrackNumber = map.get("spuTrackNumber");
       fromMapResult.spuTrackNumber = (spuTrackNumber == null) ? null : ((spuTrackNumber instanceof Integer) ? (Integer)spuTrackNumber : (Long)spuTrackNumber);
       return fromMapResult;
@@ -410,9 +410,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class DelayMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long delay;
     public Long getDelay() { return delay; }
@@ -420,14 +420,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("delay", delay);
       return toMapResult;
     }
     static DelayMessage fromMap(Map<String, Object> map) {
       DelayMessage fromMapResult = new DelayMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object delay = map.get("delay");
       fromMapResult.delay = (delay == null) ? null : ((delay instanceof Integer) ? (Integer)delay : (Long)delay);
       return fromMapResult;
@@ -436,9 +436,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class AddSubtitleMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String uri;
     public String getUri() { return uri; }
@@ -454,7 +454,7 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("uri", uri);
       toMapResult.put("type", type);
       toMapResult.put("isSelected", isSelected);
@@ -462,8 +462,8 @@ public class Messages {
     }
     static AddSubtitleMessage fromMap(Map<String, Object> map) {
       AddSubtitleMessage fromMapResult = new AddSubtitleMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object uri = map.get("uri");
       fromMapResult.uri = (String)uri;
       Object type = map.get("type");
@@ -476,9 +476,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class AudioTracksMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Map<Integer, String> audios;
     public Map<Integer, String> getAudios() { return audios; }
@@ -486,14 +486,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("audios", audios);
       return toMapResult;
     }
     static AudioTracksMessage fromMap(Map<String, Object> map) {
       AudioTracksMessage fromMapResult = new AudioTracksMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object audios = map.get("audios");
       fromMapResult.audios = (Map<Integer, String>)audios;
       return fromMapResult;
@@ -502,9 +502,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class AudioTrackMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long audioTrackNumber;
     public Long getAudioTrackNumber() { return audioTrackNumber; }
@@ -512,14 +512,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("audioTrackNumber", audioTrackNumber);
       return toMapResult;
     }
     static AudioTrackMessage fromMap(Map<String, Object> map) {
       AudioTrackMessage fromMapResult = new AudioTrackMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object audioTrackNumber = map.get("audioTrackNumber");
       fromMapResult.audioTrackNumber = (audioTrackNumber == null) ? null : ((audioTrackNumber instanceof Integer) ? (Integer)audioTrackNumber : (Long)audioTrackNumber);
       return fromMapResult;
@@ -528,9 +528,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class AddAudioMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String uri;
     public String getUri() { return uri; }
@@ -546,7 +546,7 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("uri", uri);
       toMapResult.put("type", type);
       toMapResult.put("isSelected", isSelected);
@@ -554,8 +554,8 @@ public class Messages {
     }
     static AddAudioMessage fromMap(Map<String, Object> map) {
       AddAudioMessage fromMapResult = new AddAudioMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object uri = map.get("uri");
       fromMapResult.uri = (String)uri;
       Object type = map.get("type");
@@ -568,9 +568,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class VideoTracksMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Map<Integer, String> videos;
     public Map<Integer, String> getVideos() { return videos; }
@@ -578,14 +578,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("videos", videos);
       return toMapResult;
     }
     static VideoTracksMessage fromMap(Map<String, Object> map) {
       VideoTracksMessage fromMapResult = new VideoTracksMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object videos = map.get("videos");
       fromMapResult.videos = (Map<Integer, String>)videos;
       return fromMapResult;
@@ -594,9 +594,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class VideoTrackMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Long videoTrackNumber;
     public Long getVideoTrackNumber() { return videoTrackNumber; }
@@ -604,14 +604,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("videoTrackNumber", videoTrackNumber);
       return toMapResult;
     }
     static VideoTrackMessage fromMap(Map<String, Object> map) {
       VideoTrackMessage fromMapResult = new VideoTrackMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object videoTrackNumber = map.get("videoTrackNumber");
       fromMapResult.videoTrackNumber = (videoTrackNumber == null) ? null : ((videoTrackNumber instanceof Integer) ? (Integer)videoTrackNumber : (Long)videoTrackNumber);
       return fromMapResult;
@@ -620,9 +620,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class VideoScaleMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Double scale;
     public Double getScale() { return scale; }
@@ -630,14 +630,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("scale", scale);
       return toMapResult;
     }
     static VideoScaleMessage fromMap(Map<String, Object> map) {
       VideoScaleMessage fromMapResult = new VideoScaleMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object scale = map.get("scale");
       fromMapResult.scale = (Double)scale;
       return fromMapResult;
@@ -646,9 +646,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class VideoAspectRatioMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String aspectRatio;
     public String getAspectRatio() { return aspectRatio; }
@@ -656,14 +656,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("aspectRatio", aspectRatio);
       return toMapResult;
     }
     static VideoAspectRatioMessage fromMap(Map<String, Object> map) {
       VideoAspectRatioMessage fromMapResult = new VideoAspectRatioMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object aspectRatio = map.get("aspectRatio");
       fromMapResult.aspectRatio = (String)aspectRatio;
       return fromMapResult;
@@ -672,9 +672,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class RendererServicesMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private List<String> services;
     public List<String> getServices() { return services; }
@@ -682,14 +682,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("services", services);
       return toMapResult;
     }
     static RendererServicesMessage fromMap(Map<String, Object> map) {
       RendererServicesMessage fromMapResult = new RendererServicesMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object services = map.get("services");
       fromMapResult.services = (List<String>)services;
       return fromMapResult;
@@ -698,9 +698,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class RendererScanningMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String rendererService;
     public String getRendererService() { return rendererService; }
@@ -708,14 +708,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("rendererService", rendererService);
       return toMapResult;
     }
     static RendererScanningMessage fromMap(Map<String, Object> map) {
       RendererScanningMessage fromMapResult = new RendererScanningMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object rendererService = map.get("rendererService");
       fromMapResult.rendererService = (String)rendererService;
       return fromMapResult;
@@ -724,9 +724,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class RendererDevicesMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private Map<String, String> rendererDevices;
     public Map<String, String> getRendererDevices() { return rendererDevices; }
@@ -734,14 +734,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("rendererDevices", rendererDevices);
       return toMapResult;
     }
     static RendererDevicesMessage fromMap(Map<String, Object> map) {
       RendererDevicesMessage fromMapResult = new RendererDevicesMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object rendererDevices = map.get("rendererDevices");
       fromMapResult.rendererDevices = (Map<String, String>)rendererDevices;
       return fromMapResult;
@@ -750,9 +750,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class RenderDeviceMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String rendererDevice;
     public String getRendererDevice() { return rendererDevice; }
@@ -760,14 +760,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("rendererDevice", rendererDevice);
       return toMapResult;
     }
     static RenderDeviceMessage fromMap(Map<String, Object> map) {
       RenderDeviceMessage fromMapResult = new RenderDeviceMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object rendererDevice = map.get("rendererDevice");
       fromMapResult.rendererDevice = (String)rendererDevice;
       return fromMapResult;
@@ -776,9 +776,9 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class RecordMessage {
-    private Long textureId;
-    public Long getTextureId() { return textureId; }
-    public void setTextureId(Long setterArg) { this.textureId = setterArg; }
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
 
     private String saveDirectory;
     public String getSaveDirectory() { return saveDirectory; }
@@ -786,14 +786,14 @@ public class Messages {
 
     Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("textureId", textureId);
+      toMapResult.put("viewId", viewId);
       toMapResult.put("saveDirectory", saveDirectory);
       return toMapResult;
     }
     static RecordMessage fromMap(Map<String, Object> map) {
       RecordMessage fromMapResult = new RecordMessage();
-      Object textureId = map.get("textureId");
-      fromMapResult.textureId = (textureId == null) ? null : ((textureId instanceof Integer) ? (Integer)textureId : (Long)textureId);
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
       Object saveDirectory = map.get("saveDirectory");
       fromMapResult.saveDirectory = (String)saveDirectory;
       return fromMapResult;
@@ -804,51 +804,51 @@ public class Messages {
   public interface VlcPlayerApi {
     void initialize();
     void create(CreateMessage arg);
-    void dispose(TextureMessage arg);
+    void dispose(ViewMessage arg);
     void setStreamUrl(SetMediaMessage arg);
-    void play(TextureMessage arg);
-    void pause(TextureMessage arg);
-    void stop(TextureMessage arg);
-    BooleanMessage isPlaying(TextureMessage arg);
-    BooleanMessage isSeekable(TextureMessage arg);
+    void play(ViewMessage arg);
+    void pause(ViewMessage arg);
+    void stop(ViewMessage arg);
+    BooleanMessage isPlaying(ViewMessage arg);
+    BooleanMessage isSeekable(ViewMessage arg);
     void setLooping(LoopingMessage arg);
     void seekTo(PositionMessage arg);
-    PositionMessage position(TextureMessage arg);
-    DurationMessage duration(TextureMessage arg);
+    PositionMessage position(ViewMessage arg);
+    DurationMessage duration(ViewMessage arg);
     void setVolume(VolumeMessage arg);
-    VolumeMessage getVolume(TextureMessage arg);
+    VolumeMessage getVolume(ViewMessage arg);
     void setPlaybackSpeed(PlaybackSpeedMessage arg);
-    PlaybackSpeedMessage getPlaybackSpeed(TextureMessage arg);
-    SnapshotMessage takeSnapshot(TextureMessage arg);
-    TrackCountMessage getSpuTracksCount(TextureMessage arg);
-    SpuTracksMessage getSpuTracks(TextureMessage arg);
+    PlaybackSpeedMessage getPlaybackSpeed(ViewMessage arg);
+    SnapshotMessage takeSnapshot(ViewMessage arg);
+    TrackCountMessage getSpuTracksCount(ViewMessage arg);
+    SpuTracksMessage getSpuTracks(ViewMessage arg);
     void setSpuTrack(SpuTrackMessage arg);
-    SpuTrackMessage getSpuTrack(TextureMessage arg);
+    SpuTrackMessage getSpuTrack(ViewMessage arg);
     void setSpuDelay(DelayMessage arg);
-    DelayMessage getSpuDelay(TextureMessage arg);
+    DelayMessage getSpuDelay(ViewMessage arg);
     void addSubtitleTrack(AddSubtitleMessage arg);
-    TrackCountMessage getAudioTracksCount(TextureMessage arg);
-    AudioTracksMessage getAudioTracks(TextureMessage arg);
+    TrackCountMessage getAudioTracksCount(ViewMessage arg);
+    AudioTracksMessage getAudioTracks(ViewMessage arg);
     void setAudioTrack(AudioTrackMessage arg);
-    AudioTrackMessage getAudioTrack(TextureMessage arg);
+    AudioTrackMessage getAudioTrack(ViewMessage arg);
     void setAudioDelay(DelayMessage arg);
-    DelayMessage getAudioDelay(TextureMessage arg);
+    DelayMessage getAudioDelay(ViewMessage arg);
     void addAudioTrack(AddAudioMessage arg);
-    TrackCountMessage getVideoTracksCount(TextureMessage arg);
-    VideoTracksMessage getVideoTracks(TextureMessage arg);
+    TrackCountMessage getVideoTracksCount(ViewMessage arg);
+    VideoTracksMessage getVideoTracks(ViewMessage arg);
     void setVideoTrack(VideoTrackMessage arg);
-    VideoTrackMessage getVideoTrack(TextureMessage arg);
+    VideoTrackMessage getVideoTrack(ViewMessage arg);
     void setVideoScale(VideoScaleMessage arg);
-    VideoScaleMessage getVideoScale(TextureMessage arg);
+    VideoScaleMessage getVideoScale(ViewMessage arg);
     void setVideoAspectRatio(VideoAspectRatioMessage arg);
-    VideoAspectRatioMessage getVideoAspectRatio(TextureMessage arg);
-    RendererServicesMessage getAvailableRendererServices(TextureMessage arg);
+    VideoAspectRatioMessage getVideoAspectRatio(ViewMessage arg);
+    RendererServicesMessage getAvailableRendererServices(ViewMessage arg);
     void startRendererScanning(RendererScanningMessage arg);
-    void stopRendererScanning(TextureMessage arg);
-    RendererDevicesMessage getRendererDevices(TextureMessage arg);
+    void stopRendererScanning(ViewMessage arg);
+    RendererDevicesMessage getRendererDevices(ViewMessage arg);
     void castToRenderer(RenderDeviceMessage arg);
     BooleanMessage startRecording(RecordMessage arg);
-    BooleanMessage stopRecording(TextureMessage arg);
+    BooleanMessage stopRecording(ViewMessage arg);
 
     /** Sets up an instance of `VlcPlayerApi` to handle messages through the `binaryMessenger`. */
     static void setup(BinaryMessenger binaryMessenger, VlcPlayerApi api) {
@@ -900,7 +900,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               api.dispose(input);
               wrapped.put("result", null);
             }
@@ -942,7 +942,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               api.play(input);
               wrapped.put("result", null);
             }
@@ -963,7 +963,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               api.pause(input);
               wrapped.put("result", null);
             }
@@ -984,7 +984,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               api.stop(input);
               wrapped.put("result", null);
             }
@@ -1005,7 +1005,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               BooleanMessage output = api.isPlaying(input);
               wrapped.put("result", output.toMap());
             }
@@ -1026,7 +1026,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               BooleanMessage output = api.isSeekable(input);
               wrapped.put("result", output.toMap());
             }
@@ -1089,7 +1089,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               PositionMessage output = api.position(input);
               wrapped.put("result", output.toMap());
             }
@@ -1110,7 +1110,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               DurationMessage output = api.duration(input);
               wrapped.put("result", output.toMap());
             }
@@ -1152,7 +1152,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               VolumeMessage output = api.getVolume(input);
               wrapped.put("result", output.toMap());
             }
@@ -1194,7 +1194,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               PlaybackSpeedMessage output = api.getPlaybackSpeed(input);
               wrapped.put("result", output.toMap());
             }
@@ -1215,7 +1215,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               SnapshotMessage output = api.takeSnapshot(input);
               wrapped.put("result", output.toMap());
             }
@@ -1236,7 +1236,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               TrackCountMessage output = api.getSpuTracksCount(input);
               wrapped.put("result", output.toMap());
             }
@@ -1257,7 +1257,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               SpuTracksMessage output = api.getSpuTracks(input);
               wrapped.put("result", output.toMap());
             }
@@ -1299,7 +1299,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               SpuTrackMessage output = api.getSpuTrack(input);
               wrapped.put("result", output.toMap());
             }
@@ -1341,7 +1341,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               DelayMessage output = api.getSpuDelay(input);
               wrapped.put("result", output.toMap());
             }
@@ -1383,7 +1383,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               TrackCountMessage output = api.getAudioTracksCount(input);
               wrapped.put("result", output.toMap());
             }
@@ -1404,7 +1404,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               AudioTracksMessage output = api.getAudioTracks(input);
               wrapped.put("result", output.toMap());
             }
@@ -1446,7 +1446,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               AudioTrackMessage output = api.getAudioTrack(input);
               wrapped.put("result", output.toMap());
             }
@@ -1488,7 +1488,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               DelayMessage output = api.getAudioDelay(input);
               wrapped.put("result", output.toMap());
             }
@@ -1530,7 +1530,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               TrackCountMessage output = api.getVideoTracksCount(input);
               wrapped.put("result", output.toMap());
             }
@@ -1551,7 +1551,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               VideoTracksMessage output = api.getVideoTracks(input);
               wrapped.put("result", output.toMap());
             }
@@ -1593,7 +1593,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               VideoTrackMessage output = api.getVideoTrack(input);
               wrapped.put("result", output.toMap());
             }
@@ -1635,7 +1635,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               VideoScaleMessage output = api.getVideoScale(input);
               wrapped.put("result", output.toMap());
             }
@@ -1677,7 +1677,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               VideoAspectRatioMessage output = api.getVideoAspectRatio(input);
               wrapped.put("result", output.toMap());
             }
@@ -1698,7 +1698,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               RendererServicesMessage output = api.getAvailableRendererServices(input);
               wrapped.put("result", output.toMap());
             }
@@ -1740,7 +1740,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               api.stopRendererScanning(input);
               wrapped.put("result", null);
             }
@@ -1761,7 +1761,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               RendererDevicesMessage output = api.getRendererDevices(input);
               wrapped.put("result", output.toMap());
             }
@@ -1824,7 +1824,7 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              TextureMessage input = TextureMessage.fromMap((Map<String, Object>)message);
+              ViewMessage input = ViewMessage.fromMap((Map<String, Object>)message);
               BooleanMessage output = api.stopRecording(input);
               wrapped.put("result", output.toMap());
             }

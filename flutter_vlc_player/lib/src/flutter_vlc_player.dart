@@ -8,7 +8,7 @@ class VlcPlayer extends StatefulWidget {
   final double aspectRatio;
   final Widget? placeholder;
 
-  VlcPlayer({
+  const VlcPlayer({
     Key? key,
 
     /// The [VlcPlayerController] responsible for the video being rendered in

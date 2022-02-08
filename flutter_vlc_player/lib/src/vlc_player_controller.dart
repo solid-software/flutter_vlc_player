@@ -32,7 +32,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.dataSource, {
     this.autoInitialize = true,
     this.package,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -52,7 +52,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.network(
     this.dataSource, {
     this.autoInitialize = true,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -72,7 +72,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.file(
     File file, {
     this.autoInitialize = true,
-    this.hwAcc = HwAcc.AUTO,
+    this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
@@ -333,7 +333,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       }
     }
 
-    vlcPlayerPlatform.rendererEventsFor(_viewId).listen(rendererEventListener);
+    vlcPlayerPlatform
+        .rendererEventsFor(_viewId)
+        .listen(rendererEventListener);
 
     if (!initializingCompleter.isCompleted) {
       initializingCompleter.complete(null);
@@ -369,7 +371,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_onInit != null) {
       _onInit!();
     }
-    _onInitListeners.forEach((listener) => listener());
+    for (var listener in _onInitListeners) {
+      listener();
+    }
   }
 
   /// Notify onRendererHandler callback & all registered listeners
@@ -381,7 +385,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     if (_onRendererHandler != null) {
       _onRendererHandler!(type, id!, name!);
     }
-    _onRendererEventListeners.forEach((listener) => listener(type, id!, name!));
+    for (var listener in _onRendererEventListeners) {
+      listener(type, id!, name!);
+    }
   }
 
   /// This stops playback and changes the data source. Once the new data source has been loaded, the playback state will revert to
@@ -465,7 +471,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       uri: dataSource,
       type: dataSourceType,
       package: package,
-      hwAcc: hwAcc ?? HwAcc.AUTO,
+      hwAcc: hwAcc ?? HwAcc.auto,
       autoPlay: autoPlay ?? true,
     );
     return;
@@ -563,7 +569,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns current vlc volume level.
   Future<int> getVolume() async {
     _throwIfNotInitialized('getVolume');
-    var volume = await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
+    var volume =
+        await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
     value = value.copyWith(volume: volume.clamp(0, 100));
     return volume;
   }
@@ -710,7 +717,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns the number of audio tracks
   Future<int?> getAudioTracksCount() async {
     _throwIfNotInitialized('getAudioTracksCount');
-    var audioTracksCount = await vlcPlayerPlatform.getAudioTracksCount(_viewId);
+    var audioTracksCount =
+        await vlcPlayerPlatform.getAudioTracksCount(_viewId);
     value = value.copyWith(audioTracksCount: audioTracksCount);
     return audioTracksCount;
   }
@@ -802,7 +810,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns the number of video tracks
   Future<int?> getVideoTracksCount() async {
     _throwIfNotInitialized('getVideoTracksCount');
-    var videoTracksCount = await vlcPlayerPlatform.getVideoTracksCount(_viewId);
+    var videoTracksCount =
+        await vlcPlayerPlatform.getVideoTracksCount(_viewId);
     value = value.copyWith(videoTracksCount: videoTracksCount);
     return videoTracksCount;
   }
