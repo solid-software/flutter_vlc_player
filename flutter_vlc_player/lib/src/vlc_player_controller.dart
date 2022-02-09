@@ -333,9 +333,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       }
     }
 
-    vlcPlayerPlatform
-        .rendererEventsFor(_viewId)
-        .listen(rendererEventListener);
+    vlcPlayerPlatform.rendererEventsFor(_viewId).listen(rendererEventListener);
 
     if (!initializingCompleter.isCompleted) {
       initializingCompleter.complete(null);
@@ -569,8 +567,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns current vlc volume level.
   Future<int> getVolume() async {
     _throwIfNotInitialized('getVolume');
-    var volume =
-        await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
+    var volume = await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
     value = value.copyWith(volume: volume.clamp(0, 100));
     return volume;
   }
@@ -717,8 +714,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns the number of audio tracks
   Future<int?> getAudioTracksCount() async {
     _throwIfNotInitialized('getAudioTracksCount');
-    var audioTracksCount =
-        await vlcPlayerPlatform.getAudioTracksCount(_viewId);
+    var audioTracksCount = await vlcPlayerPlatform.getAudioTracksCount(_viewId);
     value = value.copyWith(audioTracksCount: audioTracksCount);
     return audioTracksCount;
   }
@@ -810,8 +806,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Returns the number of video tracks
   Future<int?> getVideoTracksCount() async {
     _throwIfNotInitialized('getVideoTracksCount');
-    var videoTracksCount =
-        await vlcPlayerPlatform.getVideoTracksCount(_viewId);
+    var videoTracksCount = await vlcPlayerPlatform.getVideoTracksCount(_viewId);
     value = value.copyWith(videoTracksCount: videoTracksCount);
     return videoTracksCount;
   }

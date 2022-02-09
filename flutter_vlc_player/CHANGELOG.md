@@ -1,3 +1,7 @@
+## 7.0.1
+* Improve formatting
+* Modify LICENSE to use template so it parsed automatically.
+
 ## 7.0.0
 * **Breaking Change**: Refactored enum parameters to follow dart naming convention 
 * Fixed control overlay issue after upgrading to Flutter 2.8
