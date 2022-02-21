@@ -355,8 +355,9 @@ final class FlutterVlcPlayer implements PlatformView {
                 media.addOption(":no-mediacodec-dr");
                 media.addOption(":no-omxil-dr");
             }
-            if(options != null) {
-                options.forEach(option -> media.addOption(option));
+            if (options != null) {
+                for (String option: options)
+                    media.addOption(option);
             }
             mediaPlayer.setMedia(media);
             media.release();
