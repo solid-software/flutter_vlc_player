@@ -1,10 +1,23 @@
+## 2.0.0
+
+- Fix Dart analysis warnings
+- Refactored enum parameters to follow dart naming convention 
+
+## 1.0.7
+
+- Add VLC http options
+
+## 1.0.6
+
+- Added VLC recording feature
+
 ## 1.0.5
 
 - Upgrade to Null Safety
 
 ## 1.0.4
 
-- Add vlc subtitle options
+- Add VLC subtitle options
 
 ## 1.0.3
 

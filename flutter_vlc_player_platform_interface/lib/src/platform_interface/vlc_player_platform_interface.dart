@@ -6,11 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../flutter_vlc_player_platform_interface.dart';
-import '../enums/hardware_acceleration.dart';
-import '../events/media_event.dart';
-import '../events/renderer_event.dart';
 import '../method_channel/method_channel_vlc_player.dart';
-import '../utils/options/vlc_player_options.dart';
 
 /// The interface that implementations of vlc must implement.
 ///
@@ -333,6 +329,16 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   /// Returns a Stream of [VlcRendererEvent]s.
   Stream<VlcRendererEvent> rendererEventsFor(int viewId) {
     throw _unimplemented('rendererEventsFor');
+  }
+
+  /// Returns true if vlc starts recording.
+  Future<bool?> startRecording(int viewId, String saveDirectory) {
+    throw _unimplemented('startRecording');
+  }
+
+  /// Returns true if vlc stops recording.
+  Future<bool?> stopRecording(int viewId) {
+    throw _unimplemented('stopRecording');
   }
 
   Object _unimplemented(String methodName) {

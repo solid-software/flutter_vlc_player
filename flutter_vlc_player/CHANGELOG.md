@@ -1,3 +1,32 @@
+## 7.0.1
+* Improve formatting
+* Modify LICENSE to use template so it parsed automatically.
+
+## 7.0.0
+* **Breaking Change**: Refactored enum parameters to follow dart naming convention 
+* Fixed control overlay issue after upgrading to Flutter 2.8
+* Fixed Dart analysis warnings
+* Removed unnecessary initialization delay
+Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross), Illia Romanenko (https://github.com/illia-romanenko) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
+
+## 6.0.5
+* Fix issue with options applying (Android)
+* Update VLCKit for iOS and Android
+Credits to Vladislav Murashko (https://github.com/mrvancor).
+
+## 6.0.4
+* Added VLC http options
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
+## 6.0.3
+* Added VLC recording feature
+Credits to Alireza Setayesh (https://github.com/alr2413).
+
+## 6.0.2
+* Fix issue with VLC error event
+* Added onInit & onRenderer listeners
+Credits to Alireza Setayesh (https://github.com/alr2413) and solid-vovabeloded (https://github.com/solid-vovabeloded).
+
 ## 6.0.1
 * Fix issue with black screen / offstage
 Credits to Mitch Ross (https://github.com/mitchross)
@@ -7,7 +36,7 @@ Credits to Mitch Ross (https://github.com/mitchross)
 Credits to Mitch Ross (https://github.com/mitchross)
   
 ## 5.0.5
-* Added Vlc Subtitle Styling. 
+* Added VLC Subtitle Styling. 
 * Split ios swift code into multiple files for better readability.
 Credits to Alireza Setayesh (https://github.com/alr2413) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
@@ -33,7 +62,7 @@ Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://gi
 Credits to Alireza Setayesh (https://github.com/alr2413), Mitch Ross (https://github.com/mitchross) and Yurii Prykhodko (https://github.com/solid-yuriiprykhodko).
 
 ## 4.0.3
-* Update VLCKit for iOS and iOS. Cleanup example Pod file. Clean up example gradle. 
+* Update VLCKit for iOS and Android. Cleanup example Pod file. Clean up example gradle. 
 * Removed dispose calls on VlcPlayerController from VlcPlayer.
 * Fix argument-less functions throwing FlutterMethodNotImplemented.
 Credits to Mitch Ross (https://github.com/mitchross).

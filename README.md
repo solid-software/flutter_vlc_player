@@ -1,5 +1,6 @@
 #  Flutter VLC Player Plugin
 [![Join the chat at https://discord.gg/mNY4fjVk](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/mNY4fjVk)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dsolidsoftwarehq%26type%3Dpatrons&style=flat)](https://patreon.com/solidsoftwarehq)
 
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
@@ -75,6 +76,36 @@ After that you can access the media/subtitle file by
 
 <hr>
 
+#### Android build configuration
+
+1. In `android/app/build.gradle`:
+```groovy
+android {
+    packagingOptions {
+       // Fixes duplicate libraries build issue, 
+       // when your project uses more than one plugin that depend on C++ libs.
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+   
+   buildTypes {
+      release {
+         minifyEnabled true
+         useProguard true
+         proguardFiles getDefaultProguardFile(
+                 'proguard-android-optimize.txt'),
+                 'proguard-rules.pro'
+      }
+   }
+}
+```
+
+2. Create `android/app/proguard-rules.pro`, add the following lines:
+```proguard
+-keep class org.videolan.libvlc.** { *; }
+```
+
+<br>
+
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 
@@ -116,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _videoPlayerController = VlcPlayerController.network(
       'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      hwAcc: HwAcc.FULL,
+      hwAcc: HwAcc.full,
       autoPlay: false,
       options: VlcPlayerOptions(),
     );
@@ -144,12 +175,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
+<br>
 
+### Recording feature
+To start/stop video recording, you have to call the `startRecording(String saveDirectory)` and `stopRecording()` methods, respectively. By calling the stop method you can get the path of recorded file from `vlcPlayerController.value.recordPath`.
 
-
-
-
-
+<hr>
 
 ## Upgrade instructions
 
@@ -175,10 +206,18 @@ If you have some changes made to the iOS app, recreate the app using above metho
 
 Be sure to follow instructions above after 
 
-<hr>
+<br>
 
 ### Breaking Changes (from V4 to V5)
 Entire platform has been refactored in v5. It will require a refactor of your app to follow v5. 
+
+<hr>
+
+## Known Issues
+<b>1)</b> The video recording feature is problematic in iOS/Android: if the video reaches its end while you're recording it, the underlying `vlckit`/`libvlc` library fails to finalize the recording process, and we cannot retrieve the recorded file. 
+The issue is reported and tracked here: 
+<br>
+[https://code.videolan.org/videolan/VLCKit/-/issues/394](https://code.videolan.org/videolan/VLCKit/-/issues/394) (see last comment from September 22, 2020)
 
 <hr>
 

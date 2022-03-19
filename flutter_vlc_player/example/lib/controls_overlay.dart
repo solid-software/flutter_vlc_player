@@ -22,7 +22,7 @@ class ControlsOverlay extends StatelessWidget {
       reverseDuration: Duration(milliseconds: 200),
       child: Builder(
         builder: (ctx) {
-          if (controller.value.isEnded) {
+          if (controller.value.isEnded || controller.value.hasError) {
             return Center(
               child: FittedBox(
                 child: IconButton(
@@ -73,7 +73,12 @@ class ControlsOverlay extends StatelessWidget {
 
             case PlayingState.buffering:
             case PlayingState.playing:
-              return GestureDetector(onTap: _pause);
+              return GestureDetector(
+                onTap: _pause,
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              );
 
             case PlayingState.ended:
             case PlayingState.error:
@@ -87,6 +92,7 @@ class ControlsOverlay extends StatelessWidget {
                   ),
                 ),
               );
+
             default:
               return SizedBox.shrink();
           }

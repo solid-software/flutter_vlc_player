@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
@@ -81,13 +80,7 @@ class _SingleTabState extends State<SingleTab> {
       case VideoType.network:
         _controller = VlcPlayerController.network(
           initVideo.path,
-          hwAcc: HwAcc.FULL,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
+          hwAcc: HwAcc.full,
           options: VlcPlayerOptions(
             advanced: VlcAdvancedOptions([
               VlcAdvancedOptions.networkCaching(2000),
@@ -100,6 +93,9 @@ class _SingleTabState extends State<SingleTab> {
               // works only on externally added subtitles
               VlcSubtitleOptions.color(VlcSubtitleColor.navy),
             ]),
+            http: VlcHttpOptions([
+              VlcHttpOptions.httpReconnect(true),
+            ]),
             rtp: VlcRtpOptions([
               VlcRtpOptions.rtpOverRtsp(true),
             ]),
@@ -110,27 +106,23 @@ class _SingleTabState extends State<SingleTab> {
         var file = File(initVideo.path);
         _controller = VlcPlayerController.file(
           file,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
         );
         break;
       case VideoType.asset:
         _controller = VlcPlayerController.asset(
           initVideo.path,
-          onInit: () async {
-            await _controller.startRendererScanning();
-          },
-          onRendererHandler: (type, id, name) {
-            print('onRendererHandler $type $id $name');
-          },
           options: VlcPlayerOptions(),
         );
         break;
+      case VideoType.recorded:
+        break;
     }
+    _controller.addOnInitListener(() async {
+      await _controller.startRendererScanning();
+    });
+    _controller.addOnRendererEventListener((type, id, name) {
+      print('OnRendererEventListener $type $id $name');
+    });
   }
 
   @override
@@ -139,7 +131,25 @@ class _SingleTabState extends State<SingleTab> {
       children: [
         Container(
           height: 400,
-          child: VlcPlayerWithControls(key: _key, controller: _controller),
+          child: VlcPlayerWithControls(
+            key: _key,
+            controller: _controller,
+            onStopRecording: (recordPath) {
+              setState(() {
+                listVideos.add(VideoData(
+                  name: 'Recorded Video',
+                  path: recordPath,
+                  type: VideoType.recorded,
+                ));
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'The recorded video file has been added to the end of list.'),
+                ),
+              );
+            },
+          ),
         ),
         ListView.builder(
           shrinkWrap: true,
@@ -158,8 +168,12 @@ class _SingleTabState extends State<SingleTab> {
               case VideoType.asset:
                 iconData = Icons.all_inbox;
                 break;
+              case VideoType.recorded:
+                iconData = Icons.videocam;
+                break;
             }
             return ListTile(
+              dense: true,
               selected: selectedVideoIndex == index,
               selectedTileColor: Colors.black54,
               leading: Icon(
@@ -184,10 +198,13 @@ class _SingleTabState extends State<SingleTab> {
                 ),
               ),
               onTap: () async {
+                await _controller.stopRecording();
                 switch (video.type) {
                   case VideoType.network:
-                    await _controller.setMediaFromNetwork(video.path,
-                        hwAcc: HwAcc.FULL);
+                    await _controller.setMediaFromNetwork(
+                      video.path,
+                      hwAcc: HwAcc.full,
+                    );
                     break;
                   case VideoType.file:
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -217,6 +234,10 @@ class _SingleTabState extends State<SingleTab> {
                   case VideoType.asset:
                     await _controller.setMediaFromAsset(video.path);
                     break;
+                  case VideoType.recorded:
+                    var recordedFile = File(video.path);
+                    await _controller.setMediaFromFile(recordedFile);
+                    break;
                 }
                 setState(() {
                   selectedVideoIndex = index;
@@ -232,6 +253,7 @@ class _SingleTabState extends State<SingleTab> {
   @override
   void dispose() async {
     super.dispose();
+    await _controller.stopRecording();
     await _controller.stopRendererScanning();
     await _controller.dispose();
   }

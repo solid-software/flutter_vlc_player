@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
@@ -26,9 +25,8 @@ class _MultipleTabState extends State<MultipleTab> {
     for (var i = 0; i < urls.length; i++) {
       var controller = VlcPlayerController.network(
         urls[i],
-        hwAcc: HwAcc.FULL,
+        hwAcc: HwAcc.full,
         autoPlay: false,
-        onInit: () async {},
         options: VlcPlayerOptions(
           advanced: VlcAdvancedOptions([
             VlcAdvancedOptions.networkCaching(2000),
