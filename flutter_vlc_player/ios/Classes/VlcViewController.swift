@@ -71,7 +71,7 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     public func setLooping(isLooping: NSNumber?) {
         
         let enableLooping = isLooping?.boolValue ?? false;
-        self.vlcMediaPlayer.media.addOption(enableLooping ? "--loop" : "--no-loop")
+        self.vlcMediaPlayer.media?.addOption(enableLooping ? "--loop" : "--no-loop")
     }
     
     public func seek(position: NSNumber?) {
@@ -92,12 +92,12 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     
     public func setVolume(volume: NSNumber?) {
         
-        self.vlcMediaPlayer.audio.volume = volume?.int32Value ?? 100
+        self.vlcMediaPlayer.audio?.volume = volume?.int32Value ?? 100
     }
     
     public func getVolume() -> NSNumber? {
         
-        return NSNumber(value: self.vlcMediaPlayer.audio.volume)
+        return NSNumber(value: self.vlcMediaPlayer.audio?.volume ?? 100)
     }
     
     public func setPlaybackSpeed(speed: NSNumber?) {
@@ -254,7 +254,9 @@ public class VLCViewController: NSObject, FlutterPlatformView {
     
     public func getVideoAspectRatio() -> String? {
         
-        return String(cString: self.vlcMediaPlayer.videoAspectRatio)
+        guard let aspectRatio = self.vlcMediaPlayer.videoAspectRatio else { return "1"};
+        
+        return String(cString: aspectRatio)
     }
     
     public func getAvailableRendererServices() -> [String]? {
@@ -446,10 +448,10 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         return nil
     }
     
-    func mediaPlayerStateChanged(_ aNotification: Notification?) {
+    func mediaPlayerStateChanged(_ aNotification: Notification) {
         guard let mediaEventSink = self.mediaEventSink else { return }
         
-        let player = aNotification?.object as? VLCMediaPlayer
+        let player = aNotification.object as? VLCMediaPlayer
         let media = player?.media
         let height = player?.videoSize.height ?? 0
         let width = player?.videoSize.width ?? 0
@@ -459,7 +461,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         let activeSpuTrack = player?.currentVideoSubTitleIndex ?? 0
         let duration =  media?.length.value ?? 0
         let speed = player?.rate ?? 1
-        let position = player?.time?.value?.intValue ?? 0
+        let position = player?.time.value?.intValue ?? 0
         let buffering = 100.0
         let isPlaying = player?.isPlaying ?? false
                 
@@ -541,7 +543,7 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         }
     }
     
-    func mediaPlayerStartedRecording(_ player: VLCMediaPlayer?) {
+    func mediaPlayerStartedRecording(_ player: VLCMediaPlayer) {
         guard let mediaEventSink = self.mediaEventSink else { return }
                 
         mediaEventSink([
@@ -551,20 +553,20 @@ class VLCPlayerEventStreamHandler: NSObject, FlutterStreamHandler, VLCMediaPlaye
         ])
     }
     
-    func mediaPlayer(_ player: VLCMediaPlayer?, recordingStoppedAtPath path: String?) {
+    func mediaPlayer(_ player: VLCMediaPlayer, recordingStoppedAtPath path: String) {
         guard let mediaEventSink = self.mediaEventSink else { return }
         
         mediaEventSink([
             "event": "recording",
             "isRecording": false,
-            "recordPath": path ?? "",
+            "recordPath": path ,
         ])
     }
     
-    func mediaPlayerTimeChanged(_ aNotification: Notification!) {
+    func mediaPlayerTimeChanged(_ aNotification: Notification) {
         guard let mediaEventSink = self.mediaEventSink else { return }
         
-        let player = aNotification?.object as? VLCMediaPlayer
+        let player = aNotification.object as? VLCMediaPlayer
         //
         let height = player?.videoSize.height ?? 0
         let width = player?.videoSize.width ?? 0
