@@ -1,3 +1,7 @@
+## 7.0.2
+* Fixed work on Android 6-.
+Credits to Yury Kostov (https://github.com/kostov).
+
 ## 7.0.1
 * Improve formatting
 * Modify LICENSE to use template so it parsed automatically.
