@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_vlc_player'
-  s.version          = '3.0.2'
+  s.version          = '3.0.3'
   s.summary          = 'A new flutter plugin project.'
   s.description      = <<-DESC
   A VLC-powered alternative to Flutter video_player. Supports multiple players on one screen.
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '9.0'
-  s.dependency 'MobileVLCKit', '~> 3.3.17'
+  s.dependency 'MobileVLCKit', '~> 3.4'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.
