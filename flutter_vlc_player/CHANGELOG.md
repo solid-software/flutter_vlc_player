@@ -1,7 +1,10 @@
+## 7.1.1
+* Fixed to work on Android 6-.
+Credits to Yury Kostov (https://github.com/kostov).
+
 ## 7.1.0
 * Upgrade iOS and Android Lib VLC libraries to address performance issues. https://code.videolan.org/videolan/vlc-ios/-/issues/1240
 Credits to Mitch Ross (https://github.com/mitchross)
-
 
 ## 7.0.1
 * Improve formatting
