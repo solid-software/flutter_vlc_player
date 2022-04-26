@@ -57,18 +57,49 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   /// can be rendered.
   /// The `viewId` is passed as a parameter from the framework on the
   /// `onPlatformViewCreated` callback.
+  ///
+  /// The `virtualDisplay` specifies whether Virtual displays or Hybrid composition is used on Android.
+  /// iOS only uses Hybrid composition.
   @override
-  Widget buildView(PlatformViewCreatedCallback onPlatformViewCreated) {
+  Widget buildView(PlatformViewCreatedCallback onPlatformViewCreated, {bool virtualDisplay = true}) {
+    const viewType = 'flutter_video_plugin/getVideoView';
     if (Platform.isAndroid) {
-      return AndroidView(
-        viewType: 'flutter_video_plugin/getVideoView',
-        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
-        onPlatformViewCreated: onPlatformViewCreated,
-        creationParamsCodec: const StandardMessageCodec(),
-      );
+      if (virtualDisplay) {
+        return AndroidView(
+          viewType: viewType,
+          hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+          onPlatformViewCreated: onPlatformViewCreated,
+          creationParamsCodec: const StandardMessageCodec(),
+        );
+      } else {
+        return PlatformViewLink(
+          viewType: viewType,
+          surfaceFactory: (
+              BuildContext context,
+              PlatformViewController controller,
+              ) {
+            return AndroidViewSurface(
+              controller: controller as AndroidViewController,
+              gestureRecognizers: const {},
+              hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+            );
+          },
+          onCreatePlatformView: (PlatformViewCreationParams params) {
+            return PlatformViewsService.initSurfaceAndroidView(
+              id: params.id,
+              viewType: viewType,
+              layoutDirection: TextDirection.ltr,
+              creationParamsCodec: const StandardMessageCodec(),
+            )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..addOnPlatformViewCreatedListener(onPlatformViewCreated)
+              ..create();
+          },
+        );
+      }
     } else if (Platform.isIOS) {
       return UiKitView(
-        viewType: 'flutter_video_plugin/getVideoView',
+        viewType: viewType,
         onPlatformViewCreated: onPlatformViewCreated,
         hitTestBehavior: PlatformViewHitTestBehavior.transparent,
         creationParamsCodec: const StandardMessageCodec(),

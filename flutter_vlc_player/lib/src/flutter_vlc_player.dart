@@ -7,6 +7,7 @@ class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;
   final double aspectRatio;
   final Widget? placeholder;
+  final bool virtualDisplay;
 
   const VlcPlayer({
     Key? key,
@@ -23,6 +24,10 @@ class VlcPlayer extends StatefulWidget {
     /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
     /// This can simply be a [CircularProgressIndicator] (see the example.)
     this.placeholder,
+
+    /// Specify whether Virtual displays or Hybrid composition is used on Android.
+    /// iOS only uses Hybrid composition.
+    this.virtualDisplay = true
   }) : super(key: key);
 
   @override
@@ -90,7 +95,7 @@ class _VlcPlayerState extends State<VlcPlayer>
           Offstage(
             offstage: !_isInitialized,
             child: vlcPlayerPlatform
-                .buildView(widget.controller.onPlatformViewCreated),
+                .buildView(widget.controller.onPlatformViewCreated, virtualDisplay: widget.virtualDisplay),
           ),
         ],
       ),
