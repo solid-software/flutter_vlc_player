@@ -1,3 +1,6 @@
+## 7.1.2
+* Add Hybrid composition support for Android.
+
 ## 7.1.1
 * Fixed to work on Android 6-.
 Credits to Yury Kostov (https://github.com/kostov).
