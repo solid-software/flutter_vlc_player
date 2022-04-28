@@ -33,7 +33,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns a widget displaying the video.
-  Widget buildView(PlatformViewCreatedCallback onPlatformViewCreated) {
+  Widget buildView(PlatformViewCreatedCallback onPlatformViewCreated, {bool virtualDisplay = true}) {
     throw _unimplemented('buildView');
   }
 

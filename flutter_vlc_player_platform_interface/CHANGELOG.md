@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Add Hybrid composition support for Android
+
 ## 2.0.0
 
 - Fix Dart analysis warnings
