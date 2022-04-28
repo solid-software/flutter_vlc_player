@@ -9,26 +9,26 @@ class VlcPlayer extends StatefulWidget {
   final Widget? placeholder;
   final bool virtualDisplay;
 
-  const VlcPlayer({
-    Key? key,
+  const VlcPlayer(
+      {Key? key,
 
-    /// The [VlcPlayerController] responsible for the video being rendered in
-    /// this widget.
-    required this.controller,
+      /// The [VlcPlayerController] responsible for the video being rendered in
+      /// this widget.
+      required this.controller,
 
-    /// The aspect ratio used to display the video.
-    /// This MUST be provided, however it could simply be (parentWidth / parentHeight) - where parentWidth and
-    /// parentHeight are the width and height of the parent perhaps as defined by a LayoutBuilder.
-    required this.aspectRatio,
+      /// The aspect ratio used to display the video.
+      /// This MUST be provided, however it could simply be (parentWidth / parentHeight) - where parentWidth and
+      /// parentHeight are the width and height of the parent perhaps as defined by a LayoutBuilder.
+      required this.aspectRatio,
 
-    /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
-    /// This can simply be a [CircularProgressIndicator] (see the example.)
-    this.placeholder,
+      /// Before the platform view has initialized, this placeholder will be rendered instead of the video player.
+      /// This can simply be a [CircularProgressIndicator] (see the example.)
+      this.placeholder,
 
-    /// Specify whether Virtual displays or Hybrid composition is used on Android.
-    /// iOS only uses Hybrid composition.
-    this.virtualDisplay = true
-  }) : super(key: key);
+      /// Specify whether Virtual displays or Hybrid composition is used on Android.
+      /// iOS only uses Hybrid composition.
+      this.virtualDisplay = true})
+      : super(key: key);
 
   @override
   _VlcPlayerState createState() => _VlcPlayerState();
@@ -94,8 +94,9 @@ class _VlcPlayerState extends State<VlcPlayer>
           ),
           Offstage(
             offstage: !_isInitialized,
-            child: vlcPlayerPlatform
-                .buildView(widget.controller.onPlatformViewCreated, virtualDisplay: widget.virtualDisplay),
+            child: vlcPlayerPlatform.buildView(
+                widget.controller.onPlatformViewCreated,
+                virtualDisplay: widget.virtualDisplay),
           ),
         ],
       ),
