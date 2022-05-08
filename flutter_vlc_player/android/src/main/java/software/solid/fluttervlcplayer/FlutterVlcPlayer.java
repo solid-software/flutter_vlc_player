@@ -6,6 +6,7 @@ import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.RendererDiscoverer;
 import org.videolan.libvlc.RendererItem;
 import org.videolan.libvlc.interfaces.IMedia;
+import org.videolan.libvlc.interfaces.IVLCVout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,13 +34,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.util.AttributeSet;
+import android.view.ViewGroup;
+
 final class FlutterVlcPlayer implements PlatformView {
 
     private final String TAG = this.getClass().getSimpleName();
     private final boolean debug = false;
     //
     private final Context context;
-    private final TextureView textureView;
+    private final VLCTextureView textureView;
     private final TextureRegistry.SurfaceTextureEntry textureEntry;
     //
     private final QueuingEventSink mediaEventSink = new QueuingEventSink();
@@ -66,6 +70,7 @@ final class FlutterVlcPlayer implements PlatformView {
         if (isDisposed)
             return;
         //
+        textureView.dispose();
         textureEntry.release();
         mediaEventChannel.setStreamHandler(null);
         rendererEventChannel.setStreamHandler(null);
@@ -115,7 +120,7 @@ final class FlutterVlcPlayer implements PlatformView {
                 });
         //
         textureEntry = textureRegistry.createSurfaceTexture();
-        textureView = new TextureView(context);
+        textureView = new VLCTextureView(context);
         textureView.setSurfaceTexture(textureEntry.surfaceTexture());
         textureView.forceLayout();
         textureView.setFitsSystemWindows(true);
@@ -134,81 +139,11 @@ final class FlutterVlcPlayer implements PlatformView {
 
     private void setupVlcMediaPlayer() {
 
-        // method 1
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-
-            boolean wasPlaying = false;
-
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                log("onSurfaceTextureAvailable");
-
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    if (mediaPlayer == null)
-                        return;
-                    mediaPlayer.getVLCVout().setWindowSize(width, height);
-                    mediaPlayer.getVLCVout().setVideoSurface(surface);
-                    if (!mediaPlayer.getVLCVout().areViewsAttached())
-                        mediaPlayer.getVLCVout().attachViews();
-                    mediaPlayer.setVideoTrackEnabled(true);
-                    if (wasPlaying)
-                        mediaPlayer.play();
-                    wasPlaying = false;
-                }, 100L);
-
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                if (mediaPlayer != null)
-                    mediaPlayer.getVLCVout().setWindowSize(width, height);
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                log("onSurfaceTextureDestroyed");
-
-                if (mediaPlayer != null) {
-                    wasPlaying = mediaPlayer.isPlaying();
-                    mediaPlayer.pause();
-                    mediaPlayer.setVideoTrackEnabled(false);
-                    mediaPlayer.getVLCVout().detachViews();
-                }
-                return false; //do not return true if you reuse it.
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            }
-
-        });
-
-//         method 2
-        textureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                log("onLayoutChange");
-                //
-                if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-                    mediaPlayer.pause();
-                    mediaPlayer.setVideoTrackEnabled(false);
-                    mediaPlayer.getVLCVout().detachViews();
-                    mediaPlayer.getVLCVout().setWindowSize(view.getWidth(), view.getHeight());
-                    mediaPlayer.getVLCVout().setVideoView((TextureView) view);
-                    mediaPlayer.getVLCVout().attachViews();
-                    mediaPlayer.setVideoTrackEnabled(true);
-                    // hacky way to prevent video pixeling, it might be larger than buffer size
-                    long tmpTime = mediaPlayer.getTime() - 500;
-                    if (tmpTime > 0)
-                        mediaPlayer.setTime(tmpTime);
-                    mediaPlayer.play();
-                }
-            }
-        });
         //
         mediaPlayer.getVLCVout().setWindowSize(textureView.getWidth(), textureView.getHeight());
         mediaPlayer.getVLCVout().setVideoSurface(textureView.getSurfaceTexture());
-        mediaPlayer.getVLCVout().attachViews();
+        textureView.setTextureEntry(textureEntry);
+        textureView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setVideoTrackEnabled(true);
         //
         mediaPlayer.setEventListener(
@@ -313,26 +248,36 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void play() {
-        mediaPlayer.play();
+        if (mediaPlayer != null) {
+            mediaPlayer.play();
+        }
     }
 
     void pause() {
-        mediaPlayer.pause();
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+        }
     }
 
     void stop() {
-        mediaPlayer.stop();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
     }
 
     boolean isPlaying() {
+        if (mediaPlayer == null) return false;
         return mediaPlayer.isPlaying();
     }
 
     boolean isSeekable() {
+        if (mediaPlayer == null) return false;
         return mediaPlayer.isSeekable();
     }
 
     void setStreamUrl(String url, boolean isAssetUrl, boolean autoPlay, long hwAcc) {
+        if (mediaPlayer == null) return;
+
         try {
             mediaPlayer.stop();
             //
@@ -379,39 +324,57 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void setVolume(long value) {
+        if (mediaPlayer == null) return;
+
         long bracketedValue = Math.max(0, Math.min(100, value));
         mediaPlayer.setVolume((int) bracketedValue);
     }
 
     int getVolume() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getVolume();
     }
 
     void setPlaybackSpeed(double value) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setRate((float) value);
     }
 
     float getPlaybackSpeed() {
+        if (mediaPlayer == null) return -1.0f;
+
         return mediaPlayer.getRate();
     }
 
     void seekTo(int location) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setTime(location);
     }
 
     long getPosition() {
+        if (mediaPlayer == null) return -1;
+        
         return mediaPlayer.getTime();
     }
 
     long getDuration() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getLength();
     }
 
     int getSpuTracksCount() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getSpuTracksCount();
     }
 
     HashMap<Integer, String> getSpuTracks() {
+        if (mediaPlayer == null) return new HashMap<Integer, String>();
+
         MediaPlayer.TrackDescription[] spuTracks = mediaPlayer.getSpuTracks();
         HashMap<Integer, String> subtitles = new HashMap<>();
         if (spuTracks != null)
@@ -423,30 +386,44 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void setSpuTrack(int index) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setSpuTrack(index);
     }
 
     int getSpuTrack() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getSpuTrack();
     }
 
     void setSpuDelay(long delay) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setSpuDelay(delay);
     }
 
     long getSpuDelay() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getSpuDelay();
     }
 
     void addSubtitleTrack(String url, boolean isSelected) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.addSlave(Media.Slave.Type.Subtitle, Uri.parse(url), isSelected);
     }
 
     int getAudioTracksCount() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getAudioTracksCount();
     }
 
     HashMap<Integer, String> getAudioTracks() {
+        if (mediaPlayer == null) return new HashMap<Integer, String>();
+
         MediaPlayer.TrackDescription[] audioTracks = mediaPlayer.getAudioTracks();
         HashMap<Integer, String> audios = new HashMap<>();
         if (audioTracks != null)
@@ -458,30 +435,44 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void setAudioTrack(int index) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setAudioTrack(index);
     }
 
     int getAudioTrack() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getAudioTrack();
     }
 
     void setAudioDelay(long delay) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setAudioDelay(delay);
     }
 
     long getAudioDelay() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getAudioDelay();
     }
 
     void addAudioTrack(String url, boolean isSelected) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.addSlave(Media.Slave.Type.Audio, Uri.parse(url), isSelected);
     }
 
     int getVideoTracksCount() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getVideoTracksCount();
     }
 
     HashMap<Integer, String> getVideoTracks() {
+        if (mediaPlayer == null) return new HashMap<Integer, String>();
+
         MediaPlayer.TrackDescription[] videoTracks = mediaPlayer.getVideoTracks();
         HashMap<Integer, String> videos = new HashMap<>();
         if (videoTracks != null)
@@ -493,30 +484,43 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void setVideoTrack(int index) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setVideoTrack(index);
     }
 
     int getVideoTrack() {
+        if (mediaPlayer == null) return -1;
+
         return mediaPlayer.getVideoTrack();
     }
 
     void setVideoScale(float scale) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setScale(scale);
     }
 
     float getVideoScale() {
+        if (mediaPlayer == null) return -1.0f;
+
         return mediaPlayer.getScale();
     }
 
     void setVideoAspectRatio(String aspectRatio) {
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setAspectRatio(aspectRatio);
     }
 
     String getVideoAspectRatio() {
+        if (mediaPlayer == null) return "";
+
         return mediaPlayer.getAspectRatio();
     }
 
     void startRendererScanning(String rendererService) {
+        if (libVLC == null) return;
 
         //
         //  android -> chromecast -> "microdns"
@@ -568,6 +572,8 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void stopRendererScanning() {
+        if (mediaPlayer == null) return;
+
         if (isDisposed)
             return;
         //
@@ -587,6 +593,8 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     ArrayList<String> getAvailableRendererServices() {
+        if (libVLC == null) return new ArrayList<String>();
+
         RendererDiscoverer.Description[] renderers = RendererDiscoverer.list(libVLC);
         ArrayList<String> availableRendererServices = new ArrayList<>();
         for (RendererDiscoverer.Description renderer : renderers) {
@@ -605,6 +613,8 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void castToRenderer(String rendererDevice) {
+        if (mediaPlayer == null) return;
+
         if (isDisposed) {
             return;
         }
@@ -627,6 +637,8 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     String getSnapshot() {
+        if (textureView == null) return "";
+
         Bitmap bitmap = textureView.getBitmap();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
@@ -645,6 +657,233 @@ final class FlutterVlcPlayer implements PlatformView {
         if (debug) {
             Log.d(TAG, message);
         }
+    }
+
+    // --- VLCTextureView
+
+    public class VLCTextureView extends TextureView implements TextureView.SurfaceTextureListener, View.OnLayoutChangeListener, IVLCVout.OnNewVideoLayoutListener {
+
+        private final String TAG = this.getClass().getSimpleName();
+        private boolean debug = false;
+
+        private MediaPlayer mMediaPlayer = null;
+        private TextureRegistry.SurfaceTextureEntry mTextureEntry = null;
+        protected Context mContext;
+        private SurfaceTexture mSurfaceTexture = null;
+        private boolean wasPlaying = false;
+
+        private Handler mHandler;
+        private Runnable mLayoutChangeRunnable = null;
+
+        public VLCTextureView(final Context context) {
+            super(context);
+            mContext = context;
+            initVideoView();
+        }
+
+        public VLCTextureView(final Context context, final AttributeSet attrs) {
+            super(context, attrs);
+            mContext = context;
+            initVideoView();
+        }
+
+        public VLCTextureView(Context context, AttributeSet attrs, int defStyle) {
+            super(context, attrs, defStyle);
+            mContext = context;
+            initVideoView();
+        }
+
+        public void dispose() {
+            log("************************** dispose");
+
+            setSurfaceTextureListener(null);
+            removeOnLayoutChangeListener(this);
+
+            if (mLayoutChangeRunnable != null) {
+                mHandler.removeCallbacks(mLayoutChangeRunnable);
+                mLayoutChangeRunnable = null;
+            }
+
+            if (mSurfaceTexture != null) {
+                if (!mSurfaceTexture.isReleased()) {
+                    mSurfaceTexture.release();
+                }
+                mSurfaceTexture = null;
+            }
+            mTextureEntry = null;
+            mMediaPlayer = null;
+            mContext = null;
+        }
+
+        private void initVideoView() {
+            mHandler = new Handler(Looper.getMainLooper());
+
+            setFocusable(false);
+            setSurfaceTextureListener(this);
+            addOnLayoutChangeListener(this);
+        }
+
+        public void setDebug(boolean value) {
+            debug = value;
+        }
+
+        public void setMediaPlayer(MediaPlayer mediaPlayer) {
+            log("************************** setMediaPlayer: " + mediaPlayer);
+
+            if (mediaPlayer == null) {
+                mMediaPlayer.getVLCVout().detachViews();
+            }
+
+            mMediaPlayer = mediaPlayer;
+
+            if (mMediaPlayer != null) {
+                mMediaPlayer.getVLCVout().attachViews(this);
+            }
+        }
+
+        public void setTextureEntry(TextureRegistry.SurfaceTextureEntry textureEntry) {
+            this.mTextureEntry = textureEntry;
+            this.updateSurfaceTexture();
+        }
+
+        private void updateSurfaceTexture() {
+            if (this.mTextureEntry != null) {
+                final SurfaceTexture texture = this.mTextureEntry.surfaceTexture();
+                if (!texture.isReleased() && (getSurfaceTexture() != texture)) {
+                    setSurfaceTexture(texture);
+                }
+            }
+        }
+
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            log("************************** onSurfaceTextureAvailable");
+
+            if (mSurfaceTexture == null || mSurfaceTexture.isReleased()) {
+                mSurfaceTexture = surface;
+
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.getVLCVout().setWindowSize(width, height);
+                    if (!mMediaPlayer.getVLCVout().areViewsAttached()) {
+                        mMediaPlayer.getVLCVout().setVideoSurface(mSurfaceTexture);
+                        if (!mMediaPlayer.getVLCVout().areViewsAttached())
+                            mMediaPlayer.getVLCVout().attachViews(this);
+                        mMediaPlayer.setVideoTrackEnabled(true);
+                        if (wasPlaying)
+                            mMediaPlayer.play();
+                    }
+                }
+                wasPlaying = false;
+
+            } else {
+                if (getSurfaceTexture() != mSurfaceTexture) {
+                    setSurfaceTexture(mSurfaceTexture);
+                }
+            }
+
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            log("************************** onSurfaceTextureSizeChanged: " + width + "x" + height);
+
+            setSize(width, height);
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            log("************************** onSurfaceTextureDestroyed");
+
+            if (mMediaPlayer != null) {
+                wasPlaying = mMediaPlayer.isPlaying();
+            }
+
+            if (mSurfaceTexture != surface) {
+                if (mSurfaceTexture != null) {
+                    if (!mSurfaceTexture.isReleased()) {
+                        mSurfaceTexture.release();
+                    }
+                }
+                mSurfaceTexture = surface;
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+        }
+
+        @Override
+        public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
+            log("************************** onNewLayout");
+
+            if (width * height == 0) return;
+            
+            setSize(width, height);
+        }
+
+        @Override
+        public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            //
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                log("************************** onLayoutChange: " + (oldRight - oldLeft) + "x" + (oldBottom + oldTop) + " -> " + (right - left) + "x" + (bottom - top));
+                
+                textureView.updateLayoutSize(view);
+            }
+        }
+
+        public void updateLayoutSize(View view) {
+            if (mMediaPlayer != null) {
+                mMediaPlayer.getVLCVout().setWindowSize(view.getWidth(), view.getHeight());
+                updateSurfaceTexture();
+            }
+        }
+
+        private void setSize(int width, int height) {
+            int mVideoWidth = 0;
+            int mVideoHeight = 0;
+            mVideoWidth = width;
+            mVideoHeight = height;
+            if (mVideoWidth * mVideoHeight <= 1)
+                return;
+
+            // Screen size
+            int w = this.getWidth();
+            int h = this.getHeight();
+
+            // Size
+            if (w > h && w < h) {
+                int i = w;
+                w = h;
+                h = i;
+            }
+
+            float videoAR = (float) mVideoWidth / (float) mVideoHeight;
+            float screenAR = (float) w / (float) h;
+
+            if (screenAR < videoAR)
+                h = (int) (w / videoAR);
+            else
+                w = (int) (h * videoAR);
+
+            // Layout fit
+            ViewGroup.LayoutParams lp = this.getLayoutParams();
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lp.height = h;
+            this.setLayoutParams(lp);
+            this.invalidate();
+        }
+
+        // ---
+
+        private void log(String message) {
+            if (debug) {
+                Log.d(TAG, message);
+            }
+        }
+
     }
 
 }
