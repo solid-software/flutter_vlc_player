@@ -100,8 +100,7 @@ android {
 ```proguard
 -keep class org.videolan.libvlc.** { *; }
 ```
-
-<br>
+<hr>
 
 #### Android multi-window support
 
