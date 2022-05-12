@@ -48,16 +48,8 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         flutterPluginBinding = binding;
-    }
 
-    @Override
-    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        flutterPluginBinding = null;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        //
         if (flutterVlcPlayerFactory == null) {
             final FlutterInjector injector = FlutterInjector.instance();
             //
@@ -80,19 +72,29 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     }
 
     @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        stopListening();
+        //
+
+        flutterPluginBinding = null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    }
+
+    @Override
     public void onDetachedFromActivityForConfigChanges() {
-        onDetachedFromActivity();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-        onAttachedToActivity(binding);
     }
 
     @Override
     public void onDetachedFromActivity() {
-        stopListening();
     }
 
     // extra methods
