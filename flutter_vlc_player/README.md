@@ -103,6 +103,26 @@ android {
 
 <br>
 
+#### Android multi-window support
+
+To enable multi-window support in your Android application, you need to make changes to `AndroidManifest.xml`, add the `android:resizeableActivity` key for the main activity, as well as the `android.allow_multiple_resumed_activities` metadata for application:
+```xml
+<manifest ...>
+  <application ...>
+    <activity ...
+      android:resizeableActivity="true">
+      ...
+    </activity>
+    ...
+    <meta-data
+      android:name="android.allow_multiple_resumed_activities"
+      android:value="true" />
+  </application>
+</manifest>
+```
+
+<br>
+
 ## Quick Start
 To start using the plugin, copy this code or follow the example project in 'flutter_vlc_player/example'
 

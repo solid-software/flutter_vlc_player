@@ -1,3 +1,7 @@
+## 7.1.3
+* Added support for multi-window mode in Android.
+Credits to Andy Chentsov (https://github.com/andyduke).
+
 ## 7.1.2
 * Add Hybrid composition support for Android.
 
