@@ -1,5 +1,8 @@
-## 7.1.4
+## 7.1.5
 * Fix plugin destructor (https://github.com/solid-software/flutter_vlc_player/issues/237)
+
+## 7.1.4
+* Interim release to fix Flutter 3 issues
 
 ## 7.1.3
 * Added support for multi-window mode in Android.
