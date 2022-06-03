@@ -105,7 +105,9 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     }
 
     private static void stopListening() {
-        if (flutterVlcPlayerFactory != null)
+        if (flutterVlcPlayerFactory != null) {
             flutterVlcPlayerFactory.stopListening();
+            flutterVlcPlayerFactory = null;
+        }
     }
 }
