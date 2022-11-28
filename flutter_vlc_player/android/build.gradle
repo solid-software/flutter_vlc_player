@@ -7,9 +7,12 @@ buildscript {
         maven {
         url 'https://jitpack.io'
     }
+            mavenCentral()
+        gradlePluginPortal()
     maven {
         url "https://dl.bintray.com/videolan/Android"
     }
+    jcenter()
     }
 
     dependencies {
@@ -20,12 +23,15 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
+                mavenCentral()
+        gradlePluginPortal()
         maven {
         url 'https://jitpack.io'
     }
     maven {
         url "https://dl.bintray.com/videolan/Android"
     }
+    jcenter()
     }
 }
 
