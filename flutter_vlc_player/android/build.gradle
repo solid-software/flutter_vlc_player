@@ -4,7 +4,12 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
+        maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "https://dl.bintray.com/videolan/Android"
+    }
     }
 
     dependencies {
@@ -15,7 +20,12 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "https://dl.bintray.com/videolan/Android"
+    }
     }
 }
 
