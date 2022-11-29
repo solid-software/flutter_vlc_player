@@ -5,14 +5,14 @@ buildscript {
     repositories {
         google()
         maven {
-        url 'https://jitpack.io'
-    }
-            mavenCentral()
+            url 'https://jitpack.io'
+        }
+        mavenCentral()
         gradlePluginPortal()
-    maven {
-        url "https://dl.bintray.com/videolan/Android"
-    }
-    jcenter()
+        maven {
+            url "https://dl.bintray.com/videolan/Android"
+        }
+        jcenter()
     }
 
     dependencies {
@@ -23,14 +23,14 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-                mavenCentral()
+        mavenCentral()
         gradlePluginPortal()
         maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url "https://dl.bintray.com/videolan/Android"
-    }
+            url 'https://jitpack.io'
+        }
+        maven {
+            url "https://dl.bintray.com/videolan/Android"
+        }
     jcenter()
     }
 }
@@ -55,7 +55,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'org.videolan.android:libvlc-all:3.5.0-eap6'
+    implementation 'org.videolan.android:libvlc-all:3.6.0-eap2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.annotation:annotation:1.5.0'
