@@ -1,3 +1,6 @@
+## 7.2.0
+*  Update to latest VLCKit sdks
+Credits to Mitch Ross (https://github.com/mitchross)
 ## 7.1.5
 * Fix plugin destructor (https://github.com/solid-software/flutter_vlc_player/issues/237)
 
