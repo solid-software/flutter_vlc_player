@@ -2,6 +2,7 @@ import 'package:pigeon/pigeon_lib.dart';
 
 class ViewMessage {
   int? viewId;
+  bool isTexture = false;
 }
 
 class CreateMessage {
@@ -12,6 +13,12 @@ class CreateMessage {
   bool? autoPlay;
   int? hwAcc;
   List<String>? options;
+  bool isTexture = false;
+}
+
+class CreateTextureMessage {
+  double? width;
+  double? height;
 }
 
 class SetMediaMessage {
@@ -21,61 +28,78 @@ class SetMediaMessage {
   String? packageName;
   bool? autoPlay;
   int? hwAcc;
+  bool isTexture = false;
 }
 
 class BooleanMessage {
   int? viewId;
   bool? result;
+  bool isTexture = false;
+}
+
+class IntMessage {
+  int? viewId;
+  int? result;
 }
 
 class LoopingMessage {
   int? viewId;
   bool? isLooping;
+  bool isTexture = false;
 }
 
 class VolumeMessage {
   int? viewId;
   int? volume;
+  bool isTexture = false;
 }
 
 class PlaybackSpeedMessage {
   int? viewId;
   double? speed;
+  bool isTexture = false;
 }
 
 class PositionMessage {
   int? viewId;
   int? position;
+  bool isTexture = false;
 }
 
 class DurationMessage {
   int? viewId;
   int? duration;
+  bool isTexture = false;
 }
 
 class DelayMessage {
   int? viewId;
   int? delay;
+  bool isTexture = false;
 }
 
 class TrackCountMessage {
   int? viewId;
   int? count;
+  bool isTexture = false;
 }
 
 class SnapshotMessage {
   int? viewId;
   String? snapshot;
+  bool isTexture = false;
 }
 
 class SpuTracksMessage {
   int? viewId;
   Map? subtitles;
+  bool isTexture = false;
 }
 
 class SpuTrackMessage {
   int? viewId;
   int? spuTrackNumber;
+  bool isTexture = false;
 }
 
 class AddSubtitleMessage {
@@ -83,16 +107,19 @@ class AddSubtitleMessage {
   String? uri;
   int? type;
   bool? isSelected;
+  bool isTexture = false;
 }
 
 class AudioTracksMessage {
   int? viewId;
   Map? audios;
+  bool isTexture = false;
 }
 
 class AudioTrackMessage {
   int? viewId;
   int? audioTrackNumber;
+  bool isTexture = false;
 }
 
 class AddAudioMessage {
@@ -100,57 +127,69 @@ class AddAudioMessage {
   String? uri;
   int? type;
   bool? isSelected;
+  bool isTexture = false;
 }
 
 class VideoTracksMessage {
   int? viewId;
   Map? videos;
+  bool isTexture = false;
 }
 
 class VideoTrackMessage {
   int? viewId;
   int? videoTrackNumber;
+  bool isTexture = false;
 }
 
 class VideoScaleMessage {
   int? viewId;
   double? scale;
+  bool isTexture = false;
 }
 
 class VideoAspectRatioMessage {
   int? viewId;
   String? aspectRatio;
+  bool isTexture = false;
 }
 
 class RendererServicesMessage {
   int? viewId;
   List<String>? services;
+  bool isTexture = false;
 }
 
 class RendererScanningMessage {
   int? viewId;
   String? rendererService;
+  bool isTexture = false;
 }
 
 class RendererDevicesMessage {
   int? viewId;
   Map? rendererDevices;
+  bool isTexture = false;
 }
 
 class RenderDeviceMessage {
   int? viewId;
   String? rendererDevice;
+  bool isTexture = false;
 }
 
 class RecordMessage {
   int? viewId;
   String? saveDirectory;
+  bool isTexture = false;
 }
 
 @HostApi(dartHostTestHandler: 'TestHostVlcPlayerApi')
 abstract class VlcPlayerApi {
   void initialize();
   void create(CreateMessage msg);
+  IntMessage createTextureEntry(CreateTextureMessage msg);
+  void disposeTextureEntry(IntMessage msg);
   void dispose(ViewMessage msg);
   // general methods
   void setStreamUrl(SetMediaMessage msg);

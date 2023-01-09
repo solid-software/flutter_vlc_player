@@ -1,10 +1,10 @@
 package software.solid.fluttervlcplayer;
 
 import android.content.Context;
-import android.util.LongSparseArray;
 
-import java.util.Map;
+import androidx.annotation.NonNull;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugin.platform.PlatformView;
@@ -28,20 +28,20 @@ public class FlutterVlcPlayerFactory extends PlatformViewFactory {
     //
     private FlutterVlcPlayerBuilder flutterVlcPlayerBuilder;
 
-    public FlutterVlcPlayerFactory(BinaryMessenger messenger, TextureRegistry textureRegistry, KeyForAssetFn keyForAsset, KeyForAssetAndPackageName keyForAssetAndPackageName) {
+    public FlutterVlcPlayerFactory(BinaryMessenger messenger, TextureRegistry textureRegistry, KeyForAssetFn keyForAsset, KeyForAssetAndPackageName keyForAssetAndPackageName, Context context) {
         super(StandardMessageCodec.INSTANCE);
         this.messenger = messenger;
         this.textureRegistry = textureRegistry;
         this.keyForAsset = keyForAsset;
         this.keyForAssetAndPackageName = keyForAssetAndPackageName;
         //
-        flutterVlcPlayerBuilder = new FlutterVlcPlayerBuilder();
+        flutterVlcPlayerBuilder = new FlutterVlcPlayerBuilder(messenger, textureRegistry, keyForAsset, keyForAssetAndPackageName, context);
     }
 
     @Override
     public PlatformView create(Context context, int viewId, Object args) {
 //        Map<String, Object> params = (Map<String, Object>) args;
-        return flutterVlcPlayerBuilder.build(viewId, context, messenger, textureRegistry, keyForAsset, keyForAssetAndPackageName);
+        return flutterVlcPlayerBuilder.build(viewId, context);
     }
 
     public void startListening() {
@@ -50,5 +50,9 @@ public class FlutterVlcPlayerFactory extends PlatformViewFactory {
 
     public void stopListening() {
         flutterVlcPlayerBuilder.stopListening(messenger);
+    }
+
+    public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding binding) {
+        flutterVlcPlayerBuilder.setContext(binding.getApplicationContext());
     }
 }

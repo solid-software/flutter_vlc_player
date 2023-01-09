@@ -28,7 +28,8 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
                             registrar.messenger(),
                             registrar.textures(),
                             registrar::lookupKeyForAsset,
-                            registrar::lookupKeyForAsset
+                            registrar::lookupKeyForAsset,
+                            registrar.context()
                     );
             registrar
                     .platformViewRegistry()
@@ -48,7 +49,6 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         flutterPluginBinding = binding;
-
         //
         if (flutterVlcPlayerFactory == null) {
             final FlutterInjector injector = FlutterInjector.instance();
@@ -58,7 +58,8 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
                             flutterPluginBinding.getBinaryMessenger(),
                             flutterPluginBinding.getTextureRegistry(),
                             injector.flutterLoader()::getLookupKeyForAsset,
-                            injector.flutterLoader()::getLookupKeyForAsset
+                            injector.flutterLoader()::getLookupKeyForAsset,
+                            binding.getApplicationContext()
                     );
             flutterPluginBinding
                     .getPlatformViewRegistry()
@@ -68,6 +69,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
                     );
             //
         }
+        flutterVlcPlayerFactory.onAttachedToEngine(binding);
         startListening();
     }
 

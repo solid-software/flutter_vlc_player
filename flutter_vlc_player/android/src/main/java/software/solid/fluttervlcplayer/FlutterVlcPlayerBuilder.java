@@ -1,16 +1,9 @@
 package software.solid.fluttervlcplayer;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.os.Build;
 import android.util.LongSparseArray;
 
-import androidx.annotation.RequiresApi;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.view.TextureRegistry;
@@ -19,8 +12,20 @@ import software.solid.fluttervlcplayer.Enums.DataSourceType;
 public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     private final LongSparseArray<FlutterVlcPlayer> vlcPlayers = new LongSparseArray<>();
-    private FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset;
-    private FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName;
+    private final LongSparseArray<FlutterVlcPlayerTexture> vlcPlayersTexture = new LongSparseArray<>();
+    private final TextureRegistry textureRegistry;
+    private final BinaryMessenger binaryMessenger;
+    private final FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset;
+    private final FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName;
+    private Context context;
+
+    public FlutterVlcPlayerBuilder(BinaryMessenger messenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName, Context context) {
+        this.textureRegistry = textureRegistry;
+        this.binaryMessenger = messenger;
+        this.keyForAsset = keyForAsset;
+        this.keyForAssetAndPackageName = keyForAssetAndPackageName;
+        this.context = context;
+    }
 
     void startListening(BinaryMessenger messenger) {
         Messages.VlcPlayerApi.setup(messenger, this);
@@ -31,9 +36,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         Messages.VlcPlayerApi.setup(messenger, null);
     }
 
-    FlutterVlcPlayer build(int viewId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName) {
-        this.keyForAsset = keyForAsset;
-        this.keyForAssetAndPackageName = keyForAssetAndPackageName;
+    FlutterVlcPlayer build(int viewId, Context context) {
         // only create view for player and attach channel events
         FlutterVlcPlayer vlcPlayer = new FlutterVlcPlayer(viewId, context, binaryMessenger, textureRegistry);
         vlcPlayers.append(viewId, vlcPlayer);
@@ -45,7 +48,14 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
             vlcPlayers.valueAt(i).dispose();
         }
         vlcPlayers.clear();
+        for (int i = 0; i < vlcPlayersTexture.size(); i++) {
+            vlcPlayersTexture.valueAt(i).dispose();
+        }
+        vlcPlayersTexture.clear();
+    }
 
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -54,8 +64,28 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     }
 
     @Override
+    public Messages.IntMessage createTextureEntry(Messages.CreateTextureMessage arg) {
+        TextureRegistry.SurfaceTextureEntry entry = textureRegistry.createSurfaceTexture();
+        vlcPlayersTexture.append(entry.id(), new FlutterVlcPlayerTexture(context, binaryMessenger, entry, arg));
+
+        Messages.IntMessage ret = new Messages.IntMessage();
+        ret.setViewId(entry.id());
+        ret.setResult(entry.id());
+        return ret;
+    }
+
+    @Override
+    public void disposeTextureEntry(Messages.IntMessage arg) {
+        FlutterVlcPlayerTexture player = vlcPlayersTexture.get(arg.getViewId());
+        if (player != null) {
+            player.dispose();
+            vlcPlayersTexture.remove(arg.getViewId());
+        }
+    }
+
+    @Override
     public void create(Messages.CreateMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         //
         ArrayList<String> options = new ArrayList<String>();
         if (arg.getOptions().size() > 0)
@@ -80,15 +110,33 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         player.setStreamUrl(mediaUrl, isAssetUrl, arg.getAutoPlay(), arg.getHwAcc());
     }
 
+    FlutterVlcPlayerInterface getPlayer(Long viewId, Boolean isTexture) {
+        if (isTexture == null) {
+            isTexture = false;
+        }
+        if (isTexture) {
+            return vlcPlayersTexture.get(viewId);
+        } else {
+            return vlcPlayers.get(viewId);
+        }
+    }
+
     @Override
     public void dispose(Messages.ViewMessage arg) {
-        // the player has been already disposed by platform we just remove it from players list
-        vlcPlayers.remove(arg.getViewId());
+        Boolean isTexture = arg.getIsTexture();
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), isTexture);
+        if (isTexture) {
+            player.dispose();
+            vlcPlayersTexture.remove(arg.getViewId());
+        } else {
+            // the player has been already disposed by platform we just remove it from players list
+            vlcPlayers.remove(arg.getViewId());
+        }
     }
 
     @Override
     public void setStreamUrl(Messages.SetMediaMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         //
         boolean isAssetUrl;
         String mediaUrl;
@@ -109,25 +157,25 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void play(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.play();
     }
 
     @Override
     public void pause(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.pause();
     }
 
     @Override
     public void stop(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.stop();
     }
 
     @Override
     public Messages.BooleanMessage isPlaying(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.BooleanMessage message = new Messages.BooleanMessage();
         message.setResult(player.isPlaying());
         return message;
@@ -135,7 +183,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.BooleanMessage isSeekable(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.BooleanMessage message = new Messages.BooleanMessage();
         message.setResult(player.isSeekable());
         return message;
@@ -143,19 +191,19 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setLooping(Messages.LoopingMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setLooping(arg.getIsLooping());
     }
 
     @Override
     public void seekTo(Messages.PositionMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.seekTo(arg.getPosition().intValue());
     }
 
     @Override
     public Messages.PositionMessage position(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.PositionMessage message = new Messages.PositionMessage();
         message.setPosition(player.getPosition());
         return message;
@@ -163,7 +211,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.DurationMessage duration(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.DurationMessage message = new Messages.DurationMessage();
         message.setDuration(player.getDuration());
         return message;
@@ -171,13 +219,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setVolume(Messages.VolumeMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setVolume(arg.getVolume());
     }
 
     @Override
     public Messages.VolumeMessage getVolume(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.VolumeMessage message = new Messages.VolumeMessage();
         message.setVolume((long) player.getVolume());
         return message;
@@ -185,13 +233,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setPlaybackSpeed(Messages.PlaybackSpeedMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setPlaybackSpeed(arg.getSpeed());
     }
 
     @Override
     public Messages.PlaybackSpeedMessage getPlaybackSpeed(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.PlaybackSpeedMessage message = new Messages.PlaybackSpeedMessage();
         message.setSpeed((double) player.getPlaybackSpeed());
         return message;
@@ -199,7 +247,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.SnapshotMessage takeSnapshot(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.SnapshotMessage message = new Messages.SnapshotMessage();
         message.setSnapshot(player.getSnapshot());
         return message;
@@ -207,7 +255,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.TrackCountMessage getSpuTracksCount(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.TrackCountMessage message = new Messages.TrackCountMessage();
         message.setCount((long) player.getSpuTracksCount());
         return message;
@@ -215,7 +263,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.SpuTracksMessage getSpuTracks(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.SpuTracksMessage message = new Messages.SpuTracksMessage();
         message.setSubtitles(player.getSpuTracks());
         return message;
@@ -223,13 +271,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setSpuTrack(Messages.SpuTrackMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setSpuTrack(arg.getSpuTrackNumber().intValue());
     }
 
     @Override
     public Messages.SpuTrackMessage getSpuTrack(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.SpuTrackMessage message = new Messages.SpuTrackMessage();
         message.setSpuTrackNumber((long) player.getSpuTrack());
         return message;
@@ -237,13 +285,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setSpuDelay(Messages.DelayMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setSpuDelay(arg.getDelay());
     }
 
     @Override
     public Messages.DelayMessage getSpuDelay(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.DelayMessage message = new Messages.DelayMessage();
         message.setDelay(player.getSpuDelay());
         return message;
@@ -251,13 +299,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void addSubtitleTrack(Messages.AddSubtitleMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.addSubtitleTrack(arg.getUri(), arg.getIsSelected());
     }
 
     @Override
     public Messages.TrackCountMessage getAudioTracksCount(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.TrackCountMessage message = new Messages.TrackCountMessage();
         message.setCount((long) player.getAudioTracksCount());
         return message;
@@ -265,7 +313,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.AudioTracksMessage getAudioTracks(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.AudioTracksMessage message = new Messages.AudioTracksMessage();
         message.setAudios(player.getAudioTracks());
         return message;
@@ -273,13 +321,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setAudioTrack(Messages.AudioTrackMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setAudioTrack(arg.getAudioTrackNumber().intValue());
     }
 
     @Override
     public Messages.AudioTrackMessage getAudioTrack(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.AudioTrackMessage message = new Messages.AudioTrackMessage();
         message.setAudioTrackNumber((long) player.getAudioTrack());
         return message;
@@ -287,13 +335,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setAudioDelay(Messages.DelayMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setAudioDelay(arg.getDelay());
     }
 
     @Override
     public Messages.DelayMessage getAudioDelay(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.DelayMessage message = new Messages.DelayMessage();
         message.setDelay(player.getAudioDelay());
         return message;
@@ -301,13 +349,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void addAudioTrack(Messages.AddAudioMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.addAudioTrack(arg.getUri(), arg.getIsSelected());
     }
 
     @Override
     public Messages.TrackCountMessage getVideoTracksCount(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.TrackCountMessage message = new Messages.TrackCountMessage();
         message.setCount((long) player.getVideoTracksCount());
         return message;
@@ -315,7 +363,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.VideoTracksMessage getVideoTracks(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.VideoTracksMessage message = new Messages.VideoTracksMessage();
         message.setVideos(player.getVideoTracks());
         return message;
@@ -323,13 +371,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setVideoTrack(Messages.VideoTrackMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setVideoTrack(arg.getVideoTrackNumber().intValue());
     }
 
     @Override
     public Messages.VideoTrackMessage getVideoTrack(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.VideoTrackMessage message = new Messages.VideoTrackMessage();
         message.setVideoTrackNumber((long) player.getVideoTrack());
         return null;
@@ -337,13 +385,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setVideoScale(Messages.VideoScaleMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setVideoScale(arg.getScale().floatValue());
     }
 
     @Override
     public Messages.VideoScaleMessage getVideoScale(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.VideoScaleMessage message = new Messages.VideoScaleMessage();
         message.setScale((double) player.getVideoScale());
         return message;
@@ -351,13 +399,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void setVideoAspectRatio(Messages.VideoAspectRatioMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.setVideoAspectRatio(arg.getAspectRatio());
     }
 
     @Override
     public Messages.VideoAspectRatioMessage getVideoAspectRatio(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.VideoAspectRatioMessage message = new Messages.VideoAspectRatioMessage();
         message.setAspectRatio(player.getVideoAspectRatio());
         return message;
@@ -365,7 +413,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.RendererServicesMessage getAvailableRendererServices(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.RendererServicesMessage message = new Messages.RendererServicesMessage();
         message.setServices(player.getAvailableRendererServices());
         return message;
@@ -373,19 +421,19 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void startRendererScanning(Messages.RendererScanningMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.startRendererScanning(arg.getRendererService());
     }
 
     @Override
     public void stopRendererScanning(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.stopRendererScanning();
     }
 
     @Override
     public Messages.RendererDevicesMessage getRendererDevices(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Messages.RendererDevicesMessage message = new Messages.RendererDevicesMessage();
         message.setRendererDevices(player.getRendererDevices());
         return message;
@@ -393,13 +441,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public void castToRenderer(Messages.RenderDeviceMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         player.castToRenderer(arg.getRendererDevice());
     }
 
     @Override
     public Messages.BooleanMessage startRecording(Messages.RecordMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Boolean result = player.startRecording(arg.getSaveDirectory());
         Messages.BooleanMessage message = new Messages.BooleanMessage();
         message.setResult(result);
@@ -408,7 +456,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     @Override
     public Messages.BooleanMessage stopRecording(Messages.ViewMessage arg) {
-        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
         Boolean result = player.stopRecording();
         Messages.BooleanMessage message = new Messages.BooleanMessage();
         message.setResult(result);
