@@ -647,6 +647,11 @@ final class FlutterVlcPlayer implements PlatformView, FlutterVlcPlayerInterface 
         return mediaPlayer.record(null);
     }
 
+    @Override
+    public void updateSize(Messages.UpdateSizeMessage arg) {
+        // noop
+    }
+
     private void log(String message) {
         if (debug) {
             Log.d(TAG, message);

@@ -55,4 +55,8 @@ public class FlutterVlcPlayerFactory extends PlatformViewFactory {
     public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding binding) {
         flutterVlcPlayerBuilder.setContext(binding.getApplicationContext());
     }
+
+    public void disposeAllPlayers() {
+        flutterVlcPlayerBuilder.disposeAllPlayers();
+    }
 }

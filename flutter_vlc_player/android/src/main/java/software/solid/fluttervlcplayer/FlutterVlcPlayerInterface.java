@@ -98,4 +98,5 @@ interface FlutterVlcPlayerInterface {
 
     Boolean stopRecording();
 
+    void updateSize(Messages.UpdateSizeMessage arg);
 }

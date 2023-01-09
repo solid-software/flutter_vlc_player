@@ -21,6 +21,13 @@ class CreateTextureMessage {
   double? height;
 }
 
+class UpdateSizeMessage {
+  double? width;
+  double? height;
+  int? viewId;
+  bool isTexture = false;
+}
+
 class SetMediaMessage {
   int? viewId;
   String? uri;
@@ -189,6 +196,7 @@ abstract class VlcPlayerApi {
   void initialize();
   void create(CreateMessage msg);
   IntMessage createTextureEntry(CreateTextureMessage msg);
+  void updateSize(UpdateSizeMessage msg);
   void disposeTextureEntry(IntMessage msg);
   void dispose(ViewMessage msg);
   // general methods

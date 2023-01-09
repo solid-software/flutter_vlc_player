@@ -82,6 +82,31 @@ class CreateTextureMessage {
   }
 }
 
+class UpdateSizeMessage {
+  double? width;
+  double? height;
+  int? viewId;
+  bool? isTexture;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['width'] = width;
+    pigeonMap['height'] = height;
+    pigeonMap['viewId'] = viewId;
+    pigeonMap['isTexture'] = isTexture;
+    return pigeonMap;
+  }
+
+  static UpdateSizeMessage decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return UpdateSizeMessage()
+      ..width = pigeonMap['width'] as double?
+      ..height = pigeonMap['height'] as double?
+      ..viewId = pigeonMap['viewId'] as int?
+      ..isTexture = pigeonMap['isTexture'] as bool?;
+  }
+}
+
 class ViewMessage {
   int? viewId;
   bool? isTexture;
@@ -684,8 +709,10 @@ class VlcPlayerApi {
   final BinaryMessenger? _binaryMessenger;
 
   Future<void> initialize() async {
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.initialize', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(null) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.initialize', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -706,8 +733,10 @@ class VlcPlayerApi {
 
   Future<void> create(CreateMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.create', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.create', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -728,8 +757,10 @@ class VlcPlayerApi {
 
   Future<IntMessage> createTextureEntry(CreateTextureMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.createTextureEntry', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.createTextureEntry', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -748,10 +779,36 @@ class VlcPlayerApi {
     }
   }
 
+  Future<void> updateSize(UpdateSizeMessage arg) async {
+    final Object encoded = arg.encode();
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.updateSize', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      // noop
+    }
+  }
+
   Future<void> disposeTextureEntry(IntMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.disposeTextureEntry', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.disposeTextureEntry', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -772,8 +829,10 @@ class VlcPlayerApi {
 
   Future<void> dispose(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.dispose', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.dispose', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -794,8 +853,10 @@ class VlcPlayerApi {
 
   Future<void> setStreamUrl(SetMediaMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setStreamUrl', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setStreamUrl', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -816,8 +877,10 @@ class VlcPlayerApi {
 
   Future<void> play(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.play', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.play', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -838,8 +901,10 @@ class VlcPlayerApi {
 
   Future<void> pause(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.pause', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.pause', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -860,8 +925,10 @@ class VlcPlayerApi {
 
   Future<void> stop(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.stop', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.stop', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -882,8 +949,10 @@ class VlcPlayerApi {
 
   Future<BooleanMessage> isPlaying(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.isPlaying', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.isPlaying', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -904,8 +973,10 @@ class VlcPlayerApi {
 
   Future<BooleanMessage> isSeekable(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.isSeekable', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.isSeekable', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -926,8 +997,10 @@ class VlcPlayerApi {
 
   Future<void> setLooping(LoopingMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setLooping', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setLooping', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -948,8 +1021,10 @@ class VlcPlayerApi {
 
   Future<void> seekTo(PositionMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.seekTo', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.seekTo', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -970,8 +1045,10 @@ class VlcPlayerApi {
 
   Future<PositionMessage> position(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.position', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.position', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -992,8 +1069,10 @@ class VlcPlayerApi {
 
   Future<DurationMessage> duration(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.duration', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.duration', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1014,8 +1093,10 @@ class VlcPlayerApi {
 
   Future<void> setVolume(VolumeMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setVolume', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVolume', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1036,8 +1117,10 @@ class VlcPlayerApi {
 
   Future<VolumeMessage> getVolume(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVolume', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVolume', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1058,8 +1141,10 @@ class VlcPlayerApi {
 
   Future<void> setPlaybackSpeed(PlaybackSpeedMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setPlaybackSpeed', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setPlaybackSpeed', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1080,8 +1165,10 @@ class VlcPlayerApi {
 
   Future<PlaybackSpeedMessage> getPlaybackSpeed(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getPlaybackSpeed', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getPlaybackSpeed', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1102,8 +1189,10 @@ class VlcPlayerApi {
 
   Future<SnapshotMessage> takeSnapshot(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.takeSnapshot', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.takeSnapshot', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1124,8 +1213,10 @@ class VlcPlayerApi {
 
   Future<TrackCountMessage> getSpuTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getSpuTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getSpuTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1146,8 +1237,10 @@ class VlcPlayerApi {
 
   Future<SpuTracksMessage> getSpuTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getSpuTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getSpuTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1168,8 +1261,10 @@ class VlcPlayerApi {
 
   Future<void> setSpuTrack(SpuTrackMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setSpuTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setSpuTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1190,8 +1285,10 @@ class VlcPlayerApi {
 
   Future<SpuTrackMessage> getSpuTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getSpuTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getSpuTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1212,8 +1309,10 @@ class VlcPlayerApi {
 
   Future<void> setSpuDelay(DelayMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setSpuDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setSpuDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1234,8 +1333,10 @@ class VlcPlayerApi {
 
   Future<DelayMessage> getSpuDelay(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getSpuDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getSpuDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1256,8 +1357,10 @@ class VlcPlayerApi {
 
   Future<void> addSubtitleTrack(AddSubtitleMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.addSubtitleTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.addSubtitleTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1278,8 +1381,10 @@ class VlcPlayerApi {
 
   Future<TrackCountMessage> getAudioTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getAudioTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1300,8 +1405,10 @@ class VlcPlayerApi {
 
   Future<AudioTracksMessage> getAudioTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getAudioTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1322,8 +1429,10 @@ class VlcPlayerApi {
 
   Future<void> setAudioTrack(AudioTrackMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1344,8 +1453,10 @@ class VlcPlayerApi {
 
   Future<AudioTrackMessage> getAudioTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1366,8 +1477,10 @@ class VlcPlayerApi {
 
   Future<void> setAudioDelay(DelayMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setAudioDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setAudioDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1388,8 +1501,10 @@ class VlcPlayerApi {
 
   Future<DelayMessage> getAudioDelay(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getAudioDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAudioDelay', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1410,8 +1525,10 @@ class VlcPlayerApi {
 
   Future<void> addAudioTrack(AddAudioMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.addAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.addAudioTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1432,8 +1549,10 @@ class VlcPlayerApi {
 
   Future<TrackCountMessage> getVideoTracksCount(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVideoTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracksCount', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1454,8 +1573,10 @@ class VlcPlayerApi {
 
   Future<VideoTracksMessage> getVideoTracks(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVideoTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTracks', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1476,8 +1597,10 @@ class VlcPlayerApi {
 
   Future<void> setVideoTrack(VideoTrackMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setVideoTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1498,8 +1621,10 @@ class VlcPlayerApi {
 
   Future<VideoTrackMessage> getVideoTrack(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVideoTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoTrack', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1520,8 +1645,10 @@ class VlcPlayerApi {
 
   Future<void> setVideoScale(VideoScaleMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setVideoScale', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoScale', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1542,8 +1669,10 @@ class VlcPlayerApi {
 
   Future<VideoScaleMessage> getVideoScale(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVideoScale', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoScale', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1564,8 +1693,10 @@ class VlcPlayerApi {
 
   Future<void> setVideoAspectRatio(VideoAspectRatioMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.setVideoAspectRatio', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.setVideoAspectRatio', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1586,8 +1717,10 @@ class VlcPlayerApi {
 
   Future<VideoAspectRatioMessage> getVideoAspectRatio(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getVideoAspectRatio', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getVideoAspectRatio', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1608,8 +1741,10 @@ class VlcPlayerApi {
 
   Future<RendererServicesMessage> getAvailableRendererServices(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getAvailableRendererServices', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getAvailableRendererServices', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1630,8 +1765,10 @@ class VlcPlayerApi {
 
   Future<void> startRendererScanning(RendererScanningMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.startRendererScanning', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.startRendererScanning', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1652,8 +1789,10 @@ class VlcPlayerApi {
 
   Future<void> stopRendererScanning(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.stopRendererScanning', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.stopRendererScanning', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1674,8 +1813,10 @@ class VlcPlayerApi {
 
   Future<RendererDevicesMessage> getRendererDevices(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.getRendererDevices', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.getRendererDevices', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1696,8 +1837,10 @@ class VlcPlayerApi {
 
   Future<void> castToRenderer(RenderDeviceMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.castToRenderer', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.castToRenderer', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1718,8 +1861,10 @@ class VlcPlayerApi {
 
   Future<BooleanMessage> startRecording(RecordMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.startRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.startRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1740,8 +1885,10 @@ class VlcPlayerApi {
 
   Future<BooleanMessage> stopRecording(ViewMessage arg) async {
     final Object encoded = arg.encode();
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>('dev.flutter.pigeon.VlcPlayerApi.stopRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(encoded) as Map<Object?, Object?>?;
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VlcPlayerApi.stopRecording', const StandardMessageCodec(), binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(encoded) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',

@@ -645,6 +645,15 @@ public class FlutterVlcPlayerTexture implements FlutterVlcPlayerInterface {
         return mediaPlayer.record(null);
     }
 
+    public void updateSize(Messages.UpdateSizeMessage arg) {
+        width = arg.getWidth();
+        height = arg.getHeight();
+        int w = toPhysicalPixels(width);
+        int h = toPhysicalPixels(height);
+        mediaPlayer.getVLCVout().setWindowSize(w, h);
+        textureEntry.surfaceTexture().setDefaultBufferSize(w, h);
+    }
+
     private void log(String message) {
         if (debug) {
             Log.d(TAG, message);

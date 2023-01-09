@@ -6,11 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import io.flutter.FlutterInjector;
+import io.flutter.Log;
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 
-public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
+public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware, FlutterEngine.EngineLifecycleListener {
 
     private static FlutterVlcPlayerFactory flutterVlcPlayerFactory;
     private FlutterPluginBinding flutterPluginBinding;
@@ -71,14 +73,15 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
         }
         flutterVlcPlayerFactory.onAttachedToEngine(binding);
         startListening();
+        binding.getFlutterEngine().addEngineLifecycleListener(this);
     }
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         stopListening();
         //
-
         flutterPluginBinding = null;
+        binding.getFlutterEngine().removeEngineLifecycleListener(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -111,5 +114,17 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
             flutterVlcPlayerFactory.stopListening();
             flutterVlcPlayerFactory = null;
         }
+    }
+
+    @Override
+    public void onPreEngineRestart() {
+        if (flutterVlcPlayerFactory != null) {
+            flutterVlcPlayerFactory.disposeAllPlayers();
+        }
+    }
+
+    @Override
+    public void onEngineWillDestroy() {
+
     }
 }

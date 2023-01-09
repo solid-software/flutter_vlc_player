@@ -135,6 +135,46 @@ public class Messages {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static class UpdateSizeMessage {
+    private Double width;
+    public Double getWidth() { return width; }
+    public void setWidth(Double setterArg) { this.width = setterArg; }
+
+    private Double height;
+    public Double getHeight() { return height; }
+    public void setHeight(Double setterArg) { this.height = setterArg; }
+
+    private Long viewId;
+    public Long getViewId() { return viewId; }
+    public void setViewId(Long setterArg) { this.viewId = setterArg; }
+
+    private Boolean isTexture;
+    public Boolean getIsTexture() { return isTexture; }
+    public void setIsTexture(Boolean setterArg) { this.isTexture = setterArg; }
+
+    Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("width", width);
+      toMapResult.put("height", height);
+      toMapResult.put("viewId", viewId);
+      toMapResult.put("isTexture", isTexture);
+      return toMapResult;
+    }
+    static UpdateSizeMessage fromMap(Map<String, Object> map) {
+      UpdateSizeMessage fromMapResult = new UpdateSizeMessage();
+      Object width = map.get("width");
+      fromMapResult.width = (Double)width;
+      Object height = map.get("height");
+      fromMapResult.height = (Double)height;
+      Object viewId = map.get("viewId");
+      fromMapResult.viewId = (viewId == null) ? null : ((viewId instanceof Integer) ? (Integer)viewId : (Long)viewId);
+      Object isTexture = map.get("isTexture");
+      fromMapResult.isTexture = (Boolean)isTexture;
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static class ViewMessage {
     private Long viewId;
     public Long getViewId() { return viewId; }
@@ -1046,6 +1086,7 @@ public class Messages {
     void initialize();
     void create(CreateMessage arg);
     IntMessage createTextureEntry(CreateTextureMessage arg);
+    void updateSize(UpdateSizeMessage arg);
     void disposeTextureEntry(IntMessage arg);
     void dispose(ViewMessage arg);
     void setStreamUrl(SetMediaMessage arg);
@@ -1146,6 +1187,27 @@ public class Messages {
               CreateTextureMessage input = CreateTextureMessage.fromMap((Map<String, Object>)message);
               IntMessage output = api.createTextureEntry(input);
               wrapped.put("result", output.toMap());
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VlcPlayerApi.updateSize", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              UpdateSizeMessage input = UpdateSizeMessage.fromMap((Map<String, Object>)message);
+              api.updateSize(input);
+              wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));

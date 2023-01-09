@@ -68,7 +68,11 @@ class _VlcTextureSizeWidgetState extends State<VlcTextureSizeWidget> {
 
   void changeSize(Size size) {
     this.size = size;
-    // TODO: change size
+    widget.api.updateSize(UpdateSizeMessage()
+      ..isTexture = true
+      ..viewId = textureId
+      ..width = size.width
+      ..height = size.height);
   }
 
   @override

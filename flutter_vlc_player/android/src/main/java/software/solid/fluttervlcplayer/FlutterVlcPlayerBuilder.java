@@ -43,7 +43,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         return vlcPlayer;
     }
 
-    private void disposeAllPlayers() {
+    public void disposeAllPlayers() {
         for (int i = 0; i < vlcPlayers.size(); i++) {
             vlcPlayers.valueAt(i).dispose();
         }
@@ -461,5 +461,13 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         Messages.BooleanMessage message = new Messages.BooleanMessage();
         message.setResult(result);
         return message;
+    }
+
+    @Override
+    public void updateSize(Messages.UpdateSizeMessage arg) {
+        FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), arg.getIsTexture());
+        if (player != null) {
+            player.updateSize(arg);
+        }
     }
 }
