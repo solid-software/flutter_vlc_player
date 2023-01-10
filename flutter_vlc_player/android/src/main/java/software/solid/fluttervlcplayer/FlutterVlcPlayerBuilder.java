@@ -126,8 +126,10 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
         Boolean isTexture = arg.getIsTexture();
         FlutterVlcPlayerInterface player = getPlayer(arg.getViewId(), isTexture);
         if (isTexture) {
-            player.dispose();
-            vlcPlayersTexture.remove(arg.getViewId());
+            if (player != null) {
+                player.dispose();
+                vlcPlayersTexture.remove(arg.getViewId());
+            }
         } else {
             // the player has been already disposed by platform we just remove it from players list
             vlcPlayers.remove(arg.getViewId());

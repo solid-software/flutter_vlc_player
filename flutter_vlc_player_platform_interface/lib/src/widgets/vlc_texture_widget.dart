@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_vlc_player_platform_interface/src/messages/messages.dart';
@@ -54,6 +55,10 @@ class _VlcTextureSizeWidgetState extends State<VlcTextureSizeWidget> {
         widget.onPlatformViewCreated(value.result!);
       } else {
         widget.api.disposeTextureEntry(value);
+      }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print('Failed to create new textureEntry: $error $stackTrace');
       }
     });
   }

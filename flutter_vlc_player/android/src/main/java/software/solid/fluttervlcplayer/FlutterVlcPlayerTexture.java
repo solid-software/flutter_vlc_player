@@ -633,8 +633,7 @@ public class FlutterVlcPlayerTexture implements FlutterVlcPlayerInterface {
     }
 
     public String getSnapshot() {
-        Log.e(TAG, "Texture mode does not support taking Snapshot");
-        return "";
+        throw new Error("Texture mode does not support taking Snapshot");
     }
 
     public Boolean startRecording(String directory) {

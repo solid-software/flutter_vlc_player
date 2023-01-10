@@ -1,3 +1,6 @@
+## 8.0.0
+* Add support using Texture widget to display video output on Android. VlcPlayerController.takeSnapshot() does not work in this mode.
+
 ## 7.2.0
 * Update to latest VLCKit sdks
 Credits to Mitch Ross (https://github.com/mitchross)

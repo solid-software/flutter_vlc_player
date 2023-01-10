@@ -2,6 +2,20 @@ import Foundation
 import Flutter
 
 public class VLCViewBuilder: NSObject, VlcPlayerApi{
+    
+    public func createTextureEntry(_ input: CreateTextureMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> IntMessage? {
+        // Noop on ios
+        return nil;
+    }
+    
+    public func disposeTextureEntry(_ input: IntMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        // Noop on ios
+    }
+    
+    public func updateSize(_ input: UpdateSizeMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        // Noop on ios
+    }
+    
     var players = [Int:VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger

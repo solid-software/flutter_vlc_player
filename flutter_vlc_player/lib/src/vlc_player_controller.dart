@@ -97,6 +97,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   final String dataSource;
 
   /// Use Texture Widget to display video output.
+  /// [VlcPlayerController.takeSnapshot] does not work in this mode.
+  /// Currently only support Android.
   final bool _useTexture;
 
   /// Set hardware acceleration for player. Default is Automatic.
