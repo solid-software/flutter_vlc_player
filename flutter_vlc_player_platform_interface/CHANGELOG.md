@@ -1,3 +1,7 @@
+## 3.0.0
+
+- Add support using Texture widget to display video output on Android
+
 ## 2.0.2
 
 - Update dependencies
