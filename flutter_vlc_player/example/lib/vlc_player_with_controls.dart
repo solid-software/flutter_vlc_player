@@ -6,20 +6,17 @@ import 'package:path_provider/path_provider.dart';
 
 import 'controls_overlay.dart';
 
-typedef onStopRecordingCallback = void Function(String);
-
 class VlcPlayerWithControls extends StatefulWidget {
   final VlcPlayerController controller;
   final bool showControls;
-  final onStopRecordingCallback onStopRecording;
+  final Function(String)? onStopRecording;
 
-  VlcPlayerWithControls({
-    Key key,
-    @required this.controller,
-    this.showControls = true,
+  const VlcPlayerWithControls({
+    Key? key,
+    required this.controller,
+    this.showControls = false,
     this.onStopRecording,
-  })  : assert(controller != null, 'You must provide a vlc controller'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   VlcPlayerWithControlsState createState() => VlcPlayerWithControlsState();
@@ -29,12 +26,12 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     with AutomaticKeepAliveClientMixin {
   static const _playerControlsBgColor = Colors.black87;
 
-  VlcPlayerController _controller;
+  late VlcPlayerController _controller;
 
   //
   final double initSnapshotRightPosition = 10;
   final double initSnapshotBottomPosition = 10;
-  OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
 
   //
   double sliderValue = 0.0;
@@ -75,21 +72,18 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     if (_controller.value.isInitialized) {
       var oPosition = _controller.value.position;
       var oDuration = _controller.value.duration;
-      if (oPosition != null && oDuration != null) {
-        if (oDuration.inHours == 0) {
-          var strPosition = oPosition.toString().split('.')[0];
-          var strDuration = oDuration.toString().split('.')[0];
-          position =
-              "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
-          duration =
-              "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
-        } else {
-          position = oPosition.toString().split('.')[0];
-          duration = oDuration.toString().split('.')[0];
-        }
-        validPosition = oDuration.compareTo(oPosition) >= 0;
-        sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+      if (oDuration.inHours == 0) {
+        var strPosition = oPosition.toString().split('.')[0];
+        var strDuration = oDuration.toString().split('.')[0];
+        position = "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
+        duration = "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+      } else {
+        position = oPosition.toString().split('.')[0];
+        duration = oDuration.toString().split('.')[0];
       }
+      validPosition = oDuration.compareTo(oPosition) >= 0;
+      sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+
       numberOfCaptions = _controller.value.spuTracksCount;
       numberOfAudioTracks = _controller.value.audioTracksCount;
       // update recording blink widget
@@ -106,7 +100,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         isRecording = _controller.value.isRecording;
         if (!isRecording) {
           if (widget.onStopRecording != null) {
-            widget.onStopRecording(_controller.value.recordPath);
+            widget.onStopRecording!(_controller.value.recordPath);
           }
         }
       }
@@ -134,7 +128,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                       children: [
                         IconButton(
                           tooltip: 'Get Subtitle Tracks',
-                          icon: Icon(Icons.closed_caption),
+                          icon: const Icon(Icons.closed_caption),
                           color: Colors.white,
                           onPressed: _getSubtitleTracks,
                         ),
@@ -147,13 +141,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                                 color: Colors.orange,
                                 borderRadius: BorderRadius.circular(1),
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 1,
                                 horizontal: 2,
                               ),
                               child: Text(
                                 '$numberOfCaptions',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -168,7 +162,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                       children: [
                         IconButton(
                           tooltip: 'Get Audio Tracks',
-                          icon: Icon(Icons.audiotrack),
+                          icon: const Icon(Icons.audiotrack),
                           color: Colors.white,
                           onPressed: _getAudioTracks,
                         ),
@@ -181,13 +175,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                                 color: Colors.orange,
                                 borderRadius: BorderRadius.circular(1),
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 1,
                                 horizontal: 2,
                               ),
                               child: Text(
                                 '$numberOfAudioTracks',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -201,7 +195,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     Stack(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.timer),
+                          icon: const Icon(Icons.timer),
                           color: Colors.white,
                           onPressed: _cyclePlaybackSpeed,
                         ),
@@ -214,13 +208,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                                 color: Colors.orange,
                                 borderRadius: BorderRadius.circular(1),
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 1,
                                 horizontal: 2,
                               ),
                               child: Text(
                                 '${playbackSpeeds.elementAt(playbackSpeedIndex)}x',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
@@ -233,19 +227,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     ),
                     IconButton(
                       tooltip: 'Get Snapshot',
-                      icon: Icon(Icons.camera),
+                      icon: const Icon(Icons.camera),
                       color: Colors.white,
                       onPressed: _createCameraImage,
                     ),
                     IconButton(
                       color: Colors.white,
                       icon: _controller.value.isRecording
-                          ? Icon(Icons.videocam_off_outlined)
-                          : Icon(Icons.videocam_outlined),
+                          ? const Icon(Icons.videocam_off_outlined)
+                          : const Icon(Icons.videocam_outlined),
                       onPressed: _toggleRecording,
                     ),
                     IconButton(
-                      icon: Icon(Icons.cast),
+                      icon: const Icon(Icons.cast),
                       color: Colors.white,
                       onPressed: _getRendererDevices,
                     ),
@@ -257,25 +251,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Size: ' +
-                            (_controller.value.size?.width?.toInt() ?? 0)
-                                .toString() +
-                            'x' +
-                            (_controller.value.size?.height?.toInt() ?? 0)
-                                .toString(),
+                        'Size: ${_controller.value.size.width.toInt()}x${_controller.value.size.height.toInt()}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        'Status: ' +
-                            _controller.value.playingState
-                                .toString()
-                                .split('.')[1],
+                        'Status: ${_controller.value.playingState.toString().split('.')[1]}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ],
                   ),
@@ -294,7 +282,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   child: VlcPlayer(
                     controller: _controller,
                     aspectRatio: 16 / 9,
-                    placeholder: Center(child: CircularProgressIndicator()),
+                    placeholder:
+                        const Center(child: CircularProgressIndicator()),
                   ),
                 ),
                 Positioned(
@@ -302,21 +291,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   left: 10,
                   child: AnimatedOpacity(
                     opacity: recordingTextOpacity,
-                    duration: Duration(seconds: 1),
-                    child: Container(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Icon(Icons.circle, color: Colors.red),
-                          SizedBox(width: 5),
-                          Text(
-                            'REC',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                    duration: const Duration(seconds: 1),
+                    child: const Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Icon(Icons.circle, color: Colors.red),
+                        SizedBox(width: 5),
+                        Text(
+                          'REC',
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -336,8 +323,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 IconButton(
                   color: Colors.white,
                   icon: _controller.value.isPlaying
-                      ? Icon(Icons.pause_circle_outline)
-                      : Icon(Icons.play_circle_outline),
+                      ? const Icon(Icons.pause_circle_outline)
+                      : const Icon(Icons.play_circle_outline),
                   onPressed: _togglePlaying,
                 ),
                 Expanded(
@@ -347,7 +334,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     children: [
                       Text(
                         position,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       Expanded(
                         child: Slider(
@@ -355,8 +342,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           inactiveColor: Colors.white70,
                           value: sliderValue,
                           min: 0.0,
-                          max: (!validPosition &&
-                                  _controller.value.duration == null)
+                          max: !validPosition
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
                           onChanged:
@@ -365,13 +351,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                       ),
                       Text(
                         duration,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.fullscreen),
+                  icon: const Icon(Icons.fullscreen),
                   color: Colors.white,
                   onPressed: () {},
                 ),
@@ -388,7 +374,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Icon(
+                const Icon(
                   Icons.volume_down,
                   color: Colors.white,
                 ),
@@ -400,7 +386,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     onChanged: _setSoundVolume,
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.volume_up,
                   color: Colors.white,
                 ),
@@ -452,17 +438,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   }
 
   void _getSubtitleTracks() async {
-    if (!_controller.value.isPlaying) return;
+    if (!_controller.value.isPlaying) {
+      return;
+    }
 
     var subtitleTracks = await _controller.getSpuTracks();
     //
-    if (subtitleTracks != null && subtitleTracks.isNotEmpty) {
+    if (subtitleTracks.isNotEmpty) {
       var selectedSubId = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Select Subtitle'),
-            content: Container(
+            title: const Text('Select Subtitle'),
+            content: SizedBox(
               width: double.maxFinite,
               height: 250,
               child: ListView.builder(
@@ -494,17 +482,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   }
 
   void _getAudioTracks() async {
-    if (!_controller.value.isPlaying) return;
+    if (!_controller.value.isPlaying) {
+      return;
+    }
 
     var audioTracks = await _controller.getAudioTracks();
     //
-    if (audioTracks != null && audioTracks.isNotEmpty) {
+    if (audioTracks.isNotEmpty) {
       var selectedAudioTrackId = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Select Audio'),
-            content: Container(
+            title: const Text('Select Audio'),
+            content: SizedBox(
               width: double.maxFinite,
               height: 250,
               child: ListView.builder(
@@ -540,13 +530,13 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   void _getRendererDevices() async {
     var castDevices = await _controller.getRendererDevices();
     //
-    if (castDevices != null && castDevices.isNotEmpty) {
+    if (castDevices.isNotEmpty) {
       var selectedCastDeviceName = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Display Devices'),
-            content: Container(
+            title: const Text('Display Devices'),
+            content: SizedBox(
               width: double.maxFinite,
               height: 250,
               child: ListView.builder(
@@ -575,8 +565,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       );
       await _controller.castToRenderer(selectedCastDeviceName);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('No Display Device Found!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No Display Device Found!')));
     }
   }
 
@@ -584,7 +574,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     var snapshot = await _controller.takeSnapshot();
     _overlayEntry?.remove();
     _overlayEntry = _createSnapshotThumbnail(snapshot);
-    Overlay.of(context).insert(_overlayEntry);
+    if (_overlayEntry != null) {
+      Overlay.of(context).insert(_overlayEntry!);
+    }
   }
 
   OverlayEntry _createSnapshotThumbnail(Uint8List snapshot) {
@@ -605,21 +597,19 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 context: context,
                 builder: (ctx) {
                   return AlertDialog(
-                    contentPadding: EdgeInsets.all(0),
-                    content: Container(
-                      child: Image.memory(snapshot),
-                    ),
+                    contentPadding: const EdgeInsets.all(0),
+                    content: Image.memory(snapshot),
                   );
                 },
               );
             },
             onVerticalDragUpdate: (dragUpdateDetails) {
               bottom -= dragUpdateDetails.delta.dy;
-              _overlayEntry.markNeedsBuild();
+              _overlayEntry?.markNeedsBuild();
             },
             onHorizontalDragUpdate: (dragUpdateDetails) {
               right -= dragUpdateDetails.delta.dx;
-              _overlayEntry.markNeedsBuild();
+              _overlayEntry?.markNeedsBuild();
             },
             onHorizontalDragEnd: (dragEndDetails) {
               if ((initSnapshotRightPosition - right).abs() >= 100) {
@@ -627,7 +617,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 _overlayEntry = null;
               } else {
                 right = initSnapshotRightPosition;
-                _overlayEntry.markNeedsBuild();
+                _overlayEntry?.markNeedsBuild();
               }
             },
             onVerticalDragEnd: (dragEndDetails) {
@@ -636,12 +626,10 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 _overlayEntry = null;
               } else {
                 bottom = initSnapshotBottomPosition;
-                _overlayEntry.markNeedsBuild();
+                _overlayEntry?.markNeedsBuild();
               }
             },
-            child: Container(
-              child: Image.memory(snapshot),
-            ),
+            child: Image.memory(snapshot),
           ),
         ),
       ),

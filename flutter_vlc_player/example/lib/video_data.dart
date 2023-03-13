@@ -11,8 +11,8 @@ class VideoData {
   final VideoType type;
 
   VideoData({
-    this.name,
-    this.path,
-    this.type,
+    required this.name,
+    required this.path,
+    required this.type,
   });
 }

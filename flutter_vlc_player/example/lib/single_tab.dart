@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,17 +9,19 @@ import 'video_data.dart';
 import 'vlc_player_with_controls.dart';
 
 class SingleTab extends StatefulWidget {
+  const SingleTab({Key? key}) : super(key: key);
+
   @override
-  _SingleTabState createState() => _SingleTabState();
+  State<SingleTab> createState() => _SingleTabState();
 }
 
 class _SingleTabState extends State<SingleTab> {
-  VlcPlayerController _controller;
+  late VlcPlayerController _controller;
   final _key = GlobalKey<VlcPlayerWithControlsState>();
 
   //
-  List<VideoData> listVideos;
-  int selectedVideoIndex;
+  late List<VideoData> listVideos;
+  late int selectedVideoIndex;
 
   Future<File> _loadVideoToFs() async {
     final videoData = await rootBundle.load('assets/sample.mp4');
@@ -121,7 +122,7 @@ class _SingleTabState extends State<SingleTab> {
       await _controller.startRendererScanning();
     });
     _controller.addOnRendererEventListener((type, id, name) {
-      print('OnRendererEventListener $type $id $name');
+      debugPrint('OnRendererEventListener $type $id $name');
     });
   }
 
@@ -129,7 +130,7 @@ class _SingleTabState extends State<SingleTab> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Container(
+        SizedBox(
           height: 400,
           child: VlcPlayerWithControls(
             key: _key,
@@ -143,7 +144,7 @@ class _SingleTabState extends State<SingleTab> {
                 ));
               });
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text(
                       'The recorded video file has been added to the end of list.'),
                 ),
@@ -154,7 +155,7 @@ class _SingleTabState extends State<SingleTab> {
         ListView.builder(
           shrinkWrap: true,
           itemCount: listVideos.length,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             var video = listVideos[index];
             IconData iconData;
@@ -208,24 +209,24 @@ class _SingleTabState extends State<SingleTab> {
                     break;
                   case VideoType.file:
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('Copying file to temporary storage...'),
                       ),
                     );
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
                     var tempVideo = await _loadVideoToFs();
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('Now trying to play...'),
                       ),
                     );
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
                     if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('File load error.'),
                         ),
                       );

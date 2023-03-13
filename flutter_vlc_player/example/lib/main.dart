@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
+
 import 'multiple_tab.dart';
 import 'single_tab.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
-      home: App(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-class _AppState extends State<App> {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Vlc Player Example'),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'Single'),
-              Tab(text: 'Multiple'),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Vlc Player Example'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Single'),
+                Tab(text: 'Multiple'),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              SingleTab(),
+              MultipleTab(),
             ],
           ),
-        ),
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            SingleTab(),
-            MultipleTab(),
-          ],
         ),
       ),
     );
