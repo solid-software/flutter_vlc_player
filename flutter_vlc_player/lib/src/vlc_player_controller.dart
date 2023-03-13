@@ -28,18 +28,19 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// The name of the asset is given by the [dataSource] argument and must not be
   /// null. The [package] argument must be non-null when the asset comes from a
   /// package and null otherwise.
-  VlcPlayerController.asset(
-    this.dataSource, {
+  VlcPlayerController.asset(this.dataSource, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = false,
     this.package,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
-    @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
-    @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
-  })  : _dataSourceType = DataSourceType.asset,
+    @Deprecated(
+        'Please, use the addOnInitListener method instead.') VoidCallback? onInit,
+    @Deprecated(
+        'Please, use the addOnRendererEventListener method instead.') RendererCallback? onRendererHandler,
+  })
+      : _dataSourceType = DataSourceType.asset,
         _onInit = onInit,
         _onRendererHandler = onRendererHandler,
         super(VlcPlayerValue(duration: Duration.zero));
@@ -49,17 +50,18 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   ///
   /// The URI for the video is given by the [dataSource] argument and must not be
   /// null.
-  VlcPlayerController.network(
-    this.dataSource, {
+  VlcPlayerController.network(this.dataSource, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = false,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
-    @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
-    @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
-  })  : package = null,
+    @Deprecated(
+        'Please, use the addOnInitListener method instead.') VoidCallback? onInit,
+    @Deprecated(
+        'Please, use the addOnRendererEventListener method instead.') RendererCallback? onRendererHandler,
+  })
+      : package = null,
         _dataSourceType = DataSourceType.network,
         _onInit = onInit,
         _onRendererHandler = onRendererHandler,
@@ -69,17 +71,18 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   ///
   /// This will load the file from the file-URI given by:
   /// `'file://${file.path}'`.
-  VlcPlayerController.file(
-    File file, {
+  VlcPlayerController.file(File file, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = false,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
-    @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
-    @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
-  })  : dataSource = 'file://${file.path}',
+    @Deprecated(
+        'Please, use the addOnInitListener method instead.') VoidCallback? onInit,
+    @Deprecated(
+        'Please, use the addOnRendererEventListener method instead.') RendererCallback? onRendererHandler,
+  })
+      : dataSource = 'file://${file.path}',
         package = null,
         _dataSourceType = DataSourceType.file,
         _onInit = onInit,
@@ -102,6 +105,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
+
+  /// Set keep playing video in background, when app goes in background.
+  /// The default value is false.
+  final bool allowBackgroundPlayback;
 
   /// This is a callback that will be executed once the platform view has been initialized.
   /// If you want the media to play as soon as the platform view has initialized, you could just call
@@ -176,8 +183,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       throw Exception('Already Initialized');
     }
 
-    _lifeCycleObserver = VlcAppLifeCycleObserver(this);
-    _lifeCycleObserver!.initialize();
+    if (!allowBackgroundPlayback) {
+      _lifeCycleObserver = VlcAppLifeCycleObserver(this);
+    }
+    _lifeCycleObserver?.initialize();
 
     await vlcPlayerPlatform.create(
       viewId: _viewId,
@@ -375,11 +384,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   }
 
   /// Notify onRendererHandler callback & all registered listeners
-  void _notifyOnRendererListeners(
-    VlcRendererEventType type,
-    String? id,
-    String? name,
-  ) {
+  void _notifyOnRendererListeners(VlcRendererEventType type,
+      String? id,
+      String? name,) {
     if (_onRendererHandler != null) {
       _onRendererHandler!(type, id!, name!);
     }
@@ -392,8 +399,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// its state before the method was called. (i.e. if this method is called whilst media is playing, once the new
   /// data source has been loaded, the new stream will begin playing.)
   /// [dataSource] - the path of the asset file.
-  Future<void> setMediaFromAsset(
-    String dataSource, {
+  Future<void> setMediaFromAsset(String dataSource, {
     String? package,
     bool? autoPlay,
     HwAcc? hwAcc,
@@ -413,8 +419,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// its state before the method was called. (i.e. if this method is called whilst media is playing, once the new
   /// data source has been loaded, the new stream will begin playing.)
   /// [dataSource] - the URL of the stream to start playing.
-  Future<void> setMediaFromNetwork(
-    String dataSource, {
+  Future<void> setMediaFromNetwork(String dataSource, {
     bool? autoPlay,
     HwAcc? hwAcc,
   }) async {
@@ -433,8 +438,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// its state before the method was called. (i.e. if this method is called whilst media is playing, once the new
   /// data source has been loaded, the new stream will begin playing.)
   /// [file] - the File stream to start playing.
-  Future<void> setMediaFromFile(
-    File file, {
+  Future<void> setMediaFromFile(File file, {
     bool? autoPlay,
     HwAcc? hwAcc,
   }) async {
@@ -455,8 +459,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// data source has been loaded, the new stream will begin playing.)
   /// [dataSource] - the URL of the stream to start playing.
   /// [dataSourceType] - the source type of media.
-  Future<void> _setStreamUrl(
-    String dataSource, {
+  Future<void> _setStreamUrl(String dataSource, {
     required DataSourceType dataSourceType,
     String? package,
     bool? autoPlay,
@@ -669,8 +672,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra network subtitle to media.
   /// [dataSource] - Url of subtitle
   /// [isSelected] - Set true if you wanna force the added subtitle to start display on media.
-  Future<void> addSubtitleFromNetwork(
-    String dataSource, {
+  Future<void> addSubtitleFromNetwork(String dataSource, {
     bool? isSelected,
   }) async {
     return await _addSubtitleTrack(
@@ -683,8 +685,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra subtitle file to media.
   /// [file] - Subtitle file
   /// [isSelected] - Set true if you wanna force the added subtitle to start display on media.
-  Future<void> addSubtitleFromFile(
-    File file, {
+  Future<void> addSubtitleFromFile(File file, {
     bool? isSelected,
   }) async {
     return await _addSubtitleTrack(
@@ -697,8 +698,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra subtitle to media.
   /// [uri] - URI of subtitle
   /// [isSelected] - Set true if you wanna force the added subtitle to start display on media.
-  Future<void> _addSubtitleTrack(
-    String uri, {
+  Future<void> _addSubtitleTrack(String uri, {
     required DataSourceType dataSourceType,
     bool? isSelected,
   }) async {
@@ -761,8 +761,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra network audio to media.
   /// [dataSource] - Url of audio
   /// [isSelected] - Set true if you wanna force the added audio to start playing on media.
-  Future<void> addAudioFromNetwork(
-    String dataSource, {
+  Future<void> addAudioFromNetwork(String dataSource, {
     bool? isSelected,
   }) async {
     return await _addAudioTrack(
@@ -775,8 +774,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra audio file to media.
   /// [file] - Audio file
   /// [isSelected] - Set true if you wanna force the added audio to start playing on media.
-  Future<void> addAudioFromFile(
-    File file, {
+  Future<void> addAudioFromFile(File file, {
     bool? isSelected,
   }) async {
     return await _addAudioTrack(
@@ -789,8 +787,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Add extra audio to media.
   /// [uri] - URI of audio
   /// [isSelected] - Set true if you wanna force the added audio to start playing on media.
-  Future<void> _addAudioTrack(
-    String uri, {
+  Future<void> _addAudioTrack(String uri, {
     required DataSourceType dataSourceType,
     bool? isSelected,
   }) async {
