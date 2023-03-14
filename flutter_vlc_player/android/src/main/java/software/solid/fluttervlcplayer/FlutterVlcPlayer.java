@@ -644,6 +644,7 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     Boolean stopRecording() {
+        if (mediaPlayer == null) return true;
         return mediaPlayer.record(null);
     }
 

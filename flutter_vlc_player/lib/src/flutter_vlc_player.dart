@@ -34,11 +34,7 @@ class VlcPlayer extends StatefulWidget {
   _VlcPlayerState createState() => _VlcPlayerState();
 }
 
-class _VlcPlayerState extends State<VlcPlayer>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _VlcPlayerState extends State<VlcPlayer> {
   _VlcPlayerState() {
     _listener = () {
       if (!mounted) return;
@@ -83,7 +79,6 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
       child: Stack(

@@ -45,6 +45,7 @@ class _MultipleTabState extends State<MultipleTab> {
     return Container(
       child: ListView.separated(
         itemCount: controllers.length,
+        cacheExtent: double.maxFinite,
         separatorBuilder: (_, index) {
           return Divider(height: 5, thickness: 5, color: Colors.grey);
         },
