@@ -31,7 +31,7 @@ class VlcPlayer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _VlcPlayerState createState() => _VlcPlayerState();
+  State<VlcPlayer> createState() => _VlcPlayerState();
 }
 
 class _VlcPlayerState extends State<VlcPlayer>
