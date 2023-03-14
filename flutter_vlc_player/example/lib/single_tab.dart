@@ -208,28 +208,34 @@ class _SingleTabState extends State<SingleTab> {
                     );
                     break;
                   case VideoType.file:
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Copying file to temporary storage...'),
-                      ),
-                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Copying file to temporary storage...'),
+                        ),
+                      );
+                    }
                     await Future.delayed(const Duration(seconds: 1));
                     var tempVideo = await _loadVideoToFs();
                     await Future.delayed(const Duration(seconds: 1));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Now trying to play...'),
-                      ),
-                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Now trying to play...'),
+                        ),
+                      );
+                    }
                     await Future.delayed(const Duration(seconds: 1));
                     if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('File load error.'),
-                        ),
-                      );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('File load error.'),
+                          ),
+                        );
+                      }
                     }
                     break;
                   case VideoType.asset:

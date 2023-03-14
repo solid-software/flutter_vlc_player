@@ -292,9 +292,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   child: AnimatedOpacity(
                     opacity: recordingTextOpacity,
                     duration: const Duration(seconds: 1),
-                    child: const Wrap(
+                    child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
+                      children: const [
                         Icon(Icons.circle, color: Colors.red),
                         SizedBox(width: 5),
                         Text(
@@ -444,7 +444,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
     var subtitleTracks = await _controller.getSpuTracks();
     //
-    if (subtitleTracks.isNotEmpty) {
+    if (context.mounted && subtitleTracks.isNotEmpty) {
       var selectedSubId = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -488,7 +488,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
     var audioTracks = await _controller.getAudioTracks();
     //
-    if (audioTracks.isNotEmpty) {
+    if (context.mounted && audioTracks.isNotEmpty) {
       var selectedAudioTrackId = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -530,7 +530,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   void _getRendererDevices() async {
     var castDevices = await _controller.getRendererDevices();
     //
-    if (castDevices.isNotEmpty) {
+    if (context.mounted && castDevices.isNotEmpty) {
       var selectedCastDeviceName = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -574,7 +574,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     var snapshot = await _controller.takeSnapshot();
     _overlayEntry?.remove();
     _overlayEntry = _createSnapshotThumbnail(snapshot);
-    if (_overlayEntry != null) {
+    if (context.mounted && _overlayEntry != null) {
       Overlay.of(context).insert(_overlayEntry!);
     }
   }
