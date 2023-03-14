@@ -1,4 +1,4 @@
-# fluttervlcplayerexample
+# flutter_vlc_player_example
 
 Demonstrates how to use the flutter_vlc_player plugin.
 
