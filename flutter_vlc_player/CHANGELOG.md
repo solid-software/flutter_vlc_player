@@ -1,3 +1,6 @@
+## 8.0.0
+* **Possible breaking Change**: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
+
 ## 7.2.0
 * Update to latest VLCKit sdks
 Credits to Mitch Ross (https://github.com/mitchross)
