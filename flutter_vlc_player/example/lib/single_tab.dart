@@ -135,6 +135,7 @@ class _SingleTabState extends State<SingleTab> {
           child: VlcPlayerWithControls(
             key: _key,
             controller: _controller,
+            showControls: true,
             onStopRecording: (recordPath) {
               setState(() {
                 listVideos.add(VideoData(
