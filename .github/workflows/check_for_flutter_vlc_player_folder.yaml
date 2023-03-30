@@ -26,6 +26,7 @@ jobs:
       
       - name: Get dependencies
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: ./flutter_vlc_player
         run: flutter pub get
       
       - name: Setup Dart Code Metrics
