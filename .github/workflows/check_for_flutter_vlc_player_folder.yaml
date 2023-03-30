@@ -7,10 +7,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-
-      - name: Select folder
-        run: |
-          neededFolder="./flutter_vlc_player"
           
       - name: Check file existence
         id: check_files
@@ -26,22 +22,18 @@ jobs:
       
       - name: Check flutter sdk version
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: neededFolder
         run: flutter --version
       
       - name: Get dependencies
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: neededFolder
         run: flutter pub get
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: neededFolder
         run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: neededFolder
         run: |
           dirs_to_analyze=""
           if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
@@ -68,12 +60,10 @@ jobs:
 
       - name: Check formatting
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
         run: dart format . --set-exit-if-changed
 
       - name: Run tests
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
         run: |
           # run tests if `test` folder exists
           if [ -d test ]
