@@ -1,4 +1,4 @@
-name: Application ON Push & PR DO Code check
+name: Application ON Push & PR DO Code check for flutter_vlc_player_platform_interface folder
 on: [push, pull_request]
 
 jobs:
@@ -7,6 +7,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Select folder
+        run: cd flutter_vlc_player_platform_interface
           
       - name: Check file existence
         id: check_files
@@ -44,6 +47,8 @@ jobs:
           then
             dart run dart_code_metrics:metrics \
               analyze \
+              flutter_vlc_player/lib \
+              flutter_vlc_player/lib
               $dirs_to_analyze \
               --fatal-warnings \
               --fatal-performance \
