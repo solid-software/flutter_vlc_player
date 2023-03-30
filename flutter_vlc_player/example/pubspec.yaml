@@ -21,6 +21,7 @@ dev_dependencies:
 
   flutter_vlc_player:
     path: ../
+  solid_lints: 0.0.14
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

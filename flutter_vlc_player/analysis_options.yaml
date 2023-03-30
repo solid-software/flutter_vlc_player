@@ -1,1 +1,7 @@
-include: package:flutter_lints/flutter.yaml
+include: package:solid_lints/analysis_options.yaml
+
+linter:
+  rules:
+    lines_longer_than_80_chars: false 
+    comment_references: false
+    public_member_api_docs: false
