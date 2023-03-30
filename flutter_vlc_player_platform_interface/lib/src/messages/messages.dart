@@ -8,6 +8,7 @@ import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 import 'package:flutter/services.dart';
 
 // ignore: prefer-match-file-name
+
 class CreateMessage {
   int? viewId;
   String? uri;
