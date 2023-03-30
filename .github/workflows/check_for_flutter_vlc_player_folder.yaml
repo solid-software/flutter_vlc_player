@@ -15,13 +15,11 @@ jobs:
       - name: Check file existence
         id: check_files
         uses: andstor/file-existence-action@v1
-        working-directory: $neededFolder
         with:
           files: "flutter_vlc_player/pubspec.yaml"
 
       - name: Setup flutter
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
