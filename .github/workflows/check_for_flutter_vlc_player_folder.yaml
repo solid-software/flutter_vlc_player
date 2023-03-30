@@ -26,22 +26,22 @@ jobs:
       
       - name: Check flutter sdk version
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
+        working-directory: neededFolder
         run: flutter --version
       
       - name: Get dependencies
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
+        working-directory: neededFolder
         run: flutter pub get
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
+        working-directory: neededFolder
         run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: $neededFolder
+        working-directory: neededFolder
         run: |
           dirs_to_analyze=""
           if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
