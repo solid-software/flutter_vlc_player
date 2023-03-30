@@ -31,7 +31,7 @@ jobs:
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        run: dart pub get dart_code_metrics
+        run: flutter clean && dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
