@@ -29,6 +29,9 @@ jobs:
         working-directory: ./flutter_vlc_player
         run: flutter pub get
       
+      - name: Get Folder
+        run: echo $PWD
+      
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
         run: flutter clean && dart pub get dart_code_metrics
