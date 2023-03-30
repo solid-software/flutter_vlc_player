@@ -9,34 +9,41 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Select folder
-        working-directory: ./flutter_vlc_player_platform_interface
+        run: |
+          neededFolder="./flutter_vlc_player_platform_interface"
           
       - name: Check file existence
         id: check_files
         uses: andstor/file-existence-action@v1
+        working-directory: $neededFolder
         with:
           files: "flutter_vlc_player_platform_interface/pubspec.yaml"
 
       - name: Setup flutter
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
       
       - name: Check flutter sdk version
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: flutter --version
       
       - name: Get dependencies
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: flutter pub get
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: |
           dirs_to_analyze=""
           if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
@@ -63,10 +70,12 @@ jobs:
 
       - name: Check formatting
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: dart format . --set-exit-if-changed
 
       - name: Run tests
         if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: $neededFolder
         run: |
           # run tests if `test` folder exists
           if [ -d test ]
