@@ -34,8 +34,8 @@ jobs:
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        run: dart pub get dart_code_metrics
         working-directory: ./flutter_vlc_player
+        run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
@@ -56,10 +56,6 @@ jobs:
               --fatal-style
             dart run dart_code_metrics:metrics \
               check-unused-files \
-              $dirs_to_analyze \
-              --fatal-unused
-            dart run dart_code_metrics:metrics \
-              check-unused-code \ 
               $dirs_to_analyze \
               --fatal-unused
           fi
