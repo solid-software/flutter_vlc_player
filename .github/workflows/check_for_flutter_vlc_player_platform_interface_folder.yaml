@@ -26,22 +26,22 @@ jobs:
       
       - name: Check flutter sdk version
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: flutter --version
       
       - name: Get dependencies
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: flutter pub get
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: |
           dirs_to_analyze=""
           if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
@@ -64,12 +64,12 @@ jobs:
 
       - name: Check formatting
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: dart format . --set-exit-if-changed
 
       - name: Run tests
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ../flutter_vlc_player_platform_interface
+        working-directory: ./flutter_vlc_player_platform_interface
         run: |
           # run tests if `test` folder exists
           if [ -d test ]
