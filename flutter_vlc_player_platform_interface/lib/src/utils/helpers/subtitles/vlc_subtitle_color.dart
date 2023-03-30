@@ -1,4 +1,6 @@
 class VlcSubtitleColor {
+  static const _redShiftAmount = 16;
+  static const _greenShiftAmount = 8;
   static const black = VlcSubtitleColor(0);
   static const gray = VlcSubtitleColor(8421504);
   static const silver = VlcSubtitleColor(12632256);
@@ -22,5 +24,5 @@ class VlcSubtitleColor {
     int red = 0,
     int green = 0,
     int blue = 0,
-  }) : value = (red << 16) + (green << 8) + blue;
+  }) : value = (red << _redShiftAmount) + (green << _greenShiftAmount) + blue;
 }

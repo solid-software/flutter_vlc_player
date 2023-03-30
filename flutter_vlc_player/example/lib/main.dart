@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'multiple_tab.dart';
-import 'single_tab.dart';
+import 'package:flutter_vlc_player_example/multiple_tab.dart';
+import 'package:flutter_vlc_player_example/single_tab.dart';
 
 void main() {
   runApp(
@@ -10,21 +10,23 @@ void main() {
   );
 }
 
+// ignore: prefer-match-file-name
 class App extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
+  static const _length = 2;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: _length,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Vlc Player Example'),
-          bottom: TabBar(
+          title: const Text('Vlc Player Example'),
+          bottom: const TabBar(
             tabs: [
               Tab(text: 'Single'),
               Tab(text: 'Multiple'),
@@ -32,7 +34,7 @@ class _AppState extends State<App> {
           ),
         ),
         body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             SingleTab(),
             MultipleTab(),
