@@ -34,7 +34,8 @@ jobs:
       
       - name: Setup Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
-        run: flutter clean && dart pub get dart_code_metrics
+        run: dart pub get dart_code_metrics
+        working-directory: ./flutter_vlc_player
 
       - name: Dart Code Metrics
         if: steps.check_files.outputs.files_exists == 'true'
