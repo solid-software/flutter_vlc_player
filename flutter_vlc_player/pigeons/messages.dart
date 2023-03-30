@@ -1,5 +1,6 @@
 import 'package:pigeon/pigeon_lib.dart';
 
+//ignore: prefer-match-file-name
 class ViewMessage {
   int? viewId;
 }
@@ -210,8 +211,8 @@ void configurePigeon(PigeonOptions opts) {
       '../flutter_vlc_player_platform_interface/lib/src/messages/messages.dart';
   opts.objcHeaderOut = 'ios/Classes/messages.h';
   opts.objcSourceOut = 'ios/Classes/messages.m';
-  opts.objcOptions!.prefix = '';
+  opts.objcOptions?.prefix = '';
   opts.javaOut =
       'android/src/main/java/software/solid/fluttervlcplayer/Messages.java';
-  opts.javaOptions!.package = 'software.solid.fluttervlcplayer';
+  opts.javaOptions?.package = 'software.solid.fluttervlcplayer';
 }

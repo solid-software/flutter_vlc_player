@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class ControlsOverlay extends StatelessWidget {
-  const ControlsOverlay({Key key, this.controller}) : super(key: key);
-
-  final VlcPlayerController controller;
-
   static const double _playButtonIconSize = 80;
   static const double _replayButtonIconSize = 100;
   static const double _seekButtonIconSize = 48;
@@ -15,11 +12,15 @@ class ControlsOverlay extends StatelessWidget {
 
   static const Color _iconColor = Colors.white;
 
+  final VlcPlayerController controller;
+
+  const ControlsOverlay({Key key, this.controller}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 50),
-      reverseDuration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 50),
+      reverseDuration: const Duration(milliseconds: 200),
       child: Builder(
         builder: (ctx) {
           if (controller.value.isEnded || controller.value.hasError) {
@@ -29,7 +30,7 @@ class ControlsOverlay extends StatelessWidget {
                   onPressed: _replay,
                   color: _iconColor,
                   iconSize: _replayButtonIconSize,
-                  icon: Icon(Icons.replay),
+                  icon: const Icon(Icons.replay),
                 ),
               ),
             );
@@ -40,7 +41,7 @@ class ControlsOverlay extends StatelessWidget {
             case PlayingState.stopped:
             case PlayingState.paused:
               return SizedBox.expand(
-                child: Container(
+                child: ColoredBox(
                   color: Colors.black45,
                   child: FittedBox(
                     child: Row(
@@ -51,19 +52,19 @@ class ControlsOverlay extends StatelessWidget {
                           onPressed: () => _seekRelative(_seekStepBackward),
                           color: _iconColor,
                           iconSize: _seekButtonIconSize,
-                          icon: Icon(Icons.replay_10),
+                          icon: const Icon(Icons.replay_10),
                         ),
                         IconButton(
                           onPressed: _play,
                           color: _iconColor,
                           iconSize: _playButtonIconSize,
-                          icon: Icon(Icons.play_arrow),
+                          icon: const Icon(Icons.play_arrow),
                         ),
                         IconButton(
                           onPressed: () => _seekRelative(_seekStepForward),
                           color: _iconColor,
                           iconSize: _seekButtonIconSize,
-                          icon: Icon(Icons.forward_10),
+                          icon: const Icon(Icons.forward_10),
                         ),
                       ],
                     ),
@@ -88,13 +89,13 @@ class ControlsOverlay extends StatelessWidget {
                     onPressed: _replay,
                     color: _iconColor,
                     iconSize: _replayButtonIconSize,
-                    icon: Icon(Icons.replay),
+                    icon: const Icon(Icons.replay),
                   ),
                 ),
               );
 
             default:
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
           }
         },
       ),
