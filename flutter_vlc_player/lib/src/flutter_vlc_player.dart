@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_vlc_player/src/vlc_player_controller.dart';
 import 'package:flutter_vlc_player/src/vlc_player_platform.dart';
 
+// ignore: prefer-match-file-name
 class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;
   final double aspectRatio;
