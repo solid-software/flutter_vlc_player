@@ -1,4 +1,4 @@
-name: Code check for flutter_vlc_player_platform_interface folder
+name: Interface ON Push & PR DO Code check
 on: [push, pull_request]
 
 jobs:
@@ -8,16 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Select folder
-        run: |
-          neededFolder="./flutter_vlc_player_platform_interface"
-          
-      - name: Check file existence
-        id: check_files
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "flutter_vlc_player_platform_interface/pubspec.yaml"
-
       - name: Setup flutter
         if: steps.check_files.outputs.files_exists == 'true'
         uses: subosito/flutter-action@v2
@@ -25,22 +15,18 @@ jobs:
           channel: 'stable'
 
       - name: Check flutter sdk version
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: flutter --version
 
       - name: Get dependencies
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: flutter pub get
 
       - name: Setup Dart Code Metrics
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: dart pub get dart_code_metrics
 
       - name: Dart Code Metrics
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: |
           dirs_to_analyze=""
@@ -61,12 +47,10 @@ jobs:
               --fatal-unused
           fi
       - name: Check formatting
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: dart format . --set-exit-if-changed
 
       - name: Run tests
-        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ./flutter_vlc_player_platform_interface
         run: |
           # run tests if `test` folder exists
