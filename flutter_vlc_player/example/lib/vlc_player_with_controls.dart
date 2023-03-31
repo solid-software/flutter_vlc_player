@@ -31,10 +31,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   static const _recordingPositionOffset = 10.0;
   static const _positionedBottomSpace = 7.0;
   static const _positionedRightSpace = 3.0;
-  static const _hundred = 100.0;
+  static const _overlayWidth = 100.0;
   static const _elevation = 4.0;
   static const _aspectRatio = 16 / 9;
-  static const _thousand = 1000;
 
   final double initSnapshotRightPosition = 10;
   final double initSnapshotBottomPosition = 10;
@@ -400,7 +399,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 Expanded(
                   child: Slider(
                     min: 0,
-                    max: _hundred,
+                    max: _overlayWidth,
                     value: volumeValue,
                     onChanged: _setSoundVolume,
                   ),
@@ -454,7 +453,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       sliderValue = progress.floor().toDouble();
     });
     //convert to Milliseconds since VLC requires MS to set time
-    _controller.setTime(sliderValue.toInt() * _thousand);
+    _controller.setTime(sliderValue.toInt() * Duration.millisecondsPerSecond);
   }
 
   Future<void> _getSubtitleTracks() async {
@@ -607,7 +606,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       builder: (context) => Positioned(
         right: right,
         bottom: bottom,
-        width: _hundred,
+        width: _overlayWidth,
         child: Material(
           elevation: _elevation,
           child: GestureDetector(
@@ -633,7 +632,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
               _overlayEntry.markNeedsBuild();
             },
             onHorizontalDragEnd: (dragEndDetails) {
-              if ((initSnapshotRightPosition - right).abs() >= _hundred) {
+              if ((initSnapshotRightPosition - right).abs() >= _overlayWidth) {
                 _overlayEntry?.remove();
                 _overlayEntry = null;
               } else {
@@ -642,7 +641,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
               }
             },
             onVerticalDragEnd: (dragEndDetails) {
-              if ((initSnapshotBottomPosition - bottom).abs() >= _hundred) {
+              if ((initSnapshotBottomPosition - bottom).abs() >=
+                  _overlayWidth) {
                 _overlayEntry?.remove();
                 _overlayEntry = null;
               } else {

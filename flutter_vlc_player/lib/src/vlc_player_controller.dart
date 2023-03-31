@@ -1,5 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars, comment_references
-
 import 'dart:async';
 import 'dart:io';
 
@@ -179,8 +177,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       throw Exception('Already Initialized');
     }
 
-    _lifeCycleObserver = VlcAppLifeCycleObserver(this);
-    _lifeCycleObserver?.initialize();
+    _lifeCycleObserver = VlcAppLifeCycleObserver(this)..initialize();
 
     await vlcPlayerPlatform.create(
       viewId: _viewId,
@@ -369,9 +366,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// Notify onInit callback & all registered listeners
   void _notifyOnInitListeners() {
-    if (_onInit != null) {
-      _onInit?.call();
-    }
+    _onInit?.call();
     for (final listener in _onInitListeners) {
       listener();
     }
@@ -384,9 +379,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     String? name,
   ) {
     if (id == null || name == null) return;
-    if (_onRendererHandler != null) {
-      _onRendererHandler?.call(type, id, name);
-    }
+    _onRendererHandler?.call(type, id, name);
     for (final listener in _onRendererEventListeners) {
       listener(type, id, name);
     }
@@ -507,7 +500,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   }
 
   /// Sets whether or not the video should loop after playing once.
-  Future<void> setLooping({required bool looping}) async {
+  Future<void> setLooping(bool looping) async {
     _throwIfNotInitialized('setLooping');
     value = value.copyWith(isLooping: looping);
     await vlcPlayerPlatform.setLooping(_viewId, looping);

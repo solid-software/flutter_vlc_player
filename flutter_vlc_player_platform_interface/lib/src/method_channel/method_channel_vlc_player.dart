@@ -114,7 +114,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   Stream<VlcMediaEvent> mediaEventsFor(int viewId) {
     return _mediaEventChannelFor(viewId).receiveBroadcastStream().map(
       (dynamic event) {
-        final Map<Object?, Object?> map = event as Map<Object?, Object?>;
+        final Map<String, Object?> map = event as Map<String, Object?>;
         //
         switch (map['event']) {
           case 'opening':

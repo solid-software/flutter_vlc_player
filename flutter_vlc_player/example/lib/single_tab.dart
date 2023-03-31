@@ -13,7 +13,7 @@ class SingleTab extends StatefulWidget {
 }
 
 class _SingleTabState extends State<SingleTab> {
-  static const _networkCaching = 2000;
+  static const _networkCachingMs = 2000;
   static const _subtitlesFontSize = 30;
   static const _height = 400.0;
 
@@ -86,7 +86,7 @@ class _SingleTabState extends State<SingleTab> {
           hwAcc: HwAcc.full,
           options: VlcPlayerOptions(
             advanced: VlcAdvancedOptions([
-              VlcAdvancedOptions.networkCaching(_networkCaching),
+              VlcAdvancedOptions.networkCaching(_networkCachingMs),
             ]),
             subtitle: VlcSubtitleOptions([
               VlcSubtitleOptions.boldStyle(true),

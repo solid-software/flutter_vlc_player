@@ -9,7 +9,6 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Setup flutter
-        if: steps.check_files.outputs.files_exists == 'true'
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
