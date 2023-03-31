@@ -17,11 +17,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  static const _length = 2;
+  static const _tabCount = 2;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: _length,
+      length: _tabCount,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

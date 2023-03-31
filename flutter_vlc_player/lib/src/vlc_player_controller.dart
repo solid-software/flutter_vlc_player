@@ -22,7 +22,7 @@ import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
 ///
 /// After [dispose] all further calls are ignored.
 class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
-  static const _volumeMaxLimit = 100;
+  static const _maxVolume = 100;
 
   /// The URI to the video file. This will be in different formats depending on
   /// the [DataSourceType] of the original video.
@@ -572,7 +572,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// linear scale.
   Future<void> setVolume(int volume) async {
     _throwIfNotInitialized('setVolume');
-    value = value.copyWith(volume: volume.clamp(0, _volumeMaxLimit));
+    value = value.copyWith(volume: volume.clamp(0, _maxVolume));
     await vlcPlayerPlatform.setVolume(_viewId, value.volume);
   }
 
@@ -581,7 +581,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _throwIfNotInitialized('getVolume');
     final volume =
         await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
-    value = value.copyWith(volume: volume.clamp(0, _volumeMaxLimit));
+    value = value.copyWith(volume: volume.clamp(0, _maxVolume));
 
     return volume;
   }

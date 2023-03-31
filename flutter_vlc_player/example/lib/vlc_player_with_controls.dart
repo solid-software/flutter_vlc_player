@@ -27,8 +27,8 @@ class VlcPlayerWithControls extends StatefulWidget {
 class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     with AutomaticKeepAliveClientMixin {
   static const _playerControlsBgColor = Colors.black87;
-  static const _positionedOffset1 = 8.0;
-  static const _positionedOffset2 = 10.0;
+  static const _numberPositionOffset = 8.0;
+  static const _recordingPositionOffset = 10.0;
   static const _positionedBottomSpace = 7.0;
   static const _positionedRightSpace = 3.0;
   static const _hundred = 100.0;
@@ -149,8 +149,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           onPressed: _getSubtitleTracks,
                         ),
                         Positioned(
-                          top: _positionedOffset1,
-                          right: _positionedOffset1,
+                          top: _numberPositionOffset,
+                          right: _numberPositionOffset,
                           child: IgnorePointer(
                             child: Container(
                               decoration: BoxDecoration(
@@ -183,8 +183,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           onPressed: _getAudioTracks,
                         ),
                         Positioned(
-                          top: _positionedOffset1,
-                          right: _positionedOffset1,
+                          top: _numberPositionOffset,
+                          right: _numberPositionOffset,
                           child: IgnorePointer(
                             child: Container(
                               decoration: BoxDecoration(
@@ -304,8 +304,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   ),
                 ),
                 Positioned(
-                  top: _positionedOffset2,
-                  left: _positionedOffset2,
+                  top: _recordingPositionOffset,
+                  left: _recordingPositionOffset,
                   child: AnimatedOpacity(
                     opacity: recordingTextOpacity,
                     duration: const Duration(seconds: 1),

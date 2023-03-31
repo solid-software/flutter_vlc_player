@@ -10,7 +10,7 @@ class VlcPlayerValue {
   /// Define no error string
   static const String noError = '';
   static const String unknownError = 'An Unknown Error Occurred!';
-  static const _volumeMaxLimit = 100;
+  static const _maxVolume = 100;
 
   /// The total duration of the video.
   ///
@@ -122,7 +122,7 @@ class VlcPlayerValue {
     this.isEnded = false,
     this.isRecording = false,
     this.bufferPercent = 0.0,
-    this.volume = _volumeMaxLimit,
+    this.volume = _maxVolume,
     this.playbackSpeed = 1.0,
     this.videoScale = 1.0,
     this.audioTracksCount = 1,

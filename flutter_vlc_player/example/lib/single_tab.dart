@@ -14,7 +14,7 @@ class SingleTab extends StatefulWidget {
 
 class _SingleTabState extends State<SingleTab> {
   static const _networkCaching = 2000;
-  static const _fontSize = 30;
+  static const _subtitlesFontSize = 30;
   static const _height = 400.0;
 
   final _key = GlobalKey<VlcPlayerWithControlsState>();
@@ -100,7 +100,7 @@ class _SingleTabState extends State<SingleTab> {
             ]),
             subtitle: VlcSubtitleOptions([
               VlcSubtitleOptions.boldStyle(true),
-              VlcSubtitleOptions.fontSize(_fontSize),
+              VlcSubtitleOptions.fontSize(_subtitlesFontSize),
               VlcSubtitleOptions.outlineColor(VlcSubtitleColor.yellow),
               VlcSubtitleOptions.outlineThickness(VlcSubtitleThickness.normal),
               // works only on externally added subtitles
