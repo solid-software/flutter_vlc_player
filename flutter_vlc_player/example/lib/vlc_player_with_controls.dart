@@ -76,7 +76,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     super.dispose();
   }
 
-  Future<void> listener() async {
+  void listener() {
     if (!mounted) return;
     //
     if (_controller.value.isInitialized) {
@@ -86,39 +86,47 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         if (oDuration.inHours == 0) {
           final strPosition = oPosition.toString().split('.').first;
           final strDuration = oDuration.toString().split('.').first;
-          position =
-              "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
-          duration =
-              "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+          setState(() {
+            position =
+                "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
+            duration =
+                "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+          });
         } else {
-          position = oPosition.toString().split('.').first;
-          duration = oDuration.toString().split('.').first;
+          setState(() {
+            position = oPosition.toString().split('.').first;
+            duration = oDuration.toString().split('.').first;
+          });
         }
-        validPosition = oDuration.compareTo(oPosition) >= 0;
-        sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+        setState(() {
+          validPosition = oDuration.compareTo(oPosition) >= 0;
+          sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+        });
       }
-      numberOfCaptions = _controller.value.spuTracksCount;
-      numberOfAudioTracks = _controller.value.audioTracksCount;
+      setState(() {
+        numberOfCaptions = _controller.value.spuTracksCount;
+        numberOfAudioTracks = _controller.value.audioTracksCount;
+      });
       // update recording blink widget
       if (_controller.value.isRecording && _controller.value.isPlaying) {
         if (DateTime.now().difference(lastRecordingShowTime).inSeconds >= 1) {
-          lastRecordingShowTime = DateTime.now();
-          recordingTextOpacity = 1 - recordingTextOpacity;
+          setState(() {
+            lastRecordingShowTime = DateTime.now();
+            recordingTextOpacity = 1 - recordingTextOpacity;
+          });
         }
       } else {
-        recordingTextOpacity = 0;
+        setState(() => recordingTextOpacity = 0);
       }
       // check for change in recording state
       if (isRecording != _controller.value.isRecording) {
-        isRecording = _controller.value.isRecording;
+        setState(() => isRecording = _controller.value.isRecording);
         if (!isRecording) {
           if (widget.onStopRecording != null) {
             widget.onStopRecording(_controller.value.recordPath);
           }
         }
       }
-      // ignore: no-empty-block
-      setState(() {});
     }
   }
 
