@@ -35,49 +35,39 @@ class _SingleTabState extends State<SingleTab> {
   }
 
   void fillVideos() {
-    listVideos = <VideoData>[];
-    //
-    listVideos.add(
+    listVideos = [
       VideoData(
         name: 'Network Video 1',
         path:
             'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4',
         type: VideoType.network,
       ),
-    );
-    //
-    listVideos.add(
+      //
       VideoData(
         name: 'Network Video 2',
         path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
         type: VideoType.network,
       ),
-    );
-    //
-    listVideos.add(
+      //
       VideoData(
         name: 'HLS Streaming Video 1',
         path:
             'http://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel.ism/.m3u8',
         type: VideoType.network,
       ),
-    );
-    //
-    listVideos.add(
+      //
       VideoData(
         name: 'File Video 1',
         path: 'System File Example',
         type: VideoType.file,
       ),
-    );
-    //
-    listVideos.add(
+      //
       VideoData(
         name: 'Asset Video 1',
         path: 'assets/sample.mp4',
         type: VideoType.asset,
       ),
-    );
+    ];
   }
 
   @override
