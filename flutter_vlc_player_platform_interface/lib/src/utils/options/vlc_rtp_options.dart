@@ -4,7 +4,7 @@ class VlcRtpOptions {
   VlcRtpOptions(this.options);
 
   /// Use RTP over RTSP (TCP)
-  static String rtpOverRtsp({required bool enable}) {
+  static String rtpOverRtsp(bool enable) {
     return enable ? '--rtsp-tcp' : '--no-rtsp-tcp';
   }
 }

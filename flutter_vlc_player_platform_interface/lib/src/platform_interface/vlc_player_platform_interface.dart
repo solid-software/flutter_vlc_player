@@ -84,7 +84,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Sets the looping attribute of the video.
-  Future<void> setLooping({required int viewId, required bool looping}) {
+  Future<void> setLooping(int viewId, bool looping) {
     throw _unimplemented('setLooping');
   }
 

@@ -93,7 +93,7 @@ class VlcSubtitleOptions {
   }
 
   /// Enable/Disable subtitle yuvp renderer
-  static String yuvpRenderer({required bool enable}) {
+  static String yuvpRenderer(bool enable) {
     return enable ? '--freetype-yuvp' : '--no-freetype-yuvp';
   }
 }

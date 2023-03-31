@@ -221,7 +221,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
-  Future<void> setLooping({required int viewId, required bool looping}) async {
+  Future<void> setLooping(int viewId, bool looping) async {
     return _api.setLooping(
       LoopingMessage()
         ..viewId = viewId
