@@ -9,3 +9,4 @@ linter:
     lines_longer_than_80_chars: false 
     comment_references: false
     public_member_api_docs: false
+    avoid_positional_boolean_parameters: false
