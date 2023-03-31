@@ -22,6 +22,6 @@ export 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
         VlcSubtitleOptions;
 
 export 'src/enums/playing_state.dart' show PlayingState;
-export 'src/vlc_player.dart' show VlcPlayer;
+export 'src/flutter_vlc_player.dart' show VlcPlayer;
 export 'src/vlc_player_controller.dart' show VlcPlayerController;
 export 'src/vlc_player_value.dart' show VlcPlayerValue;
