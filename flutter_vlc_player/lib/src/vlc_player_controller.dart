@@ -532,15 +532,15 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// and silently clamped.
   Future<void> seekTo(Duration position) async {
     _throwIfNotInitialized('seekTo');
-    final Duration correctPosition;
+    final Duration newPosition;
     if (position > value.duration) {
-      correctPosition = value.duration;
+      newPosition = value.duration;
     } else if (position < Duration.zero) {
-      correctPosition = Duration.zero;
+      newPosition = Duration.zero;
     } else {
-      correctPosition = position;
+      newPosition = position;
     }
-    await vlcPlayerPlatform.seekTo(_viewId, correctPosition);
+    await vlcPlayerPlatform.seekTo(_viewId, newPosition);
   }
 
   /// Get the video timestamp in millisecond
