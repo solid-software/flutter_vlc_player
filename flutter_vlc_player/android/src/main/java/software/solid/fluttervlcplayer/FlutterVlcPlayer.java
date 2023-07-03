@@ -145,7 +145,7 @@ final class FlutterVlcPlayer implements PlatformView {
     // }
 
     public void initialize(List<String> options) {
-        this.options = options; 
+        this.options = options;
         libVLC = new LibVLC(context, options);
         mediaPlayer = new MediaPlayer(libVLC);
         setupVlcMediaPlayer();
@@ -661,12 +661,16 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     String getSnapshot() {
-        if (textureView == null) return "";
+        if (textureView != null) {
+            Bitmap bitmap = textureView.getBitmap();
+            if (bitmap != null) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+            }
+        }
 
-        Bitmap bitmap = textureView.getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+        return "";
     }
 
     Boolean startRecording(String directory) {
