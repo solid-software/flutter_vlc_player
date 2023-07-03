@@ -1,10 +1,3 @@
-enum VideoType {
-  asset,
-  file,
-  network,
-  recorded,
-}
-
 class VideoData {
   final String name;
   final String path;
@@ -15,4 +8,11 @@ class VideoData {
     this.path,
     this.type,
   });
+}
+
+enum VideoType {
+  asset,
+  file,
+  network,
+  recorded,
 }
