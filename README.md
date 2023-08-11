@@ -1,6 +1,7 @@
 #  Flutter VLC Player Plugin
 [![Join the chat at https://discord.gg/mNY4fjVk](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/mNY4fjVk)
 [![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dsolidsoftwarehq%26type%3Dpatrons&style=flat)](https://patreon.com/solidsoftwarehq)
+[![flutter_vlc_player](https://nokycucwgzweensacwfy.supabase.co/functions/v1/get_project_badge?projectName=flutter_vlc_player)](https://www.worklog.ai)
 
 A VLC-powered alternative to Flutter's video_player that supports iOS and Android.
 
