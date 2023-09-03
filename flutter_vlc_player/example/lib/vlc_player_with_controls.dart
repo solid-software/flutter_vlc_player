@@ -10,15 +10,14 @@ typedef OnStopRecordingCallback = void Function(String);
 class VlcPlayerWithControls extends StatefulWidget {
   final VlcPlayerController controller;
   final bool showControls;
-  final OnStopRecordingCallback onStopRecording;
+  final OnStopRecordingCallback? onStopRecording;
 
   const VlcPlayerWithControls({
-    Key key,
-    @required this.controller,
+    required this.controller,
     this.showControls = true,
     this.onStopRecording,
-  })  : assert(controller != null, 'You must provide a vlc controller'),
-        super(key: key);
+    super.key,
+  });
 
   @override
   VlcPlayerWithControlsState createState() => VlcPlayerWithControlsState();
@@ -38,10 +37,11 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   final double initSnapshotRightPosition = 10;
   final double initSnapshotBottomPosition = 10;
 
-  VlcPlayerController _controller;
+  // ignore: avoid-late-keyword
+  late VlcPlayerController _controller;
 
   //
-  OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
 
   //
   double sliderValue = 0.0;
@@ -70,39 +70,31 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     _controller.addListener(listener);
   }
 
-  @override
-  void dispose() {
-    _controller.removeListener(listener);
-    super.dispose();
-  }
-
   void listener() {
     if (!mounted) return;
     //
     if (_controller.value.isInitialized) {
       final oPosition = _controller.value.position;
       final oDuration = _controller.value.duration;
-      if (oPosition != null && oDuration != null) {
-        if (oDuration.inHours == 0) {
-          final strPosition = oPosition.toString().split('.').first;
-          final strDuration = oDuration.toString().split('.').first;
-          setState(() {
-            position =
-                "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
-            duration =
-                "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
-          });
-        } else {
-          setState(() {
-            position = oPosition.toString().split('.').first;
-            duration = oDuration.toString().split('.').first;
-          });
-        }
+      if (oDuration.inHours == 0) {
+        final strPosition = oPosition.toString().split('.').first;
+        final strDuration = oDuration.toString().split('.').first;
         setState(() {
-          validPosition = oDuration.compareTo(oPosition) >= 0;
-          sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+          position =
+              "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
+          duration =
+              "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+        });
+      } else {
+        setState(() {
+          position = oPosition.toString().split('.').first;
+          duration = oDuration.toString().split('.').first;
         });
       }
+      setState(() {
+        validPosition = oDuration.compareTo(oPosition) >= 0;
+        sliderValue = validPosition ? oPosition.inSeconds.toDouble() : 0;
+      });
       setState(() {
         numberOfCaptions = _controller.value.spuTracksCount;
         numberOfAudioTracks = _controller.value.audioTracksCount;
@@ -122,9 +114,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       if (isRecording != _controller.value.isRecording) {
         setState(() => isRecording = _controller.value.isRecording);
         if (!isRecording) {
-          if (widget.onStopRecording != null) {
-            widget.onStopRecording(_controller.value.recordPath);
-          }
+          widget.onStopRecording?.call(_controller.value.recordPath);
         }
       }
     }
@@ -274,8 +264,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Size: ${_controller.value.size?.width?.toInt() ?? 0}'
-                        'x${_controller.value.size?.height?.toInt() ?? 0}',
+                        'Size: ${_controller.value.size.width.toInt()}'
+                        'x${_controller.value.size.height.toInt()}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style:
@@ -316,9 +306,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   child: AnimatedOpacity(
                     opacity: recordingTextOpacity,
                     duration: const Duration(seconds: 1),
-                    child: Wrap(
+                    child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      children: const [
+                      children: [
                         Icon(Icons.circle, color: Colors.red),
                         SizedBox(width: 5),
                         Text(
@@ -341,8 +331,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           child: ColoredBox(
             color: _playerControlsBgColor,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
                   color: Colors.white,
@@ -354,7 +342,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
                         position,
@@ -365,9 +352,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                           activeColor: Colors.redAccent,
                           inactiveColor: Colors.white70,
                           value: sliderValue,
-                          min: 0.0,
-                          max: (!validPosition &&
-                                  _controller.value.duration == null)
+                          max: !validPosition
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
                           onChanged:
@@ -398,7 +383,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
               children: [
                 const Icon(
                   Icons.volume_down,
@@ -406,7 +390,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 ),
                 Expanded(
                   child: Slider(
-                    min: 0,
                     max: _overlayWidth,
                     value: volumeValue,
                     onChanged: _setSoundVolume,
@@ -422,6 +405,12 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(listener);
+    super.dispose();
   }
 
   Future<void> _cyclePlaybackSpeed() async {
@@ -469,9 +458,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
     final subtitleTracks = await _controller.getSpuTracks();
     //
-    if (subtitleTracks != null && subtitleTracks.isNotEmpty) {
+    if (subtitleTracks.isNotEmpty) {
       if (!mounted) return;
-      final int selectedSubId = await showDialog(
+      final selectedSubId = await showDialog<int>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -485,7 +474,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   return ListTile(
                     title: Text(
                       index < subtitleTracks.keys.length
-                          ? subtitleTracks.values.elementAt(index).toString()
+                          ? subtitleTracks.values.elementAt(index)
                           : 'Disable',
                     ),
                     onTap: () {
@@ -503,7 +492,10 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           );
         },
       );
-      if (selectedSubId != null) await _controller.setSpuTrack(selectedSubId);
+
+      if (selectedSubId != null) {
+        await _controller.setSpuTrack(selectedSubId);
+      }
     }
   }
 
@@ -512,9 +504,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
     final audioTracks = await _controller.getAudioTracks();
     //
-    if (audioTracks != null && audioTracks.isNotEmpty) {
+    if (audioTracks.isNotEmpty) {
       if (!mounted) return;
-      final int selectedAudioTrackId = await showDialog(
+      final selectedAudioTrackId = await showDialog<int>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -528,7 +520,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   return ListTile(
                     title: Text(
                       index < audioTracks.keys.length
-                          ? audioTracks.values.elementAt(index).toString()
+                          ? audioTracks.values.elementAt(index)
                           : 'Disable',
                     ),
                     onTap: () {
@@ -546,6 +538,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           );
         },
       );
+
       if (selectedAudioTrackId != null) {
         await _controller.setAudioTrack(selectedAudioTrackId);
       }
@@ -555,9 +548,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   Future<void> _getRendererDevices() async {
     final castDevices = await _controller.getRendererDevices();
     //
-    if (castDevices != null && castDevices.isNotEmpty) {
+    if (castDevices.isNotEmpty) {
       if (!mounted) return;
-      final String selectedCastDeviceName = await showDialog(
+      final selectedCastDeviceName = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -571,7 +564,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   return ListTile(
                     title: Text(
                       index < castDevices.keys.length
-                          ? castDevices.values.elementAt(index).toString()
+                          ? castDevices.values.elementAt(index)
                           : 'Disconnect',
                     ),
                     onTap: () {
@@ -589,7 +582,10 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
           );
         },
       );
-      await _controller.castToRenderer(selectedCastDeviceName);
+
+      if (selectedCastDeviceName != null) {
+        await _controller.castToRenderer(selectedCastDeviceName);
+      }
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -600,10 +596,14 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
   Future<void> _createCameraImage() async {
     final snapshot = await _controller.takeSnapshot();
+
     _overlayEntry?.remove();
     _overlayEntry = _createSnapshotThumbnail(snapshot);
+
     if (!mounted) return;
-    Overlay.of(context).insert(_overlayEntry);
+
+    // ignore: avoid-non-null-assertion
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   OverlayEntry _createSnapshotThumbnail(Uint8List snapshot) {
@@ -633,11 +633,11 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
             },
             onVerticalDragUpdate: (dragUpdateDetails) {
               bottom -= dragUpdateDetails.delta.dy;
-              _overlayEntry.markNeedsBuild();
+              _overlayEntry?.markNeedsBuild();
             },
             onHorizontalDragUpdate: (dragUpdateDetails) {
               right -= dragUpdateDetails.delta.dx;
-              _overlayEntry.markNeedsBuild();
+              _overlayEntry?.markNeedsBuild();
             },
             onHorizontalDragEnd: (dragEndDetails) {
               if ((initSnapshotRightPosition - right).abs() >= _overlayWidth) {
@@ -645,7 +645,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 _overlayEntry = null;
               } else {
                 right = initSnapshotRightPosition;
-                _overlayEntry.markNeedsBuild();
+                _overlayEntry?.markNeedsBuild();
               }
             },
             onVerticalDragEnd: (dragEndDetails) {
@@ -655,7 +655,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                 _overlayEntry = null;
               } else {
                 bottom = initSnapshotBottomPosition;
-                _overlayEntry.markNeedsBuild();
+                _overlayEntry?.markNeedsBuild();
               }
             },
             child: Image.memory(snapshot),

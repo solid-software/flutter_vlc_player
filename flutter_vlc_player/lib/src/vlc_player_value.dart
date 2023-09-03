@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-
 import 'package:flutter_vlc_player/src/enums/playing_state.dart';
 
 /// The duration, current position, buffering state, error state and settings
@@ -139,10 +138,7 @@ class VlcPlayerValue {
 
   /// Returns an instance with a `null` [Duration].
   factory VlcPlayerValue.uninitialized() {
-    return VlcPlayerValue(
-      duration: Duration.zero,
-      isInitialized: false,
-    );
+    return VlcPlayerValue(duration: Duration.zero);
   }
 
   /// Returns an instance with the playing state error
@@ -151,7 +147,6 @@ class VlcPlayerValue {
     return VlcPlayerValue(
       duration: Duration.zero,
       playingState: PlayingState.error,
-      isInitialized: false,
       errorDescription: errorDescription ?? VlcPlayerValue.unknownError,
     );
   }

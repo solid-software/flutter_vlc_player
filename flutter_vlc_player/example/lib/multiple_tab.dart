@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-
 import 'package:flutter_vlc_player_example/vlc_player_with_controls.dart';
 
 class MultipleTab extends StatefulWidget {
@@ -12,11 +11,12 @@ class _MultipleTabState extends State<MultipleTab> {
   static const _heightWithControls = 400.0;
   static const _heightWithoutControls = 300.0;
 
-  List<VlcPlayerController> controllers;
+  List<VlcPlayerController> controllers = <VlcPlayerController>[];
+
   List<String> urls = [
     'https://www.tomandjerryonline.com/Videos/Ford%20Mondeo%20-%20Tom%20and%20Jerry.mov',
     'https://www.tomandjerryonline.com/Videos/TomAndJerryTales_HQ.wmv',
-    'https://www.tomandjerryonline.com/Videos/tjpb1.mov'
+    'https://www.tomandjerryonline.com/Videos/tjpb1.mov',
   ];
 
   bool showPlayerControls = true;
@@ -24,7 +24,6 @@ class _MultipleTabState extends State<MultipleTab> {
   @override
   void initState() {
     super.initState();
-    controllers = <VlcPlayerController>[];
     for (var i = 0; i < urls.length; i++) {
       final controller = VlcPlayerController.network(
         urls[i],

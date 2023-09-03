@@ -96,9 +96,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
+    VoidCallback? onInit,
     @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
+    RendererCallback? onRendererHandler,
   })  : _dataSourceType = DataSourceType.asset,
         _onInit = onInit,
         _onRendererHandler = onRendererHandler,
@@ -116,9 +116,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
+    VoidCallback? onInit,
     @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
+    RendererCallback? onRendererHandler,
   })  : package = null,
         _dataSourceType = DataSourceType.network,
         _onInit = onInit,
@@ -136,9 +136,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.autoPlay = true,
     this.options,
     @Deprecated('Please, use the addOnInitListener method instead.')
-        VoidCallback? onInit,
+    VoidCallback? onInit,
     @Deprecated('Please, use the addOnRendererEventListener method instead.')
-        RendererCallback? onRendererHandler,
+    RendererCallback? onRendererHandler,
   })  : dataSource = 'file://${file.path}',
         package = null,
         _dataSourceType = DataSourceType.file,
@@ -206,7 +206,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.buffering,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
 
         case VlcMediaEventType.paused:
           value = value.copyWith(
@@ -214,7 +213,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isBuffering: false,
             playingState: PlayingState.paused,
           );
-          break;
 
         case VlcMediaEventType.stopped:
           value = value.copyWith(
@@ -224,7 +222,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.stopped,
             position: Duration.zero,
           );
-          break;
 
         case VlcMediaEventType.playing:
           value = value.copyWith(
@@ -241,7 +238,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             activeSpuTrack: event.activeSpuTrack,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
 
         case VlcMediaEventType.ended:
           value = value.copyWith(
@@ -252,7 +248,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.ended,
             position: event.position,
           );
-          break;
 
         case VlcMediaEventType.buffering:
         case VlcMediaEventType.timeChanged:
@@ -274,7 +269,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
                 : value.playingState,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
 
         case VlcMediaEventType.mediaChanged:
           break;
@@ -285,7 +279,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isRecording: event.isRecording,
             recordPath: event.recordPath,
           );
-          break;
 
         case VlcMediaEventType.error:
           value = value.copyWith(
@@ -295,7 +288,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.error,
             errorDescription: VlcPlayerValue.unknownError,
           );
-          break;
 
         case VlcMediaEventType.unknown:
           break;
@@ -303,8 +295,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     }
 
     void errorListener(Object obj) {
-      final e = obj as PlatformException;
-      value = VlcPlayerValue.erroneous(e.message);
+      value = VlcPlayerValue.erroneous(obj.toString());
       if (!initializingCompleter.isCompleted) {
         initializingCompleter.completeError(obj);
       }
@@ -327,7 +318,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             event.rendererId,
             event.rendererName,
           );
-          break;
         case VlcRendererEventType.unknown:
           break;
       }
@@ -420,7 +410,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     await _setStreamUrl(
       dataSource,
       dataSourceType: DataSourceType.network,
-      package: null,
       autoPlay: autoPlay,
       hwAcc: hwAcc,
     );
@@ -441,7 +430,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     await _setStreamUrl(
       dataSource,
       dataSourceType: DataSourceType.file,
-      package: null,
       autoPlay: autoPlay,
       hwAcc: hwAcc,
     );
@@ -918,8 +906,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   Future<void> startRendererScanning({String? rendererService}) async {
     _throwIfNotInitialized('startRendererScanning');
 
-    return vlcPlayerPlatform.startRendererScanning(_viewId,
-        rendererService: rendererService ?? '');
+    return vlcPlayerPlatform.startRendererScanning(
+      _viewId,
+      rendererService: rendererService ?? '',
+    );
   }
 
   /// Stop vlc cast and scan
