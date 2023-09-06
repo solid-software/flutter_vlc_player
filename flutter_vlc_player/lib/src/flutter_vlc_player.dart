@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-
 import 'package:flutter_vlc_player/src/vlc_player_controller.dart';
 import 'package:flutter_vlc_player/src/vlc_player_platform.dart';
 
@@ -11,8 +10,6 @@ class VlcPlayer extends StatefulWidget {
   final bool virtualDisplay;
 
   const VlcPlayer({
-    Key? key,
-
     /// The [VlcPlayerController] responsible for the video being rendered in
     /// this widget.
     required this.controller,
@@ -29,7 +26,8 @@ class VlcPlayer extends StatefulWidget {
     /// Specify whether Virtual displays or Hybrid composition is used on Android.
     /// iOS only uses Hybrid composition.
     this.virtualDisplay = true,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _VlcPlayerState createState() => _VlcPlayerState();
@@ -68,22 +66,6 @@ class _VlcPlayerState extends State<VlcPlayer>
   }
 
   @override
-  void didUpdateWidget(VlcPlayer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller.removeListener(_listener);
-      _isInitialized = widget.controller.value.isInitialized;
-      widget.controller.addListener(_listener);
-    }
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    widget.controller.removeListener(_listener);
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
 
@@ -105,5 +87,21 @@ class _VlcPlayerState extends State<VlcPlayer>
         ],
       ),
     );
+  }
+
+  @override
+  void didUpdateWidget(VlcPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_listener);
+      _isInitialized = widget.controller.value.isInitialized;
+      widget.controller.addListener(_listener);
+    }
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    widget.controller.removeListener(_listener);
   }
 }

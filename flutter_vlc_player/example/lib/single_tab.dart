@@ -19,10 +19,45 @@ class _SingleTabState extends State<SingleTab> {
 
   final _key = GlobalKey<VlcPlayerWithControlsState>();
 
-  VlcPlayerController _controller;
+  // ignore: avoid-late-keyword
+  late final VlcPlayerController _controller;
+
   //
-  List<VideoData> listVideos;
-  int selectedVideoIndex;
+  List<VideoData> listVideos = [
+    const VideoData(
+      name: 'Network Video 1',
+      path:
+          'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4',
+      type: VideoType.network,
+    ),
+    //
+    const VideoData(
+      name: 'Network Video 2',
+      path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      type: VideoType.network,
+    ),
+    //
+    const VideoData(
+      name: 'HLS Streaming Video 1',
+      path:
+          'http://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+      type: VideoType.network,
+    ),
+    //
+    const VideoData(
+      name: 'File Video 1',
+      path: 'System File Example',
+      type: VideoType.file,
+    ),
+    //
+    const VideoData(
+      name: 'Asset Video 1',
+      path: 'assets/sample.mp4',
+      type: VideoType.asset,
+    ),
+  ];
+
+  int selectedVideoIndex = 0;
 
   Future<File> _loadVideoToFs() async {
     final videoData = await rootBundle.load('assets/sample.mp4');
@@ -34,49 +69,10 @@ class _SingleTabState extends State<SingleTab> {
     return temp;
   }
 
-  void fillVideos() {
-    listVideos = [
-      VideoData(
-        name: 'Network Video 1',
-        path:
-            'http://samples.mplayerhq.hu/MPEG-4/embedded_subs/1Video_2Audio_2SUBs_timed_text_streams_.mp4',
-        type: VideoType.network,
-      ),
-      //
-      VideoData(
-        name: 'Network Video 2',
-        path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-        type: VideoType.network,
-      ),
-      //
-      VideoData(
-        name: 'HLS Streaming Video 1',
-        path:
-            'http://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel.ism/.m3u8',
-        type: VideoType.network,
-      ),
-      //
-      VideoData(
-        name: 'File Video 1',
-        path: 'System File Example',
-        type: VideoType.file,
-      ),
-      //
-      VideoData(
-        name: 'Asset Video 1',
-        path: 'assets/sample.mp4',
-        type: VideoType.asset,
-      ),
-    ];
-  }
-
   @override
   void initState() {
     super.initState();
 
-    //
-    fillVideos();
-    selectedVideoIndex = 0;
     //
     final initVideo = listVideos[selectedVideoIndex];
     switch (initVideo.type) {
@@ -104,19 +100,16 @@ class _SingleTabState extends State<SingleTab> {
             ]),
           ),
         );
-        break;
       case VideoType.file:
         final file = File(initVideo.path);
         _controller = VlcPlayerController.file(
           file,
         );
-        break;
       case VideoType.asset:
         _controller = VlcPlayerController.asset(
           initVideo.path,
           options: VlcPlayerOptions(),
         );
-        break;
       case VideoType.recorded:
         break;
     }
@@ -124,7 +117,7 @@ class _SingleTabState extends State<SingleTab> {
       await _controller.startRendererScanning();
     });
     _controller.addOnRendererEventListener((type, id, name) {
-      print('OnRendererEventListener $type $id $name');
+      debugPrint('OnRendererEventListener $type $id $name');
     });
   }
 
@@ -167,16 +160,12 @@ class _SingleTabState extends State<SingleTab> {
             switch (video.type) {
               case VideoType.network:
                 iconData = Icons.cloud;
-                break;
               case VideoType.file:
                 iconData = Icons.insert_drive_file;
-                break;
               case VideoType.asset:
                 iconData = Icons.all_inbox;
-                break;
               case VideoType.recorded:
                 iconData = Icons.videocam;
-                break;
             }
 
             return ListTile(
@@ -212,7 +201,6 @@ class _SingleTabState extends State<SingleTab> {
                       video.path,
                       hwAcc: HwAcc.full,
                     );
-                    break;
                   case VideoType.file:
                     if (!mounted) break;
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -240,14 +228,11 @@ class _SingleTabState extends State<SingleTab> {
                         ),
                       );
                     }
-                    break;
                   case VideoType.asset:
                     await _controller.setMediaFromAsset(video.path);
-                    break;
                   case VideoType.recorded:
                     final recordedFile = File(video.path);
                     await _controller.setMediaFromFile(recordedFile);
-                    break;
                 }
                 setState(() {
                   selectedVideoIndex = index;

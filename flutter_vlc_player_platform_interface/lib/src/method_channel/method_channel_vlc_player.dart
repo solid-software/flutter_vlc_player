@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
 import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platform_interface.dart';
 import 'package:flutter_vlc_player_platform_interface/src/messages/messages.dart';
 
@@ -114,7 +113,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   Stream<VlcMediaEvent> mediaEventsFor(int viewId) {
     return _mediaEventChannelFor(viewId).receiveBroadcastStream().map(
       (dynamic event) {
-        final Map<String, Object?> map = event as Map<String, Object?>;
+        final Map<Object?, Object?> map = event as Map<Object?, Object?>;
         //
         switch (map['event']) {
           case 'opening':
@@ -136,8 +135,8 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
             return VlcMediaEvent(
               mediaEventType: VlcMediaEventType.playing,
               size: Size(
-                (map['width'] as int?)?.toDouble() ?? 0.0,
-                (map['height'] as int?)?.toDouble() ?? 0.0,
+                (map['width'] as num?)?.toDouble() ?? 0.0,
+                (map['height'] as num?)?.toDouble() ?? 0.0,
               ),
               playbackSpeed: map['speed'] as double? ?? 1.0,
               duration: Duration(milliseconds: map['duration'] as int? ?? 0),
@@ -155,13 +154,13 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
           case 'buffering':
           case 'timeChanged':
-            const _defaultBufferPercent = 100.0;
+            const defaultBufferPercent = 100.0;
 
             return VlcMediaEvent(
               mediaEventType: VlcMediaEventType.timeChanged,
               size: Size(
-                (map['width'] as int?)?.toDouble() ?? 0.0,
-                (map['height'] as int?)?.toDouble() ?? 0.0,
+                (map['width'] as num?)?.toDouble() ?? 0.0,
+                (map['height'] as num?)?.toDouble() ?? 0.0,
               ),
               playbackSpeed: map['speed'] as double? ?? 1.0,
               position: Duration(milliseconds: map['position'] as int? ?? 0),
@@ -170,7 +169,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
               activeAudioTrack: map['activeAudioTrack'] as int? ?? 0,
               spuTracksCount: map['spuTracksCount'] as int? ?? 0,
               activeSpuTrack: map['activeSpuTrack'] as int? ?? -1,
-              bufferPercent: map['buffer'] as double? ?? _defaultBufferPercent,
+              bufferPercent: map['buffer'] as double? ?? defaultBufferPercent,
               isPlaying: map['isPlaying'] as bool? ?? false,
             );
 
@@ -564,21 +563,21 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   Stream<VlcRendererEvent> rendererEventsFor(int viewId) {
     return _rendererEventChannelFor(viewId).receiveBroadcastStream().map(
       (dynamic event) {
-        final Map<String?, String?> map = event as Map<String?, String?>;
+        final Map<Object?, Object?> map = event as Map<Object?, Object?>;
         //
         switch (map['event']) {
           case 'attached':
             return VlcRendererEvent(
               eventType: VlcRendererEventType.attached,
-              rendererId: map['id'],
-              rendererName: map['name'],
+              rendererId: map['id'].toString(),
+              rendererName: map['name'].toString(),
             );
           //
           case 'detached':
             return VlcRendererEvent(
               eventType: VlcRendererEventType.detached,
-              rendererId: map['id'],
-              rendererName: map['name'],
+              rendererId: map['id'].toString(),
+              rendererName: map['name'].toString(),
             );
           //
           default:

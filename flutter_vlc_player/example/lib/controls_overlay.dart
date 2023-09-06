@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class ControlsOverlay extends StatelessWidget {
@@ -14,7 +13,10 @@ class ControlsOverlay extends StatelessWidget {
 
   final VlcPlayerController controller;
 
-  const ControlsOverlay({Key key, this.controller}) : super(key: key);
+  const ControlsOverlay({
+    required this.controller,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,6 @@ class ControlsOverlay extends StatelessWidget {
                   color: Colors.black45,
                   child: FittedBox(
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         IconButton(
@@ -118,9 +119,7 @@ class ControlsOverlay extends StatelessWidget {
   }
 
   /// Returns a callback which seeks the video relative to current playing time.
-  Future<void> _seekRelative(Duration seekStep) async {
-    if (controller.value.duration != null) {
-      await controller.seekTo(controller.value.position + seekStep);
-    }
+  Future<void> _seekRelative(Duration seekStep) {
+    return controller.seekTo(controller.value.position + seekStep);
   }
 }

@@ -3,10 +3,10 @@ class VideoData {
   final String path;
   final VideoType type;
 
-  VideoData({
-    this.name,
-    this.path,
-    this.type,
+  const VideoData({
+    required this.name,
+    required this.path,
+    required this.type,
   });
 }
 
