@@ -1,3 +1,7 @@
+## 2.0.3
+
+- Fix http-user-agent. Credits: @afriza
+
 ## 2.0.2
 
 - Update dependencies
