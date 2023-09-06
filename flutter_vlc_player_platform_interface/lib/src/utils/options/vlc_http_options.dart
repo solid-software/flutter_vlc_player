@@ -30,6 +30,8 @@ class VlcHttpOptions {
   /// HTTP server, i.e. the HTTP "User-Agent". Name and version must be
   /// separated by a forward slash, e.g. "FooBar/1.2.3".
   static String httpUserAgent(String userAgent) {
-    return '--http-user-agent=$userAgent';
+    // Use colon (:) instead of dashes.
+    // See https://stackoverflow.com/a/52127734/109747
+    return ':http-user-agent=$userAgent';
   }
 }
