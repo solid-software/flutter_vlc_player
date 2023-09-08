@@ -310,7 +310,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Icon(Icons.circle, color: Colors.red),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(
                           'REC',
                           style: TextStyle(

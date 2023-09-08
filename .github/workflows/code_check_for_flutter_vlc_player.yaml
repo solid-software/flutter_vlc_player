@@ -30,7 +30,7 @@ jobs:
           dirs_to_analyze=""
           if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
           if [ -d test ]; then dirs_to_analyze+=" test"; fi
-          if [ -d example ]; then dirs_to_analyze+=" example"; fi
+          if [ -d example/lib ]; then dirs_to_analyze+=" example/lib"; fi
           if [ dirs_to_analyze != "" ]
           then
             dart run dart_code_metrics:metrics \
