@@ -77,9 +77,9 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
         final strDuration = oDuration.toString().split('.').first;
         setState(() {
           position =
-          "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
+              "${strPosition.split(':')[1]}:${strPosition.split(':')[2]}";
           duration =
-          "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+              "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
         });
       } else {
         setState(() {
@@ -259,11 +259,11 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                     children: [
                       Text(
                         'Size: ${_controller.value.size.width.toInt()}'
-                            'x${_controller.value.size.height.toInt()}',
+                        'x${_controller.value.size.height.toInt()}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style:
-                        const TextStyle(color: Colors.white, fontSize: 10),
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                       const SizedBox(height: 5),
                       Text(
@@ -271,7 +271,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style:
-                        const TextStyle(color: Colors.white, fontSize: 10),
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ],
                   ),
@@ -291,7 +291,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                     controller: _controller,
                     aspectRatio: _aspectRatio,
                     placeholder:
-                    const Center(child: CircularProgressIndicator()),
+                        const Center(child: CircularProgressIndicator()),
                   ),
                 ),
                 Positioned(
@@ -350,7 +350,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                               ? 1.0
                               : _controller.value.duration.inSeconds.toDouble(),
                           onChanged:
-                          validPosition ? _onSliderPositionChanged : null,
+                              validPosition ? _onSliderPositionChanged : null,
                         ),
                       ),
                       Text(
