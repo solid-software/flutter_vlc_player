@@ -3,27 +3,24 @@ description: Demonstrates how to use the flutter_vlc_player plugin.
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.18.0 <4.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  path_provider: ^2.0.11
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-
-dev_dependencies:
-  flutter_test:
+  
+  flutter:
     sdk: flutter
 
   flutter_vlc_player:
     path: ../
 
-# For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
+  path_provider: ^2.0.11
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  solid_lints: ^0.0.18
 
 # The following section is specific to Flutter.
 flutter:

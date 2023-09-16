@@ -1,30 +1,9 @@
 import 'dart:ui';
 
-import '../enums/media_event_type.dart';
+import 'package:flutter_vlc_player_platform_interface/src/enums/media_event_type.dart';
 
+// ignore: prefer-match-file-name
 class VlcMediaEvent {
-  /// Creates an instance of [VlcMediaEvent].
-  ///
-  /// The [mediaEventType] argument is required.
-  ///
-  /// Depending on the [mediaEventType], the [duration], [size]
-  /// arguments can be null.
-  VlcMediaEvent({
-    required this.mediaEventType,
-    this.duration,
-    this.size,
-    this.position,
-    this.playbackSpeed,
-    this.audioTracksCount,
-    this.activeAudioTrack,
-    this.spuTracksCount,
-    this.activeSpuTrack,
-    this.bufferPercent,
-    this.isPlaying,
-    this.isRecording,
-    this.recordPath,
-  });
-
   /// The type of the event.
   final VlcMediaEventType mediaEventType;
 
@@ -87,4 +66,26 @@ class VlcMediaEvent {
   ///
   /// Only used if [eventType] is [VlcMediaEventType.recording].
   final String? recordPath;
+
+  /// Creates an instance of [VlcMediaEvent].
+  ///
+  /// The [mediaEventType] argument is required.
+  ///
+  /// Depending on the [mediaEventType], the [duration], [size]
+  /// arguments can be null.
+  VlcMediaEvent({
+    required this.mediaEventType,
+    this.duration,
+    this.size,
+    this.position,
+    this.playbackSpeed,
+    this.audioTracksCount,
+    this.activeAudioTrack,
+    this.spuTracksCount,
+    this.activeSpuTrack,
+    this.bufferPercent,
+    this.isPlaying,
+    this.isRecording,
+    this.recordPath,
+  });
 }

@@ -1,21 +1,18 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platform_interface.dart';
+import 'package:flutter_vlc_player_platform_interface/src/method_channel/method_channel_vlc_player.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../../flutter_vlc_player_platform_interface.dart';
-import '../method_channel/method_channel_vlc_player.dart';
+// ignore_for_file: prefer-match-file-name
 
 /// The interface that implementations of vlc must implement.
 ///
 /// Platform implementations should extend this class rather than implement it as `vlc`
 /// does not consider newly added methods to be breaking changes.
 abstract class VlcPlayerPlatform extends PlatformInterface {
-  /// Constructs a VlcPlayerPlatform.
-  VlcPlayerPlatform() : super(token: _token);
-
   static final Object _token = Object();
 
   static VlcPlayerPlatform _instance = MethodChannelVlcPlayer();
@@ -32,9 +29,14 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Constructs a VlcPlayerPlatform.
+  VlcPlayerPlatform() : super(token: _token);
+
   /// Returns a widget displaying the video.
-  Widget buildView(PlatformViewCreatedCallback onPlatformViewCreated,
-      {bool virtualDisplay = true}) {
+  Widget buildView(
+    PlatformViewCreatedCallback onPlatformViewCreated, {
+    bool virtualDisplay = true,
+  }) {
     throw _unimplemented('buildView');
   }
 
@@ -283,7 +285,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     throw _unimplemented('getVideoScale');
   }
 
-  /// [aspect] - the video apect ratio like '16:9'
+  /// [aspect] - the video aspect ratio like '16:9'
   /// Set video aspect ratio
   Future<void> setVideoAspectRatio(int viewId, String aspect) {
     throw _unimplemented('setVideoAspectRatio');
@@ -299,7 +301,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
     throw _unimplemented('takeSnapshot');
   }
 
-  /// Returns list of all avialble vlc renderer services
+  /// Returns list of all available vlc renderer services
   Future<List<String>> getAvailableRendererServices(int viewId) {
     throw _unimplemented('getAvailableRendererServices');
   }
@@ -321,7 +323,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// [rendererDevice] - name of renderer device
-  /// Start vlc video casting to the renderered device.
+  /// Start vlc video casting to the rendered device.
   ///  Set null if you wanna to stop video casting.
   Future<void> castToRenderer(int viewId, String rendererDevice) {
     throw _unimplemented('castToRenderer');

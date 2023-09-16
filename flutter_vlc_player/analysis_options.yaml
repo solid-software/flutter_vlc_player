@@ -1,1 +1,12 @@
-include: package:flutter_lints/flutter.yaml
+include: package:solid_lints/analysis_options.yaml
+
+dart_code_metrics:
+  metrics: 
+    cyclomatic-complexity: 30
+
+linter:
+  rules:
+    lines_longer_than_80_chars: false 
+    comment_references: false
+    public_member_api_docs: false
+    avoid_positional_boolean_parameters: false

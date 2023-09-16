@@ -5,10 +5,12 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     var players = [Int:VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
+    private var options: [String]
     
     init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
         self.messenger = registrar.messenger()
+        options = []
         super.init()
         //
         VlcPlayerApiSetup(messenger, self)
@@ -55,12 +57,14 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
             isAssetUrl = false
         }
         
+        options = input.options as? [String] ?? []
+        
         player?.setMediaPlayerUrl(
             uri: mediaUrl,
             isAssetUrl: isAssetUrl,
             autoPlay: input.autoPlay?.boolValue ?? true,
             hwAcc: input.hwAcc?.intValue ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
-            options: input.options as? [String] ?? []
+            options: options
         )
     }
     
@@ -97,7 +101,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
             isAssetUrl: isAssetUrl,
             autoPlay: input.autoPlay?.boolValue ?? true,
             hwAcc: input.hwAcc?.intValue ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
-            options: []
+            options: options
         )
     }
     

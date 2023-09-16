@@ -1,3 +1,4 @@
+// ignore: prefer-match-file-name
 enum VlcMediaEventType {
   opening,
   playing,
