@@ -23,13 +23,15 @@ class VlcHttpOptions {
 
   /// Provide the referral URL, i.e. HTTP "Referer" (sic).
   static String httpReferrer(String referrer) {
-    return '--http-referrer=' + referrer;
+    return '--http-referrer=$referrer';
   }
 
   /// Override the name and version of the application as provided to the
   /// HTTP server, i.e. the HTTP "User-Agent". Name and version must be
   /// separated by a forward slash, e.g. "FooBar/1.2.3".
   static String httpUserAgent(String userAgent) {
-    return '--http-user-agent=' + userAgent;
+    // Use colon (:) instead of dashes.
+    // See https://stackoverflow.com/a/52127734/109747
+    return ':http-user-agent=$userAgent';
   }
 }

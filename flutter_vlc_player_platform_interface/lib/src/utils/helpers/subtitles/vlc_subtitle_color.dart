@@ -1,4 +1,7 @@
 class VlcSubtitleColor {
+  static const _bitsInByte = 8;
+  static const _redHexOffset = 2 * _bitsInByte;
+  static const _greenHexOffset = _bitsInByte;
   static const black = VlcSubtitleColor(0);
   static const gray = VlcSubtitleColor(8421504);
   static const silver = VlcSubtitleColor(12632256);
@@ -22,5 +25,5 @@ class VlcSubtitleColor {
     int red = 0,
     int green = 0,
     int blue = 0,
-  }) : value = (red << 16) + (green << 8) + blue;
+  }) : value = (red << _redHexOffset) + (green << _greenHexOffset) + blue;
 }

@@ -1,8 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-
-import 'enums/playing_state.dart';
+import 'package:flutter_vlc_player/src/enums/playing_state.dart';
 
 /// The duration, current position, buffering state, error state and settings
 /// of a [VlcPlayerController].
@@ -10,54 +9,7 @@ class VlcPlayerValue {
   /// Define no error string
   static const String noError = '';
   static const String unknownError = 'An Unknown Error Occurred!';
-
-  /// Constructs a video with the given values. Only [duration] is required. The
-  /// rest will initialize with default values when unset.
-  VlcPlayerValue({
-    required this.duration,
-    this.size = Size.zero,
-    this.position = Duration.zero,
-    this.playingState = PlayingState.initializing,
-    this.isInitialized = false,
-    this.isPlaying = false,
-    this.isLooping = false,
-    this.isBuffering = false,
-    this.isEnded = false,
-    this.isRecording = false,
-    this.bufferPercent = 0.0,
-    this.volume = 100,
-    this.playbackSpeed = 1.0,
-    this.videoScale = 1.0,
-    this.audioTracksCount = 1,
-    this.activeAudioTrack = 1,
-    this.audioDelay = 0,
-    this.spuTracksCount = 0,
-    this.activeSpuTrack = -1,
-    this.spuDelay = 0,
-    this.videoTracksCount = 1,
-    this.activeVideoTrack = 0,
-    this.recordPath = '',
-    this.errorDescription = VlcPlayerValue.noError,
-  });
-
-  /// Returns an instance with a `null` [Duration].
-  factory VlcPlayerValue.uninitialized() {
-    return VlcPlayerValue(
-      duration: Duration.zero,
-      isInitialized: false,
-    );
-  }
-
-  /// Returns an instance with the playing state error
-  /// and the given [errorDescription].
-  factory VlcPlayerValue.erroneous(String? errorDescription) {
-    return VlcPlayerValue(
-      duration: Duration.zero,
-      playingState: PlayingState.error,
-      isInitialized: false,
-      errorDescription: errorDescription ?? VlcPlayerValue.unknownError,
-    );
-  }
+  static const _maxVolume = 100;
 
   /// The total duration of the video.
   ///
@@ -151,7 +103,52 @@ class VlcPlayerValue {
     if (aspectRatio <= 0) {
       return 1.0;
     }
+
     return aspectRatio;
+  }
+
+  /// Constructs a video with the given values. Only [duration] is required. The
+  /// rest will initialize with default values when unset.
+  VlcPlayerValue({
+    required this.duration,
+    this.size = Size.zero,
+    this.position = Duration.zero,
+    this.playingState = PlayingState.initializing,
+    this.isInitialized = false,
+    this.isPlaying = false,
+    this.isLooping = false,
+    this.isBuffering = false,
+    this.isEnded = false,
+    this.isRecording = false,
+    this.bufferPercent = 0.0,
+    this.volume = _maxVolume,
+    this.playbackSpeed = 1.0,
+    this.videoScale = 1.0,
+    this.audioTracksCount = 1,
+    this.activeAudioTrack = 1,
+    this.audioDelay = 0,
+    this.spuTracksCount = 0,
+    this.activeSpuTrack = -1,
+    this.spuDelay = 0,
+    this.videoTracksCount = 1,
+    this.activeVideoTrack = 0,
+    this.recordPath = '',
+    this.errorDescription = VlcPlayerValue.noError,
+  });
+
+  /// Returns an instance with a `null` [Duration].
+  factory VlcPlayerValue.uninitialized() {
+    return VlcPlayerValue(duration: Duration.zero);
+  }
+
+  /// Returns an instance with the playing state error
+  /// and the given [errorDescription].
+  factory VlcPlayerValue.erroneous(String? errorDescription) {
+    return VlcPlayerValue(
+      duration: Duration.zero,
+      playingState: PlayingState.error,
+      errorDescription: errorDescription ?? VlcPlayerValue.unknownError,
+    );
   }
 
   /// Returns a new instance that has the same values as this current instance,
@@ -212,7 +209,7 @@ class VlcPlayerValue {
 
   @override
   String toString() {
-    return '$runtimeType('
+    return 'VlcPlayerValue('
         'duration: $duration, '
         'size: $size, '
         'position: $position, '

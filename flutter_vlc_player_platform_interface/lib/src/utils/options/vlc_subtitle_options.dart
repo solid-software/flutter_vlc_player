@@ -1,6 +1,6 @@
-import '../../enums/subtitles/vlc_subtitle_text_direction.dart';
-import '../helpers/subtitles/vlc_subtitle_thickness.dart';
-import '../helpers/subtitles/vlc_subtitle_color.dart';
+import 'package:flutter_vlc_player_platform_interface/src/enums/subtitles/vlc_subtitle_text_direction.dart';
+import 'package:flutter_vlc_player_platform_interface/src/utils/helpers/subtitles/vlc_subtitle_color.dart';
+import 'package:flutter_vlc_player_platform_interface/src/utils/helpers/subtitles/vlc_subtitle_thickness.dart';
 
 class VlcSubtitleOptions {
   final List<String> options;

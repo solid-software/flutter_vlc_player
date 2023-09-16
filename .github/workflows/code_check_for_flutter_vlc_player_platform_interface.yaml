@@ -1,0 +1,61 @@
+name: Interface ON Push & PR DO Code check
+on: [push, pull_request]
+
+jobs:
+  code-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Check flutter sdk version
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: flutter --version
+
+      - name: Get dependencies
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: flutter pub get
+
+      - name: Setup Dart Code Metrics
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: dart pub get dart_code_metrics
+
+      - name: Dart Code Metrics
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: |
+          dirs_to_analyze=""
+          if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
+          if [ -d test ]; then dirs_to_analyze+=" test"; fi
+          if [ -d example ]; then dirs_to_analyze+=" example"; fi
+          if [ dirs_to_analyze != "" ]
+          then
+            dart run dart_code_metrics:metrics \
+              analyze \
+              $dirs_to_analyze \
+              --fatal-warnings \
+              --fatal-performance \
+              --fatal-style
+            dart run dart_code_metrics:metrics \
+              check-unused-files \
+              $dirs_to_analyze \
+              --fatal-unused
+          fi
+      - name: Check formatting
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: dart format . --set-exit-if-changed
+
+      - name: Run tests
+        working-directory: ./flutter_vlc_player_platform_interface
+        run: |
+          # run tests if `test` folder exists
+          if [ -d test ]
+          then
+              flutter test -r expanded
+          else
+              echo "Tests not found."
+          fi
