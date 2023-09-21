@@ -39,6 +39,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
 
+  /// Set keep playing video in background, when app goes in background.
+  /// The default value is false.
+  final bool allowBackgroundPlayback;
+
   /// This is a callback that will be executed once the platform view has been initialized.
   /// If you want the media to play as soon as the platform view has initialized, you could just call
   /// [VlcPlayerController.play] in this callback. (see the example).
@@ -91,6 +95,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.asset(
     this.dataSource, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = false,
     this.package,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
@@ -112,6 +117,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.network(
     this.dataSource, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = false,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
@@ -132,6 +138,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.file(
     File file, {
     this.autoInitialize = true,
+    this.allowBackgroundPlayback = true,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
@@ -177,7 +184,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       throw Exception('Already Initialized');
     }
 
-    _lifeCycleObserver = VlcAppLifeCycleObserver(this)..initialize();
+    if (!allowBackgroundPlayback) {
+      _lifeCycleObserver = VlcAppLifeCycleObserver(this)..initialize();
+    }
 
     await vlcPlayerPlatform.create(
       viewId: _viewId,
