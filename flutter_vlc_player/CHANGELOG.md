@@ -1,5 +1,10 @@
 ## 7.4.0
-* **Possible breaking Change**: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
+* Important change: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
+* Mobile VLC update to 3.6.0-eap9
+* Allow background playback
+  Credits to Oliver Nitzschke (https://github.com/pinpong)
+* fix instructions for proguard
+  Credits to Luiz Fernando Baldo Marques (https://github.com/luizbaldo)
 
 ## 7.3.1
 * Restore Flutter 3.3-3.7 compatibility
