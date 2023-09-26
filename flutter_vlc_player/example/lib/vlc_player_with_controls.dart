@@ -23,8 +23,7 @@ class VlcPlayerWithControls extends StatefulWidget {
   VlcPlayerWithControlsState createState() => VlcPlayerWithControlsState();
 }
 
-class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
-    with AutomaticKeepAliveClientMixin {
+class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
   static const _playerControlsBgColor = Colors.black87;
   static const _numberPositionOffset = 8.0;
   static const _recordingPositionOffset = 10.0;
@@ -59,9 +58,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
   //
   List<double> playbackSpeeds = [0.5, 1.0, 2.0];
   int playbackSpeedIndex = 1;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -122,8 +118,6 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

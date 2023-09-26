@@ -1,3 +1,6 @@
+## 7.4.0
+* **Possible breaking Change**: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
+
 ## 7.3.1
 * Restore Flutter 3.3-3.7 compatibility
   Credits to Yang Fang (https://github.com/yangsfang)

@@ -33,15 +33,11 @@ class VlcPlayer extends StatefulWidget {
   _VlcPlayerState createState() => _VlcPlayerState();
 }
 
-class _VlcPlayerState extends State<VlcPlayer>
-    with AutomaticKeepAliveClientMixin {
+class _VlcPlayerState extends State<VlcPlayer> {
   bool _isInitialized = false;
 
   //ignore: avoid-late-keyword
   late VoidCallback _listener;
-
-  @override
-  bool get wantKeepAlive => true;
 
   _VlcPlayerState() {
     _listener = () {
@@ -67,8 +63,6 @@ class _VlcPlayerState extends State<VlcPlayer>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
       child: Stack(
