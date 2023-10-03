@@ -15,7 +15,7 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     private static FlutterVlcPlayerFactory flutterVlcPlayerFactory;
     private FlutterPluginBinding flutterPluginBinding;
 
-    private static final String VIEW_TYPE = "flutter_video_plugin/getVideoView";
+    private static final String VIEW_TYPE = "flutter_vlc_player/getVideoView";
 
     public FlutterVlcPlayerPlugin() {
     }

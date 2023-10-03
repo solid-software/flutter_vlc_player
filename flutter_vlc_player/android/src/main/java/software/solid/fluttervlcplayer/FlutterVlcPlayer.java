@@ -86,7 +86,7 @@ final class FlutterVlcPlayer implements PlatformView {
     FlutterVlcPlayer(int viewId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry) {
         this.context = context;
         // event for media
-        mediaEventChannel = new EventChannel(binaryMessenger, "flutter_video_plugin/getVideoEvents_" + viewId);
+        mediaEventChannel = new EventChannel(binaryMessenger, "flutter_vlc_player/getVideoEvents_" + viewId);
         mediaEventChannel.setStreamHandler(
                 new EventChannel.StreamHandler() {
                     @Override
@@ -100,7 +100,7 @@ final class FlutterVlcPlayer implements PlatformView {
                     }
                 });
         // event for renderer
-        rendererEventChannel = new EventChannel(binaryMessenger, "flutter_video_plugin/getRendererEvents_" + viewId);
+        rendererEventChannel = new EventChannel(binaryMessenger, "flutter_vlc_player/getRendererEvents_" + viewId);
         rendererEventChannel.setStreamHandler(
                 new EventChannel.StreamHandler() {
                     @Override

@@ -13,11 +13,11 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   final _api = VlcPlayerApi();
 
   EventChannel _mediaEventChannelFor(int viewId) {
-    return EventChannel('flutter_video_plugin/getVideoEvents_$viewId');
+    return EventChannel('flutter_vlc_player/getVideoEvents_$viewId');
   }
 
   EventChannel _rendererEventChannelFor(int viewId) {
-    return EventChannel('flutter_video_plugin/getRendererEvents_$viewId');
+    return EventChannel('flutter_vlc_player/getRendererEvents_$viewId');
   }
 
   @override
@@ -64,7 +64,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     PlatformViewCreatedCallback onPlatformViewCreated, {
     bool virtualDisplay = true,
   }) {
-    const viewType = 'flutter_video_plugin/getVideoView';
+    const viewType = 'flutter_vlc_player/getVideoView';
     if (Platform.isAndroid) {
       return virtualDisplay
           ? AndroidView(
