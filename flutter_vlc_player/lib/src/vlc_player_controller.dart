@@ -612,11 +612,8 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     return;
   }
 
-  /// Sets the max audio volume of
-  ///
-  /// [maxVolume] indicates a value between 1 (lowest) and 200 (highest) on a
-  /// linear scale.
-  Future<int> getMaxVolume(int maxVolume) async {
+  /// Returns current vlc max volume level.
+  Future<int> getMaxVolume() async {
     _throwIfNotInitialized('getMaxVolume');
 
     return _maxVolume;
