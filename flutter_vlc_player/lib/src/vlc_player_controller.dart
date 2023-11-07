@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -39,6 +40,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
 
+  /// Video start from [startAt]. When initialization is complete
+  final Duration? startAt;
+
   /// Set keep playing video in background, when app goes in background.
   /// The default value is false.
   final bool allowBackgroundPlayback;
@@ -71,7 +75,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// List of onRenderer listeners
   final List<RendererCallback> _onRendererEventListeners = [];
-
   bool _isDisposed = false;
 
   VlcAppLifeCycleObserver? _lifeCycleObserver;
@@ -96,6 +99,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.dataSource, {
     this.autoInitialize = true,
     this.allowBackgroundPlayback = false,
+    this.startAt,
     this.package,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
@@ -118,6 +122,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     this.dataSource, {
     this.autoInitialize = true,
     this.allowBackgroundPlayback = false,
+    this.startAt,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
@@ -139,6 +144,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     File file, {
     this.autoInitialize = true,
     this.allowBackgroundPlayback = true,
+    this.startAt,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
     this.options,
@@ -346,7 +352,22 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
     _notifyOnInitListeners();
 
+    /// Calling start at
+    unawaited(_setStartAt());
+
     return initializingCompleter.future;
+  }
+
+  /// Waiting for video being loaded and then seek to start at
+  Future<void> _setStartAt() async {
+    if (startAt != null) {
+      do {
+        await Future.delayed(const Duration(milliseconds: 100));
+      } while (value.playingState != PlayingState.playing);
+
+      log("seeking: ${value.duration.inSeconds}");
+      await seekTo(startAt ?? Duration.zero);
+    }
   }
 
   /// Dispose controller
@@ -589,6 +610,16 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _maxVolume = maxVolume;
 
     return;
+  }
+
+  /// Sets the max audio volume of
+  ///
+  /// [maxVolume] indicates a value between 1 (lowest) and 200 (highest) on a
+  /// linear scale.
+  Future<int> getMaxVolume(int maxVolume) async {
+    _throwIfNotInitialized('getMaxVolume');
+
+    return _maxVolume;
   }
 
   /// Sets the audio volume of
