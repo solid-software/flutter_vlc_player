@@ -322,7 +322,7 @@ final class FlutterVlcPlayer implements PlatformView {
     void setVolume(long value) {
         if (mediaPlayer == null) return;
 
-        long bracketedValue = Math.max(0, Math.min(100, value));
+        long bracketedValue = Math.max(0, Math.min(200, value));
         mediaPlayer.setVolume((int) bracketedValue);
     }
 
