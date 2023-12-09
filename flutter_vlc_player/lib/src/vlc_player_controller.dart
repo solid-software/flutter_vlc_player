@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
 /// After [dispose] all further calls are ignored.
 class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   int _maxVolume = 100;
+  bool _startAtSet = false;
 
   /// The URI to the video file. This will be in different formats depending on
   /// the [DataSourceType] of the original video.
@@ -239,6 +239,10 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
           );
           break;
         case VlcMediaEventType.playing:
+
+          /// Calling start at
+          if (startAt != null && !_startAtSet) _setStartAt();
+
           value = value.copyWith(
             isEnded: false,
             isPlaying: true,
@@ -352,22 +356,27 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
     _notifyOnInitListeners();
 
-    /// Calling start at
-    unawaited(_setStartAt());
-
     return initializingCompleter.future;
   }
 
-  /// Waiting for video being loaded and then seek to start at
+  /// Seeking to start at
   Future<void> _setStartAt() async {
-    if (startAt != null) {
-      do {
-        await Future.delayed(const Duration(milliseconds: 100));
-      } while (value.playingState != PlayingState.playing);
+    // Check if already seted up or start at is null then return.
+    if (startAt == null || _startAtSet) return;
 
-      log("seeking: ${value.duration.inSeconds}");
-      await seekTo(startAt ?? Duration.zero);
+    final Duration startAtDuration = startAt ?? Duration.zero;
+
+    // Checking if startAt is greatet then video's duration then throw error.
+    if (startAtDuration.inMilliseconds > value.duration.inMilliseconds) {
+      throw ArgumentError.value(
+        startAtDuration,
+        'Start At cannot be greater than video duration.',
+      );
     }
+
+    // Setting startAt
+    _startAtSet = true;
+    await seekTo(startAtDuration);
   }
 
   /// Dispose controller
@@ -595,8 +604,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// linear scale.
   Future<void> setMaxVolume(int maxVolume) async {
     _throwIfNotInitialized('setMaxVolume');
-    const volumeLimit = 200;
-    if (maxVolume > volumeLimit) {
+    if (maxVolume > 200) {
       throw ArgumentError.value(
         maxVolume,
         'Max volume should be lower than 200.',
