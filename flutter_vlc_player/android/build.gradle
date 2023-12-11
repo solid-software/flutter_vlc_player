@@ -22,6 +22,8 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'software.solid.fluttervlcplayer'
+
     compileSdk 33
 
     defaultConfig {
