@@ -1,3 +1,7 @@
+## 7.4.1
+* Add support for Flutter 3.16
+  Credits to thearaks (https://github.com/thearaks)
+
 ## 7.4.0
 * Important change: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
 * Mobile VLC update to 3.6.0-eap9
