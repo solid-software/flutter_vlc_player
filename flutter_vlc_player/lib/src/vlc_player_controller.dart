@@ -573,6 +573,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     final volume = await vlcPlayerPlatform.getVolume(_viewId);
     value = value.copyWith(
         volume: volume != null ? volume.clamp(0, _maxVolume) : null);
+
     return volume;
   }
 
