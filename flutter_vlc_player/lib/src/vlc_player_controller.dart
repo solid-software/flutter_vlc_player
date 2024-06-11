@@ -568,11 +568,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   }
 
   /// Returns current vlc volume level.
-  Future<int> getVolume() async {
+  Future<int?> getVolume() async {
     _throwIfNotInitialized('getVolume');
-    final volume =
-        await (vlcPlayerPlatform.getVolume(_viewId) as FutureOr<int>);
-    value = value.copyWith(volume: volume.clamp(0, _maxVolume));
+    final volume = await vlcPlayerPlatform.getVolume(_viewId);
+    value = value.copyWith(
+        volume: volume != null ? volume.clamp(0, _maxVolume) : null);
 
     return volume;
   }
