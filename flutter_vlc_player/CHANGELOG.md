@@ -1,3 +1,11 @@
+## 7.4.2
+* fixed getVolume #486
+  Credits to pinpong (https://github.com/pinpong)
+* updated MobileVLCKit & libvlc
+  Credits to pinpong (https://github.com/pinpong)
+* Fix: Unable to replay when status is stopped #449
+  Credits to Virczz (https://github.com/Virczz) 
+
 ## 7.4.1
 * Add support for Flutter 3.16
   Credits to thearaks (https://github.com/thearaks)
