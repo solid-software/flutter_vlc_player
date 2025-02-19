@@ -215,14 +215,12 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.buffering,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
         case VlcMediaEventType.paused:
           value = value.copyWith(
             isPlaying: false,
             isBuffering: false,
             playingState: PlayingState.paused,
           );
-          break;
         case VlcMediaEventType.stopped:
           value = value.copyWith(
             isPlaying: false,
@@ -231,7 +229,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.stopped,
             position: Duration.zero,
           );
-          break;
         case VlcMediaEventType.playing:
           value = value.copyWith(
             isEnded: false,
@@ -247,7 +244,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             activeSpuTrack: event.activeSpuTrack,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
         case VlcMediaEventType.ended:
           value = value.copyWith(
             isPlaying: false,
@@ -257,7 +253,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.ended,
             position: event.position,
           );
-          break;
         case VlcMediaEventType.buffering:
         case VlcMediaEventType.timeChanged:
           value = value.copyWith(
@@ -278,7 +273,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
                 : value.playingState,
             errorDescription: VlcPlayerValue.noError,
           );
-          break;
         case VlcMediaEventType.mediaChanged:
           break;
 
@@ -288,7 +282,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             isRecording: event.isRecording,
             recordPath: event.recordPath,
           );
-          break;
         case VlcMediaEventType.error:
           value = value.copyWith(
             isPlaying: false,
@@ -297,7 +290,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             playingState: PlayingState.error,
             errorDescription: VlcPlayerValue.unknownError,
           );
-          break;
         case VlcMediaEventType.unknown:
           break;
       }
@@ -327,7 +319,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             event.rendererId,
             event.rendererName,
           );
-          break;
         case VlcRendererEventType.unknown:
           break;
       }
@@ -572,7 +563,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _throwIfNotInitialized('getVolume');
     final volume = await vlcPlayerPlatform.getVolume(_viewId);
     value = value.copyWith(
-        volume: volume != null ? volume.clamp(0, _maxVolume) : null);
+        volume: volume?.clamp(0, _maxVolume),);
 
     return volume;
   }

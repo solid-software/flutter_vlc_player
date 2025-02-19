@@ -20,31 +20,6 @@ public class FlutterVlcPlayerPlugin implements FlutterPlugin, ActivityAware {
     public FlutterVlcPlayerPlugin() {
     }
 
-    @SuppressWarnings("deprecation")
-    public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
-        if (flutterVlcPlayerFactory == null) {
-            flutterVlcPlayerFactory =
-                    new FlutterVlcPlayerFactory(
-                            registrar.messenger(),
-                            registrar.textures(),
-                            registrar::lookupKeyForAsset,
-                            registrar::lookupKeyForAsset
-                    );
-            registrar
-                    .platformViewRegistry()
-                    .registerViewFactory(
-                            VIEW_TYPE,
-                            flutterVlcPlayerFactory
-                    );
-        }
-        registrar.addViewDestroyListener(view -> {
-            stopListening();
-            return false;
-        });
-        //
-        startListening();
-    }
-
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         flutterPluginBinding = binding;
