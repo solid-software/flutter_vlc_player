@@ -10,6 +10,7 @@ class MultipleTab extends StatefulWidget {
 class _MultipleTabState extends State<MultipleTab> {
   static const _heightWithControls = 400.0;
   static const _heightWithoutControls = 300.0;
+  static const _networkCachingTime = 2000;
 
   List<VlcPlayerController> controllers = <VlcPlayerController>[];
 
@@ -31,7 +32,7 @@ class _MultipleTabState extends State<MultipleTab> {
         autoPlay: false,
         options: VlcPlayerOptions(
           advanced: VlcAdvancedOptions([
-            VlcAdvancedOptions.networkCaching(2000),
+            VlcAdvancedOptions.networkCaching(_networkCachingTime),
           ]),
           rtp: VlcRtpOptions([
             VlcRtpOptions.rtpOverRtsp(true),
@@ -46,7 +47,7 @@ class _MultipleTabState extends State<MultipleTab> {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: controllers.length,
-      separatorBuilder: (_, index) {
+      separatorBuilder: (_, __) {
         return const Divider(height: 5, thickness: 5, color: Colors.grey);
       },
       itemBuilder: (_, index) {
@@ -64,10 +65,10 @@ class _MultipleTabState extends State<MultipleTab> {
 
   @override
   Future<void> dispose() async {
-    super.dispose();
     for (final controller in controllers) {
       await controller.stopRendererScanning();
       await controller.dispose();
     }
+    super.dispose();
   }
 }

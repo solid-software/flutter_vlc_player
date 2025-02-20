@@ -1,2 +1,2 @@
-// ignore: prefer-match-file-name
+// ignore: prefer_match_file_name
 enum VlcRendererEventType { attached, detached, unknown }

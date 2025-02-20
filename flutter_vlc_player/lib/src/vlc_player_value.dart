@@ -153,6 +153,7 @@ class VlcPlayerValue {
 
   /// Returns a new instance that has the same values as this current instance,
   /// except for any overrides passed in as arguments to [copyWidth].
+  // ignore: number_of_parameters
   VlcPlayerValue copyWith({
     Duration? duration,
     Size? size,

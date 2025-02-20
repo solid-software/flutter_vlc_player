@@ -47,6 +47,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     return _api.create(message);
   }
 
+  // ignore: proper_super_calls
   @override
   Future<void> dispose(int viewId) async {
     return _api.dispose(ViewMessage()..viewId = viewId);
@@ -76,7 +77,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
           : PlatformViewLink(
             viewType: viewType,
             surfaceFactory: (
-              BuildContext context,
+              BuildContext _,
               PlatformViewController controller,
             ) {
               return AndroidViewSurface(
@@ -110,6 +111,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
+  // ignore: cyclomatic_complexity
   Stream<VlcMediaEvent> mediaEventsFor(int viewId) {
     return _mediaEventChannelFor(viewId).receiveBroadcastStream().map((
       dynamic event,

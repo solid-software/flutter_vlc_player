@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_early_return, function_lines_of_code
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
   final double initSnapshotRightPosition = 10;
   final double initSnapshotBottomPosition = 10;
 
-  // ignore: avoid-late-keyword
+  // ignore: avoid_late_keyword
   late VlcPlayerController _controller;
 
   //
@@ -363,7 +364,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                 IconButton(
                   icon: const Icon(Icons.fullscreen),
                   color: Colors.white,
-                  // ignore: no-empty-block
+                  // ignore: no_empty_block
                   onPressed: () {},
                 ),
               ],
@@ -456,7 +457,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
       if (!mounted) return;
       final selectedSubId = await showDialog<int>(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _) {
           return AlertDialog(
             title: const Text('Select Subtitle'),
             content: SizedBox(
@@ -502,7 +503,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
       if (!mounted) return;
       final selectedAudioTrackId = await showDialog<int>(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _) {
           return AlertDialog(
             title: const Text('Select Audio'),
             content: SizedBox(
@@ -546,7 +547,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
       if (!mounted) return;
       final selectedCastDeviceName = await showDialog<String>(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _) {
           return AlertDialog(
             title: const Text('Display Devices'),
             content: SizedBox(
@@ -596,7 +597,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
 
     if (!mounted) return;
 
-    // ignore: avoid-non-null-assertion
+    // ignore: avoid_non_null_assertion
     Overlay.of(context).insert(_overlayEntry!);
   }
 
@@ -617,7 +618,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
               _overlayEntry = null;
               await showDialog<void>(
                 context: context,
-                builder: (ctx) {
+                builder: (_) {
                   return AlertDialog(
                     contentPadding: EdgeInsets.zero,
                     content: Image.memory(snapshot),
@@ -633,7 +634,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
               right -= dragUpdateDetails.delta.dx;
               _overlayEntry?.markNeedsBuild();
             },
-            onHorizontalDragEnd: (dragEndDetails) {
+            onHorizontalDragEnd: (_) {
               if ((initSnapshotRightPosition - right).abs() >= _overlayWidth) {
                 _overlayEntry?.remove();
                 _overlayEntry = null;
@@ -642,7 +643,7 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls> {
                 _overlayEntry?.markNeedsBuild();
               }
             },
-            onVerticalDragEnd: (dragEndDetails) {
+            onVerticalDragEnd: (_) {
               if ((initSnapshotBottomPosition - bottom).abs() >=
                   _overlayWidth) {
                 _overlayEntry?.remove();
