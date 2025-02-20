@@ -1,5 +1,7 @@
+// ignore_for_file: cyclomatic_complexity
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
@@ -19,7 +21,7 @@ class _SingleTabState extends State<SingleTab> {
 
   final _key = GlobalKey<VlcPlayerWithControlsState>();
 
-  // ignore: avoid-late-keyword
+  // ignore: avoid_late_keyword
   late final VlcPlayerController _controller;
 
   //
@@ -120,7 +122,10 @@ class _SingleTabState extends State<SingleTab> {
       await _controller.startRendererScanning();
     });
     _controller.addOnRendererEventListener((type, id, name) {
-      debugPrint('OnRendererEventListener $type $id $name');
+      // ignore: prefer_early_return
+      if (!kReleaseMode) {
+        debugPrint('OnRendererEventListener $type $id $name');
+      }
     });
   }
 
@@ -258,15 +263,9 @@ class _SingleTabState extends State<SingleTab> {
 
   @override
   Future<void> dispose() async {
-    super.dispose();
     await _controller.stopRecording();
     await _controller.stopRendererScanning();
     await _controller.dispose();
+    super.dispose();
   }
-}
-
-class MyClass {
-  final int _myField = 0;
-
-  int get myField => _myField;
 }

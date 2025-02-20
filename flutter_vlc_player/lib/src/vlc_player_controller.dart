@@ -63,7 +63,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   bool? _isReadyToInitialize;
 
   /// The viewId for this controller
-  // ignore: avoid-late-keyword
+  // ignore: avoid_late_keyword
   late int _viewId;
 
   /// List of onInit listeners
@@ -351,9 +351,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     _onRendererEventListeners.clear();
     _lifeCycleObserver?.dispose();
     _isDisposed = true;
-    super.dispose();
     //
     await vlcPlayerPlatform.dispose(_viewId);
+    super.dispose();
   }
 
   /// Notify onInit callback & all registered listeners
@@ -953,6 +953,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
         '$functionName() was called on an uninitialized VlcPlayerController.',
       );
     }
+    // ignore: prefer_early_return
     if (_isDisposed) {
       throw Exception(
         '$functionName() was called on a disposed VlcPlayerController.',

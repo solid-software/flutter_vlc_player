@@ -19,12 +19,13 @@ class ControlsOverlay extends StatelessWidget {
   });
 
   @override
+  // ignore: cyclomatic_complexity
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 50),
       reverseDuration: const Duration(milliseconds: 200),
       child: Builder(
-        builder: (ctx) {
+        builder: (_) {
           if (controller.value.isEnded || controller.value.hasError) {
             return Center(
               child: FittedBox(
@@ -113,6 +114,7 @@ class ControlsOverlay extends StatelessWidget {
   }
 
   Future<void> _pause() async {
+    // ignore: prefer_early_return
     if (controller.value.isPlaying) {
       await controller.pause();
     }

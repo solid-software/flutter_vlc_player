@@ -1,6 +1,6 @@
 import 'package:flutter_vlc_player_platform_interface/src/enums/renderer_event_type.dart';
 
-// ignore: prefer-match-file-name
+// ignore: prefer_match_file_name
 class VlcRendererEvent {
   /// The type of the event.
   final VlcRendererEventType eventType;

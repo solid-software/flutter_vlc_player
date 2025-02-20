@@ -1,6 +1,6 @@
 import 'package:pigeon/pigeon_lib.dart';
 
-//ignore: prefer-match-file-name
+//ignore: prefer_match_file_name
 class ViewMessage {
   int? viewId;
 }
