@@ -219,7 +219,7 @@ class _SingleTabState extends State<SingleTab> {
                     await Future<void>.delayed(const Duration(seconds: 1));
                     final tempVideo = await _loadVideoToFs();
                     await Future<void>.delayed(const Duration(seconds: 1));
-                    if (!mounted) break;
+                    if (!context.mounted) break;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Now trying to play...'),
@@ -229,7 +229,7 @@ class _SingleTabState extends State<SingleTab> {
                     if (await tempVideo.exists()) {
                       await _controller.setMediaFromFile(tempVideo);
                     } else {
-                      if (!mounted) break;
+                      if (!context.mounted) break;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('File load error.'),
@@ -263,4 +263,10 @@ class _SingleTabState extends State<SingleTab> {
     await _controller.stopRendererScanning();
     await _controller.dispose();
   }
+}
+
+class MyClass {
+  final int _myField = 0;
+
+  int get myField => _myField;
 }

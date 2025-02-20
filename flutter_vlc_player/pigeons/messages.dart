@@ -71,7 +71,7 @@ class SnapshotMessage {
 
 class SpuTracksMessage {
   int? viewId;
-  Map? subtitles;
+  Map<Object?, Object?>? subtitles;
 }
 
 class SpuTrackMessage {
@@ -88,7 +88,7 @@ class AddSubtitleMessage {
 
 class AudioTracksMessage {
   int? viewId;
-  Map? audios;
+  Map<Object?, Object?>? audios;
 }
 
 class AudioTrackMessage {
@@ -105,7 +105,7 @@ class AddAudioMessage {
 
 class VideoTracksMessage {
   int? viewId;
-  Map? videos;
+  Map<Object?, Object?>? videos;
 }
 
 class VideoTrackMessage {
@@ -135,7 +135,7 @@ class RendererScanningMessage {
 
 class RendererDevicesMessage {
   int? viewId;
-  Map? rendererDevices;
+  Map<Object?, Object?>? rendererDevices;
 }
 
 class RenderDeviceMessage {
