@@ -25,6 +25,7 @@ jobs:
         run: dart analyze
 
       - name: Check formatting
+        working-directory: ./flutter_vlc_player        
         run: dart format . --set-exit-if-changed
 
       - name: Run tests
