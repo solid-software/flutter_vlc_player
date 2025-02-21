@@ -4,7 +4,7 @@
 
 ## 2.0.4
 
-- Restore Flutter 3.3-3.7 compatibility. Credits: @yangsfang
+- Update to Dart 3 and Flutter 3.13. Credits: @romaingyh
 
 ## 2.0.3
 
