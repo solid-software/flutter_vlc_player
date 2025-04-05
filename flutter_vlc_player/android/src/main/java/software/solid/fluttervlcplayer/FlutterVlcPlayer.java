@@ -18,6 +18,8 @@ import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.platform.PlatformView;
@@ -633,10 +635,13 @@ final class FlutterVlcPlayer implements PlatformView {
         mediaPlayer.play();
     }
 
+    @Nullable
     String getSnapshot() {
         if (textureView == null) return "";
 
         Bitmap bitmap = textureView.getBitmap();
+        if (bitmap == null) return null;
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
