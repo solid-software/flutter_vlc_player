@@ -1,10 +1,7 @@
-import Foundation
 import Flutter
+import Foundation
 
-public class VLCViewBuilder: NSObject, VlcPlayerApi{
-
-    
-    
+public class VLCViewBuilder: NSObject, VlcPlayerApi {
     var players = [Int: VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
@@ -12,19 +9,19 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     
     init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
-        self.messenger = registrar.messenger()
+        messenger = registrar.messenger()
         options = []
         super.init()
         //
         VlcPlayerApiSetup.setUp(binaryMessenger: messenger, api: self)
     }
     
-    public func build(frame: CGRect, viewId: Int64) -> VLCViewController{
+    public func build(frame: CGRect, viewId: Int64) -> VLCViewController {
         //
         var vlcViewController: VLCViewController
         vlcViewController = VLCViewController(frame: frame, viewId: viewId, messenger: messenger)
         players[viewId.int] = vlcViewController
-        return vlcViewController;
+        return vlcViewController
     }
     
     func getPlayer(id: Int64) throws -> VLCViewController {
@@ -35,17 +32,15 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         return player
     }
     
-    public func initialize() throws {
-        return
-    }
+    public func initialize() throws {}
     
     func create(msg: CreateMessage) throws {
         let player = try getPlayer(id: msg.playerId)
         
-        var isAssetUrl: Bool = false
-        var mediaUrl: String = ""
+        var isAssetUrl = false
+        var mediaUrl = ""
         
-        if(DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET){
+        if DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET {
             var assetPath: String
             if let packageName = msg.packageName {
                 assetPath = registrar.lookupKey(forAsset: msg.uri, fromPackage: packageName)
@@ -54,7 +49,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
             }
             mediaUrl = assetPath
             isAssetUrl = true
-        } else{
+        } else {
             mediaUrl = msg.uri
             isAssetUrl = false
         }
@@ -80,10 +75,10 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     func setStreamUrl(msg: SetMediaMessage) throws {
         let player = try getPlayer(id: msg.playerId)
         
-        var isAssetUrl: Bool = false
-        var mediaUrl: String = ""
+        var isAssetUrl = false
+        var mediaUrl = ""
         
-        if (DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET){
+        if DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET {
             var assetPath: String
             if let packageName = msg.packageName {
                 assetPath = registrar.lookupKey(forAsset: msg.uri, fromPackage: packageName)
@@ -92,7 +87,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
             }
             mediaUrl = assetPath
             isAssetUrl = true
-        } else{
+        } else {
             mediaUrl = msg.uri
             isAssetUrl = false
         }
@@ -181,7 +176,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         return try getPlayer(id: playerId).spuTracksCount.int64
     }
     
-    func getSpuTracks(playerId: Int64) throws -> [Int64 : String] {
+    func getSpuTracks(playerId: Int64) throws -> [Int64: String] {
         return try getPlayer(id: playerId).spuTracks.int64Dictionary
     }
     
@@ -217,7 +212,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         return try getPlayer(id: playerId).audioTracksCount.int64
     }
     
-    func getAudioTracks(playerId: Int64) throws -> [Int64 : String] {
+    func getAudioTracks(playerId: Int64) throws -> [Int64: String] {
         return try getPlayer(id: playerId).audioTracks.int64Dictionary
     }
     
@@ -248,11 +243,12 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
     }
     
     // MARK: - Video Tracks
+
     func getVideoTracksCount(playerId: Int64) throws -> Int64 {
         return try getPlayer(id: playerId).videoTracksCount.int64
     }
     
-    func getVideoTracks(playerId: Int64) throws -> [Int64 : String] {
+    func getVideoTracks(playerId: Int64) throws -> [Int64: String] {
         return try getPlayer(id: playerId).videoTracks.int64Dictionary
     }
     
@@ -298,7 +294,6 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         let player = try getPlayer(id: playerId)
         
         player.startRendererScanning()
-
     }
     
     func stopRendererScanning(playerId: Int64) throws {
@@ -307,7 +302,7 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         player.stopRendererScanning()
     }
     
-    func getRendererDevices(playerId: Int64) throws -> [String : String] {
+    func getRendererDevices(playerId: Int64) throws -> [String: String] {
         return try getPlayer(id: playerId).rendererDevices
     }
     
@@ -323,14 +318,12 @@ public class VLCViewBuilder: NSObject, VlcPlayerApi{
         let player = try getPlayer(id: playerId)
         
         return player.startRecording(saveDirectory: saveDirectory)
-
     }
     
     func stopRecording(playerId: Int64) throws -> Bool {
         let player = try getPlayer(id: playerId)
         
         return player.stopRecording()
-
     }
 }
 
@@ -353,7 +346,6 @@ extension Int64 {
         Int32(truncatingIfNeeded: self)
     }
 }
-
 
 extension Int32 {
     var int: Int {
@@ -379,8 +371,8 @@ extension Float {
 
 extension Dictionary where Key == Int {
     var int64Dictionary: [Int64: Value] {
-        Dictionary<Int64, Value>(uniqueKeysWithValues:
-            self.map { (Int64($0.key), $0.value) }
+        [Int64: Value](uniqueKeysWithValues:
+            map { (Int64($0.key), $0.value) }
         )
     }
 }
