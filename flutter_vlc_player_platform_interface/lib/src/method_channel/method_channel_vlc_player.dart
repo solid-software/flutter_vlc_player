@@ -47,6 +47,7 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     return _api.create(message);
   }
 
+  // ignore: proper_super_calls
   @override
   Future<void> dispose(int viewId) async {
     return _api.dispose(ViewMessage()..viewId = viewId);
@@ -68,35 +69,35 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
     if (Platform.isAndroid) {
       return virtualDisplay
           ? AndroidView(
-              viewType: viewType,
-              hitTestBehavior: PlatformViewHitTestBehavior.transparent,
-              onPlatformViewCreated: onPlatformViewCreated,
-              creationParamsCodec: const StandardMessageCodec(),
-            )
+            viewType: viewType,
+            hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+            onPlatformViewCreated: onPlatformViewCreated,
+            creationParamsCodec: const StandardMessageCodec(),
+          )
           : PlatformViewLink(
-              viewType: viewType,
-              surfaceFactory:
-                  (BuildContext context, PlatformViewController controller) {
-                return AndroidViewSurface(
-                  controller: controller as AndroidViewController,
-                  gestureRecognizers: const {},
-                  hitTestBehavior: PlatformViewHitTestBehavior.transparent,
-                );
-              },
-              onCreatePlatformView: (PlatformViewCreationParams params) {
-                return PlatformViewsService.initSurfaceAndroidView(
+            viewType: viewType,
+            surfaceFactory: (
+              BuildContext _,
+              PlatformViewController controller,
+            ) {
+              return AndroidViewSurface(
+                controller: controller as AndroidViewController,
+                gestureRecognizers: const {},
+                hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+              );
+            },
+            onCreatePlatformView: (PlatformViewCreationParams params) {
+              return PlatformViewsService.initSurfaceAndroidView(
                   id: params.id,
                   viewType: viewType,
                   layoutDirection: TextDirection.ltr,
                   creationParamsCodec: const StandardMessageCodec(),
                 )
-                  ..addOnPlatformViewCreatedListener(
-                    params.onPlatformViewCreated,
-                  )
-                  ..addOnPlatformViewCreatedListener(onPlatformViewCreated)
-                  ..create();
-              },
-            );
+                ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+                ..addOnPlatformViewCreatedListener(onPlatformViewCreated)
+                ..create();
+            },
+          );
     } else if (Platform.isIOS) {
       return UiKitView(
         viewType: viewType,
@@ -110,93 +111,82 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
   }
 
   @override
+  // ignore: cyclomatic_complexity
   Stream<VlcMediaEvent> mediaEventsFor(int viewId) {
-    return _mediaEventChannelFor(viewId).receiveBroadcastStream().map(
-      (dynamic event) {
-        final Map<Object?, Object?> map = event as Map<Object?, Object?>;
-        //
-        switch (map['event']) {
-          case 'opening':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.opening,
-            );
+    return _mediaEventChannelFor(viewId).receiveBroadcastStream().map((
+      dynamic event,
+    ) {
+      final Map<Object?, Object?> map = event as Map<Object?, Object?>;
+      //
+      switch (map['event']) {
+        case 'opening':
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.opening);
 
-          case 'paused':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.paused,
-            );
+        case 'paused':
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.paused);
 
-          case 'stopped':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.stopped,
-            );
+        case 'stopped':
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.stopped);
 
-          case 'playing':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.playing,
-              size: Size(
-                (map['width'] as num?)?.toDouble() ?? 0.0,
-                (map['height'] as num?)?.toDouble() ?? 0.0,
-              ),
-              playbackSpeed: map['speed'] as double? ?? 1.0,
-              duration: Duration(milliseconds: map['duration'] as int? ?? 0),
-              audioTracksCount: map['audioTracksCount'] as int? ?? 1,
-              activeAudioTrack: map['activeAudioTrack'] as int? ?? 0,
-              spuTracksCount: map['spuTracksCount'] as int? ?? 0,
-              activeSpuTrack: map['activeSpuTrack'] as int? ?? -1,
-            );
+        case 'playing':
+          return VlcMediaEvent(
+            mediaEventType: VlcMediaEventType.playing,
+            size: Size(
+              (map['width'] as num?)?.toDouble() ?? 0.0,
+              (map['height'] as num?)?.toDouble() ?? 0.0,
+            ),
+            playbackSpeed: map['speed'] as double? ?? 1.0,
+            duration: Duration(milliseconds: map['duration'] as int? ?? 0),
+            audioTracksCount: map['audioTracksCount'] as int? ?? 1,
+            activeAudioTrack: map['activeAudioTrack'] as int? ?? 0,
+            spuTracksCount: map['spuTracksCount'] as int? ?? 0,
+            activeSpuTrack: map['activeSpuTrack'] as int? ?? -1,
+          );
 
-          case 'ended':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.ended,
-              position: Duration(milliseconds: map['position'] as int? ?? 0),
-            );
+        case 'ended':
+          return VlcMediaEvent(
+            mediaEventType: VlcMediaEventType.ended,
+            position: Duration(milliseconds: map['position'] as int? ?? 0),
+          );
 
-          case 'buffering':
-          case 'timeChanged':
-            const defaultBufferPercent = 100.0;
+        case 'buffering':
+        case 'timeChanged':
+          const defaultBufferPercent = 100.0;
 
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.timeChanged,
-              size: Size(
-                (map['width'] as num?)?.toDouble() ?? 0.0,
-                (map['height'] as num?)?.toDouble() ?? 0.0,
-              ),
-              playbackSpeed: map['speed'] as double? ?? 1.0,
-              position: Duration(milliseconds: map['position'] as int? ?? 0),
-              duration: Duration(milliseconds: map['duration'] as int? ?? 0),
-              audioTracksCount: map['audioTracksCount'] as int? ?? 1,
-              activeAudioTrack: map['activeAudioTrack'] as int? ?? 0,
-              spuTracksCount: map['spuTracksCount'] as int? ?? 0,
-              activeSpuTrack: map['activeSpuTrack'] as int? ?? -1,
-              bufferPercent: map['buffer'] as double? ?? defaultBufferPercent,
-              isPlaying: map['isPlaying'] as bool? ?? false,
-            );
+          return VlcMediaEvent(
+            mediaEventType: VlcMediaEventType.timeChanged,
+            size: Size(
+              (map['width'] as num?)?.toDouble() ?? 0.0,
+              (map['height'] as num?)?.toDouble() ?? 0.0,
+            ),
+            playbackSpeed: map['speed'] as double? ?? 1.0,
+            position: Duration(milliseconds: map['position'] as int? ?? 0),
+            duration: Duration(milliseconds: map['duration'] as int? ?? 0),
+            audioTracksCount: map['audioTracksCount'] as int? ?? 1,
+            activeAudioTrack: map['activeAudioTrack'] as int? ?? 0,
+            spuTracksCount: map['spuTracksCount'] as int? ?? 0,
+            activeSpuTrack: map['activeSpuTrack'] as int? ?? -1,
+            bufferPercent: map['buffer'] as double? ?? defaultBufferPercent,
+            isPlaying: map['isPlaying'] as bool? ?? false,
+          );
 
-          case 'mediaChanged':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.mediaChanged,
-            );
+        case 'mediaChanged':
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.mediaChanged);
 
-          case 'recording':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.recording,
-              isRecording: map['isRecording'] as bool? ?? false,
-              recordPath: map['recordPath'] as String? ?? '',
-            );
+        case 'recording':
+          return VlcMediaEvent(
+            mediaEventType: VlcMediaEventType.recording,
+            isRecording: map['isRecording'] as bool? ?? false,
+            recordPath: map['recordPath'] as String? ?? '',
+          );
 
-          case 'error':
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.error,
-            );
+        case 'error':
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.error);
 
-          default:
-            return VlcMediaEvent(
-              mediaEventType: VlcMediaEventType.unknown,
-            );
-        }
-      },
-    );
+        default:
+          return VlcMediaEvent(mediaEventType: VlcMediaEventType.unknown);
+      }
+    });
   }
 
   @override
@@ -309,16 +299,18 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<double?> getPlaybackSpeed(int viewId) async {
-    final response =
-        await _api.getPlaybackSpeed(ViewMessage()..viewId = viewId);
+    final response = await _api.getPlaybackSpeed(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.speed;
   }
 
   @override
   Future<int?> getSpuTracksCount(int viewId) async {
-    final response =
-        await _api.getSpuTracksCount(ViewMessage()..viewId = viewId);
+    final response = await _api.getSpuTracksCount(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.count;
   }
@@ -380,8 +372,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int?> getAudioTracksCount(int viewId) async {
-    final response =
-        await _api.getAudioTracksCount(ViewMessage()..viewId = viewId);
+    final response = await _api.getAudioTracksCount(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.count;
   }
@@ -443,8 +436,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<int?> getVideoTracksCount(int viewId) async {
-    final response =
-        await _api.getVideoTracksCount(ViewMessage()..viewId = viewId);
+    final response = await _api.getVideoTracksCount(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.count;
   }
@@ -499,8 +493,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<String?> getVideoAspectRatio(int viewId) async {
-    final response =
-        await _api.getVideoAspectRatio(ViewMessage()..viewId = viewId);
+    final response = await _api.getVideoAspectRatio(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.aspectRatio;
   }
@@ -519,8 +514,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<List<String>> getAvailableRendererServices(int viewId) async {
-    final response =
-        await _api.getAvailableRendererServices(ViewMessage()..viewId = viewId);
+    final response = await _api.getAvailableRendererServices(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.services?.cast<String>() ?? [];
   }
@@ -544,8 +540,9 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Future<Map<String, String>> getRendererDevices(int viewId) async {
-    final response =
-        await _api.getRendererDevices(ViewMessage()..viewId = viewId);
+    final response = await _api.getRendererDevices(
+      ViewMessage()..viewId = viewId,
+    );
 
     return response.rendererDevices?.cast<String, String>() ?? {};
   }
@@ -561,30 +558,30 @@ class MethodChannelVlcPlayer extends VlcPlayerPlatform {
 
   @override
   Stream<VlcRendererEvent> rendererEventsFor(int viewId) {
-    return _rendererEventChannelFor(viewId).receiveBroadcastStream().map(
-      (dynamic event) {
-        final Map<Object?, Object?> map = event as Map<Object?, Object?>;
+    return _rendererEventChannelFor(viewId).receiveBroadcastStream().map((
+      dynamic event,
+    ) {
+      final Map<Object?, Object?> map = event as Map<Object?, Object?>;
+      //
+      switch (map['event']) {
+        case 'attached':
+          return VlcRendererEvent(
+            eventType: VlcRendererEventType.attached,
+            rendererId: map['id'].toString(),
+            rendererName: map['name'].toString(),
+          );
         //
-        switch (map['event']) {
-          case 'attached':
-            return VlcRendererEvent(
-              eventType: VlcRendererEventType.attached,
-              rendererId: map['id'].toString(),
-              rendererName: map['name'].toString(),
-            );
-          //
-          case 'detached':
-            return VlcRendererEvent(
-              eventType: VlcRendererEventType.detached,
-              rendererId: map['id'].toString(),
-              rendererName: map['name'].toString(),
-            );
-          //
-          default:
-            return VlcRendererEvent(eventType: VlcRendererEventType.unknown);
-        }
-      },
-    );
+        case 'detached':
+          return VlcRendererEvent(
+            eventType: VlcRendererEventType.detached,
+            rendererId: map['id'].toString(),
+            rendererName: map['name'].toString(),
+          );
+        //
+        default:
+          return VlcRendererEvent(eventType: VlcRendererEventType.unknown);
+      }
+    });
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_vlc_player/src/vlc_player_controller.dart';
 import 'package:flutter_vlc_player/src/vlc_player_platform.dart';
 
-// ignore: prefer-match-file-name
+// ignore: prefer_match_file_name
 class VlcPlayer extends StatefulWidget {
   final VlcPlayerController controller;
   final double aspectRatio;
@@ -36,7 +36,7 @@ class VlcPlayer extends StatefulWidget {
 class _VlcPlayerState extends State<VlcPlayer> {
   bool _isInitialized = false;
 
-  //ignore: avoid-late-keyword
+  //ignore: avoid_late_keyword
   late VoidCallback _listener;
 
   _VlcPlayerState() {

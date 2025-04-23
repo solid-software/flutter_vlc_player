@@ -20,31 +20,12 @@ jobs:
         working-directory: ./flutter_vlc_player
         run: flutter pub get
 
-      - name: Setup Dart Code Metrics
+      - name: Run Solid Lints
         working-directory: ./flutter_vlc_player
-        run: dart pub get dart_code_metrics
+        run: dart analyze
 
-      - name: Dart Code Metrics
-        working-directory: ./flutter_vlc_player
-        run: |
-          dirs_to_analyze=""
-          if [ -d lib ]; then dirs_to_analyze+=" lib"; fi
-          if [ -d test ]; then dirs_to_analyze+=" test"; fi
-          if [ -d example ]; then dirs_to_analyze+=" example"; fi
-          if [ dirs_to_analyze != "" ]
-          then
-            dart run dart_code_metrics:metrics \
-              analyze \
-              $dirs_to_analyze \
-              --fatal-warnings \
-              --fatal-performance \
-              --fatal-style
-            dart run dart_code_metrics:metrics \
-              check-unused-files \
-              $dirs_to_analyze \
-              --fatal-unused
-          fi
       - name: Check formatting
+        working-directory: ./flutter_vlc_player        
         run: dart format . --set-exit-if-changed
 
       - name: Run tests

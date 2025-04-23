@@ -1,8 +1,4 @@
-enum VlcSubtitleTextDirection {
-  ltr,
-  rtl,
-  auto,
-}
+enum VlcSubtitleTextDirection { ltr, rtl, auto }
 
 extension VlcSubtitleTextDirectionExtensionMap on VlcSubtitleTextDirection {
   static const valueMap = {

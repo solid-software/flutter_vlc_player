@@ -6,7 +6,7 @@ import 'package:flutter_vlc_player_platform_interface/flutter_vlc_player_platfor
 import 'package:flutter_vlc_player_platform_interface/src/method_channel/method_channel_vlc_player.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-// ignore_for_file: prefer-match-file-name
+// ignore_for_file: prefer_match_file_name
 
 /// The interface that implementations of vlc must implement.
 ///
@@ -32,6 +32,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   /// Constructs a VlcPlayerPlatform.
   VlcPlayerPlatform() : super(token: _token);
 
+  // ignore: avoid_returning_widgets
   /// Returns a widget displaying the video.
   Widget buildView(
     PlatformViewCreatedCallback onPlatformViewCreated, {

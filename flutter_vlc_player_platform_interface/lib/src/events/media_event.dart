@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_vlc_player_platform_interface/src/enums/media_event_type.dart';
 
-// ignore: prefer-match-file-name
+// ignore: prefer_match_file_name
 class VlcMediaEvent {
   /// The type of the event.
   final VlcMediaEventType mediaEventType;

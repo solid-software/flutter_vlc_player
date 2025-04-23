@@ -255,7 +255,7 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     void stop() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
         }
     }
@@ -281,6 +281,8 @@ final class FlutterVlcPlayer implements PlatformView {
             Media media;
             if (isAssetUrl)
                 media = new Media(libVLC, context.getAssets().openFd(url));
+            else if(url.startsWith("content://"))
+                media = new Media(libVLC, context.getContentResolver().openFileDescriptor(Uri.parse(url), "r").getFileDescriptor());
             else
                 media = new Media(libVLC, Uri.parse(url));
             final HwAcc hwAccValue = HwAcc.values()[(int) hwAcc];

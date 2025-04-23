@@ -1,3 +1,22 @@
+## 7.4.3
+* Bumped minimum Flutter SDK requirement to 3.22.0 and Dart SDK requirement to 3.4.0. The minimum supported Android version is now 5.0 (API level 21)
+* [Android] updated libvlc
+* [Android] set Java compatibility to 11 instead of 8
+* [ios] updated MobileVLCKit
+* updated exmaple
+
+## 7.4.2
+* fixed getVolume #486
+  Credits to pinpong (https://github.com/pinpong)
+* updated MobileVLCKit & libvlc
+  Credits to pinpong (https://github.com/pinpong)
+* Fix: Unable to replay when status is stopped #449
+  Credits to Virczz (https://github.com/Virczz) 
+
+## 7.4.1
+* Add support for Flutter 3.16
+  Credits to thearaks (https://github.com/thearaks)
+
 ## 7.4.0
 * Important change: Removed [AutomaticKeepAliveClientMixin](https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html) from plugin widget
 * Mobile VLC update to 3.6.0-eap9
