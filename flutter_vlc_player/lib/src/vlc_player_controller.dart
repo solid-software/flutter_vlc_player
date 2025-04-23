@@ -236,10 +236,6 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             position: Duration.zero,
           );
         case VlcMediaEventType.playing:
-
-          /// Calling start at
-          if (startAt != null && !_startAtSet) _setStartAt();
-
           value = value.copyWith(
             isEnded: false,
             isPlaying: true,
@@ -254,6 +250,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             activeSpuTrack: event.activeSpuTrack,
             errorDescription: VlcPlayerValue.noError,
           );
+
+          /// Calling start at
+          _setStartAt();
         case VlcMediaEventType.ended:
           value = value.copyWith(
             isPlaying: false,
@@ -596,20 +595,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// linear scale.
   Future<void> setMaxVolume(int maxVolume) async {
     _throwIfNotInitialized('setMaxVolume');
-    if (maxVolume > 200) {
-      throw ArgumentError.value(
-        maxVolume,
-        'Max volume should be lower than 200.',
-      );
-    } else if (maxVolume <= 0) {
-      throw ArgumentError.value(
-        maxVolume,
-        'Max volume should not be 0 or negative.',
-      );
-    }
-    _maxVolume = maxVolume;
-
-    return;
+    _maxVolume = maxVolume.clamp(0, 200);
   }
 
   /// Returns current vlc max volume level.
