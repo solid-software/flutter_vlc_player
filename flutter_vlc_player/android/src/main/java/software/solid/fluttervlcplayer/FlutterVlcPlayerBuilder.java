@@ -153,7 +153,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     @Override
     public void seekTo(@NonNull Long playerId, @NonNull Long position) {
         var player = getPlayer(playerId);
-        player.seekTo(position.intValue());
+        player.seekTo(position);
     }
 
     @NonNull
