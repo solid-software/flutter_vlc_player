@@ -1,16 +1,19 @@
 package software.solid.fluttervlcplayer;
 
-import org.videolan.libvlc.MediaPlayer;
-import org.videolan.libvlc.interfaces.IVLCVout;
-
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.view.TextureView;
-import android.view.View;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.TextureView;
+import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.RequiresApi;
+
+import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.interfaces.IVLCVout;
 
 import io.flutter.view.TextureRegistry;
 

@@ -1,9 +1,6 @@
 package software.solid.fluttervlcplayer;
 
 import android.content.Context;
-import android.util.LongSparseArray;
-
-import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.StandardMessageCodec;

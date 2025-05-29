@@ -1,37 +1,31 @@
 package software.solid.fluttervlcplayer;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.RendererDiscoverer;
 import org.videolan.libvlc.RendererItem;
-import org.videolan.libvlc.interfaces.IMedia;
-import org.videolan.libvlc.interfaces.IVLCVout;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.SurfaceTexture;
-import android.net.Uri;
-import android.util.Base64;
-import android.util.Log;
-import android.view.Surface;
-import android.view.SurfaceView;
-import android.view.View;
-
-import androidx.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.view.TextureRegistry;
 import software.solid.fluttervlcplayer.Enums.HwAcc;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 final class FlutterVlcPlayer implements PlatformView {
 
