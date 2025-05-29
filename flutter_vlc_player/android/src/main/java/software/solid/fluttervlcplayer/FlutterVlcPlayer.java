@@ -277,7 +277,7 @@ final class FlutterVlcPlayer implements PlatformView {
             Media media;
             if (isAssetUrl)
                 media = new Media(libVLC, context.getAssets().openFd(url));
-            else if(url.startsWith("content://"))
+            else if (url.startsWith("content://"))
                 media = new Media(libVLC, context.getContentResolver().openFileDescriptor(Uri.parse(url), "r").getFileDescriptor());
             else
                 media = new Media(libVLC, Uri.parse(url));

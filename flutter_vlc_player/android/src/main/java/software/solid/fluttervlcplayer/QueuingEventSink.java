@@ -66,7 +66,8 @@ final class QueuingEventSink implements EventChannel.EventSink {
         eventQueue.clear();
     }
 
-    private static class EndOfStreamEvent {}
+    private static class EndOfStreamEvent {
+    }
 
     private static class ErrorEvent {
         String code;

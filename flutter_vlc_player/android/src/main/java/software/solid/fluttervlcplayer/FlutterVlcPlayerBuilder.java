@@ -30,7 +30,6 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 //        disposeAllPlayers();
         Messages.VlcPlayerApi.setUp(messenger, null);
     }
-    
 
     FlutterVlcPlayer build(int viewId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName) {
         this.keyForAsset = keyForAsset;
@@ -50,12 +49,12 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
     private FlutterVlcPlayer getPlayer(@NonNull Long playerId) {
         if (vlcPlayers.get(playerId) == null) {
-            throw new Messages.FlutterError("player_not_found","Player with id " + playerId + " not found", null);
+            throw new Messages.FlutterError("player_not_found", "Player with id " + playerId + " not found", null);
         }
 
         return vlcPlayers.get(playerId);
     }
-    
+
     @Override
     public void initialize() {
 //        disposeAllPlayers();

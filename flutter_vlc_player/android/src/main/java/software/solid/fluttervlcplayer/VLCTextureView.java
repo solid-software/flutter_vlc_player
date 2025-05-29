@@ -2,15 +2,12 @@ package software.solid.fluttervlcplayer;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.RequiresApi;
 
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.interfaces.IVLCVout;
@@ -160,7 +157,7 @@ public class VLCTextureView extends TextureView implements TextureView.SurfaceTe
     @Override
     public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
         if (width * height == 0) return;
-        
+
         setSize(width, height);
     }
 
