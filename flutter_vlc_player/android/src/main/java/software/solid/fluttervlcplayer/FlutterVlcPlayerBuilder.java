@@ -285,7 +285,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     @Override
     public void setAudioDelay(@NonNull Long playerId, @NonNull Long delay) {
         var player = getPlayer(playerId);
-        player.setAudioDelay(delay.intValue());
+        player.setAudioDelay(delay);
     }
 
     @NonNull
