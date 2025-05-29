@@ -4,5 +4,5 @@ public enum HwAcc {
     AUTOMATIC,
     DISABLED,
     DECODING,
-    FULL;
+    FULL
 }
