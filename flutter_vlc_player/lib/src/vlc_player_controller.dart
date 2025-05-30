@@ -882,7 +882,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
 
   /// Returns binary data for a snapshot of the media at the current frame.
   ///
-  Future<Uint8List> takeSnapshot() async {
+  Future<Uint8List?> takeSnapshot() async {
     _throwIfNotInitialized('takeSnapshot');
 
     return vlcPlayerPlatform.takeSnapshot(_viewId);
