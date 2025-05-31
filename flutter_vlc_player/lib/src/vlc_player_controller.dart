@@ -355,10 +355,11 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     // Check if already seted up or start at is null then return.
     if (startAt == null || _startAtSet) return;
 
-    final Duration startAtDuration = startAt ?? Duration.zero;
+    final Duration startAtDuration = startAt!;
 
-    // Checking if startAt is greatet then video's duration then throw error.
-    if (startAtDuration.inMilliseconds > value.duration.inMilliseconds) {
+    // Only perform the check if the video's duration is known (greater than zero)
+    if (value.duration > Duration.zero &&
+        startAtDuration.inMilliseconds > value.duration.inMilliseconds) {
       throw ArgumentError.value(
         startAtDuration,
         'Start At cannot be greater than video duration.',
