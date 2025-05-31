@@ -298,7 +298,7 @@ abstract class VlcPlayerPlatform extends PlatformInterface {
   }
 
   /// Returns binary data for a snapshot of the media at the current frame.
-  Future<Uint8List> takeSnapshot(int viewId) {
+  Future<Uint8List?> takeSnapshot(int viewId) {
     throw _unimplemented('takeSnapshot');
   }
 
