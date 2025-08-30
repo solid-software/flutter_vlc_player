@@ -178,7 +178,7 @@
 * Support casting media to external device
 * Updated changing audio/subtitle method
 * Support audio/subtitle delay
-  credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
+  Credits to Alireza Setayesh (https://github.com/alr2413) and Mitch Ross (https://github.com/mitchross)
 
 ## 3.0.7
 
