@@ -193,7 +193,7 @@
 ## 3.0.5
 
 * Updates MobileVLC to allow for changing of volume. Example Updated Also.
-  credits to  Mitch Ross (https://github.com/mitchross)
+  Credits to Mitch Ross (https://github.com/mitchross)
 
 ## 3.0.4
 
