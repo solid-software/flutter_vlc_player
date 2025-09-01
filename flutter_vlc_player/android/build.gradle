@@ -2,7 +2,7 @@ group 'software.solid.fluttervlcplayer'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.1.0"
     repositories {
         google()
         mavenCentral()
@@ -50,7 +50,7 @@ android {
     dependencies {
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
-        implementation 'org.videolan.android:libvlc-all:3.6.0-eap14'
+        implementation 'org.videolan.android:libvlc-all:4.0.0-eap21'
         implementation 'androidx.appcompat:appcompat:1.7.0'
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation 'androidx.annotation:annotation:1.9.1'
