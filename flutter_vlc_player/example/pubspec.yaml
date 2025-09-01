@@ -20,7 +20,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  solid_lints: ^0.2.3
+  solid_lints: ^0.3.1
 
 # The following section is specific to Flutter.
 flutter:
