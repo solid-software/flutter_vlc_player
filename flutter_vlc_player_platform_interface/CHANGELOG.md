@@ -1,9 +1,6 @@
-## 3.0.0
+## 2.0.5
 
-- * **Breaking Change**: bumped minimum Flutter SDK requirement to 3.22.0 and Dart SDK requirement to 3.4.0. The minimum supported Android version is now 5.0 (API level 21)
-
-## 2.0.4
-
+- Bumped minimum Flutter SDK requirement to 3.22.0 and Dart SDK requirement to 3.4.0. The minimum supported Android version is now 5.0 (API level 21)
 - Update to Dart 3 and Flutter 3.13. Credits: @romaingyh
 
 ## 2.0.3

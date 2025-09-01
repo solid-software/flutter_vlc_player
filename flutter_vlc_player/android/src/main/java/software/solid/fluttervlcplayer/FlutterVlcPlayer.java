@@ -567,6 +567,7 @@ final class FlutterVlcPlayer implements PlatformView {
     String getSnapshot() {
         if (textureView == null) return null;
         if (!mediaPlayer.isPlaying()) return null;
+
         Bitmap bitmap = textureView.getBitmap();
         if (bitmap == null) return null;
 
