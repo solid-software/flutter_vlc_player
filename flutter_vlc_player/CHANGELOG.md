@@ -1,5 +1,5 @@
-## 8.0.0
-* **Breaking Change**: bumped minimum Flutter SDK requirement to 3.22.0 and Dart SDK requirement to 3.4.0. The minimum supported Android version is now 5.0 (API level 21)
+## 7.4.3
+* Bumped minimum Flutter SDK requirement to 3.22.0 and Dart SDK requirement to 3.7.0. The minimum supported Android version is now 5.0 (API level 21)
 * [Android] updated libvlc
 * [Android] set Java compatibility to 11 instead of 8
 * [ios] updated MobileVLCKit
