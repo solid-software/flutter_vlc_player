@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_vlc_player/src/vlc_player_controller.dart';
+import 'package:flutter_vlc_player_16kb/src/vlc_player_controller.dart';
 
 class VlcAppLifeCycleObserver extends Object with WidgetsBindingObserver {
   bool _wasPlayingBeforePause = false;

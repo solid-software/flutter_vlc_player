@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:flutter_vlc_player_16kb/flutter_vlc_player.dart';
 import 'package:flutter_vlc_player_example/video_data.dart';
 import 'package:flutter_vlc_player_example/vlc_player_with_controls.dart';
 import 'package:path_provider/path_provider.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:flutter_vlc_player_16kb/flutter_vlc_player.dart';
 import 'package:flutter_vlc_player_example/vlc_player_with_controls.dart';
 
 class MultipleTab extends StatefulWidget {

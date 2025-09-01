@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_vlc_player/src/vlc_player_controller.dart';
-import 'package:flutter_vlc_player/src/vlc_player_platform.dart';
+import 'package:flutter_vlc_player_16kb/src/vlc_player_controller.dart';
+import 'package:flutter_vlc_player_16kb/src/vlc_player_platform.dart';
 
 // ignore: prefer_match_file_name
 class VlcPlayer extends StatefulWidget {

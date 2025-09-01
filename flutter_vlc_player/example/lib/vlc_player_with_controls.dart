@@ -2,7 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:flutter_vlc_player_16kb/flutter_vlc_player.dart';
 import 'package:flutter_vlc_player_example/controls_overlay.dart';
 import 'package:path_provider/path_provider.dart';
 
