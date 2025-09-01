@@ -102,19 +102,16 @@ class _SingleTabState extends State<SingleTab> {
             ]),
           ),
         );
-        break;
       case VideoType.file:
         final file = File(initVideo.path);
         _controller = VlcPlayerController.file(
           file,
         );
-        break;
       case VideoType.asset:
         _controller = VlcPlayerController.asset(
           initVideo.path,
           options: VlcPlayerOptions(),
         );
-        break;
       case VideoType.recorded:
         break;
     }
@@ -168,16 +165,12 @@ class _SingleTabState extends State<SingleTab> {
             switch (video.type) {
               case VideoType.network:
                 iconData = Icons.cloud;
-                break;
               case VideoType.file:
                 iconData = Icons.insert_drive_file;
-                break;
               case VideoType.asset:
                 iconData = Icons.all_inbox;
-                break;
               case VideoType.recorded:
                 iconData = Icons.videocam;
-                break;
             }
 
             return ListTile(
@@ -213,9 +206,9 @@ class _SingleTabState extends State<SingleTab> {
                       video.path,
                       hwAcc: HwAcc.full,
                     );
-                    break;
                   case VideoType.file:
                     if (!mounted) break;
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Copying file to temporary storage...'),
@@ -241,14 +234,11 @@ class _SingleTabState extends State<SingleTab> {
                         ),
                       );
                     }
-                    break;
                   case VideoType.asset:
                     await _controller.setMediaFromAsset(video.path);
-                    break;
                   case VideoType.recorded:
                     final recordedFile = File(video.path);
                     await _controller.setMediaFromFile(recordedFile);
-                    break;
                 }
                 setState(() {
                   selectedVideoIndex = index;
