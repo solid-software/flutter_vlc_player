@@ -1,20 +1,20 @@
 package software.solid.fluttervlcplayer;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.os.Build;
 import android.util.LongSparseArray;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.view.TextureRegistry;
 import software.solid.fluttervlcplayer.Enums.DataSourceType;
-import software.solid.fluttervlcplayer.Enums.HwAcc;
 
 public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
 
@@ -23,12 +23,12 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     private FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName;
 
     void startListening(BinaryMessenger messenger) {
-        Messages.VlcPlayerApi.setUp(messenger, this);
+        Messages.VlcPlayerApi.setup(messenger, this);
     }
 
     void stopListening(BinaryMessenger messenger) {
 //        disposeAllPlayers();
-        Messages.VlcPlayerApi.setUp(messenger, null);
+        Messages.VlcPlayerApi.setup(messenger, null);
     }
 
     FlutterVlcPlayer build(int viewId, Context context, BinaryMessenger binaryMessenger, TextureRegistry textureRegistry, FlutterVlcPlayerFactory.KeyForAssetFn keyForAsset, FlutterVlcPlayerFactory.KeyForAssetAndPackageName keyForAssetAndPackageName) {
@@ -45,14 +45,7 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
             vlcPlayers.valueAt(i).dispose();
         }
         vlcPlayers.clear();
-    }
 
-    private FlutterVlcPlayer getPlayer(@NonNull Long playerId) {
-        if (vlcPlayers.get(playerId) == null) {
-            throw new Messages.FlutterError("player_not_found", "Player with id " + playerId + " not found", null);
-        }
-
-        return vlcPlayers.get(playerId);
     }
 
     @Override
@@ -61,39 +54,18 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
     }
 
     @Override
-    public void create(@NonNull Messages.CreateMessage arg) {
-        FlutterVlcPlayer player = getPlayer(arg.getPlayerId());
-
-        ArrayList<String> options = new ArrayList<>();
-        if (!arg.getOptions().isEmpty())
-            options.addAll(arg.getOptions());
+    public void create(Messages.CreateMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        //
+        ArrayList<String> options = new ArrayList<String>();
+        if (arg.getOptions().size() > 0)
+            for (Object option : arg.getOptions())
+                options.add((String) option);
         player.initialize(options);
-
-        var mediaMessage = new Messages.SetMediaMessage();
-        mediaMessage.setPlayerId(arg.getPlayerId());
-        mediaMessage.setUri(arg.getUri());
-        mediaMessage.setType(arg.getType());
-        mediaMessage.setAutoPlay(arg.getAutoPlay());
-        mediaMessage.setHwAcc(arg.getHwAcc());
-        mediaMessage.setPackageName(arg.getPackageName());
-
-        setStreamUrl(mediaMessage);
-    }
-
-    @Override
-    public void dispose(@NonNull Long playerId) {
-        FlutterVlcPlayer player = getPlayer(playerId);
-        player.dispose();
-        vlcPlayers.remove(playerId);
-    }
-
-    @Override
-    public void setStreamUrl(@NonNull Messages.SetMediaMessage arg) {
-        var player = getPlayer(arg.getPlayerId());
-
+        //
         String mediaUrl;
         boolean isAssetUrl;
-        if (arg.getType() == DataSourceType.ASSET.ordinal()) {
+        if (arg.getType() == DataSourceType.ASSET.getNumericType()) {
             String assetLookupKey;
             if (arg.getPackageName() != null)
                 assetLookupKey = keyForAssetAndPackageName.get(arg.getUri(), arg.getPackageName());
@@ -105,308 +77,341 @@ public class FlutterVlcPlayerBuilder implements Messages.VlcPlayerApi {
             mediaUrl = arg.getUri();
             isAssetUrl = false;
         }
-
-        if (arg.getHwAcc() == null) {
-            arg.setHwAcc((long) HwAcc.AUTOMATIC.ordinal());
-        }
-
         player.setStreamUrl(mediaUrl, isAssetUrl, arg.getAutoPlay(), arg.getHwAcc());
     }
 
     @Override
-    public void play(@NonNull Long playerId) {
-        var player = getPlayer(playerId);
+    public void dispose(Messages.ViewMessage arg) {
+        // the player has been already disposed by platform we just remove it from players list
+        vlcPlayers.remove(arg.getViewId());
+    }
+
+    @Override
+    public void setStreamUrl(Messages.SetMediaMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        //
+        boolean isAssetUrl;
+        String mediaUrl;
+        if (arg.getType() == DataSourceType.ASSET.getNumericType()) {
+            String assetLookupKey;
+            if (arg.getPackageName() != null)
+                assetLookupKey = keyForAssetAndPackageName.get(arg.getUri(), arg.getPackageName());
+            else
+                assetLookupKey = keyForAsset.get(arg.getUri());
+            mediaUrl = assetLookupKey;
+            isAssetUrl = true;
+        } else {
+            mediaUrl = arg.getUri();
+            isAssetUrl = false;
+        }
+        player.setStreamUrl(mediaUrl, isAssetUrl, arg.getAutoPlay(), arg.getHwAcc());
+    }
+
+    @Override
+    public void play(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.play();
     }
 
     @Override
-    public void pause(@NonNull Long playerId) {
-        var player = getPlayer(playerId);
+    public void pause(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.pause();
     }
 
     @Override
-    public void stop(@NonNull Long playerId) {
-        var player = getPlayer(playerId);
+    public void stop(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.stop();
     }
 
-    @NonNull
     @Override
-    public Boolean isPlaying(@NonNull Long playerId) {
-        return getPlayer(playerId).isPlaying();
-    }
-
-    @NonNull
-    @Override
-    public Boolean isSeekable(@NonNull Long playerId) {
-        return getPlayer(playerId).isSeekable();
+    public Messages.BooleanMessage isPlaying(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(player.isPlaying());
+        return message;
     }
 
     @Override
-    public void setLooping(@NonNull Long playerId, @NonNull Boolean isLooping) {
-        var player = getPlayer(playerId);
-        player.setLooping(isLooping);
+    public Messages.BooleanMessage isSeekable(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(player.isSeekable());
+        return message;
     }
 
     @Override
-    public void seekTo(@NonNull Long playerId, @NonNull Long position) {
-        var player = getPlayer(playerId);
-        player.seekTo(position);
-    }
-
-    @NonNull
-    @Override
-    public Long position(@NonNull Long playerId) {
-        return getPlayer(playerId).getPosition();
-    }
-
-    @NonNull
-    @Override
-    public Long duration(@NonNull Long playerId) {
-        return getPlayer(playerId).getDuration();
-    }
-
-    @NonNull
-    @Override
-    public Long getVolume(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getVolume();
+    public void setLooping(Messages.LoopingMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setLooping(arg.getIsLooping());
     }
 
     @Override
-    public void setVolume(@NonNull Long playerId, @NonNull Long volume) {
-        var player = getPlayer(playerId);
-        player.setVolume(volume.intValue());
+    public void seekTo(Messages.PositionMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.seekTo(arg.getPosition().intValue());
     }
 
     @Override
-    public void setPlaybackSpeed(@NonNull Long playerId, @NonNull Double speed) {
-        var player = getPlayer(playerId);
-        player.setPlaybackSpeed(speed);
-    }
-
-    @NonNull
-    @Override
-    public Double getPlaybackSpeed(@NonNull Long playerId) {
-        return (double) getPlayer(playerId).getPlaybackSpeed();
-    }
-
-    @Nullable
-    @Override
-    public String takeSnapshot(@NonNull Long playerId) {
-        return getPlayer(playerId).getSnapshot();
-    }
-
-    // Subtitles
-
-    @NonNull
-    @Override
-    public Long getSpuTracksCount(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getSpuTracksCount();
-    }
-
-    @NonNull
-    @Override
-    public Map<Long, String> getSpuTracks(@NonNull Long playerId) {
-        Map<Integer, String> tracks = getPlayer(playerId).getSpuTracks();
-
-        Map<Long, String> convertedTracks = new HashMap<>();
-        for (Map.Entry<Integer, String> entry : tracks.entrySet()) {
-            convertedTracks.put(entry.getKey().longValue(), entry.getValue());
-        }
-
-        return convertedTracks;
-    }
-
-    @NonNull
-    @Override
-    public Long getSpuTrack(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getSpuTrack();
+    public Messages.PositionMessage position(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.PositionMessage message = new Messages.PositionMessage();
+        message.setPosition(player.getPosition());
+        return message;
     }
 
     @Override
-    public void setSpuTrack(@NonNull Long playerId, @NonNull Long spuTrackNumber) {
-        var player = getPlayer(playerId);
-        player.setSpuTrack(spuTrackNumber.intValue());
+    public Messages.DurationMessage duration(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.DurationMessage message = new Messages.DurationMessage();
+        message.setDuration(player.getDuration());
+        return message;
     }
 
     @Override
-    public void setSpuDelay(@NonNull Long playerId, @NonNull Long delay) {
-        var player = getPlayer(playerId);
-        player.setSpuDelay(delay.intValue());
+    public void setVolume(Messages.VolumeMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setVolume(arg.getVolume());
     }
 
-    @NonNull
     @Override
-    public Long getSpuDelay(@NonNull Long playerId) {
-        return getPlayer(playerId).getSpuDelay();
+    public Messages.VolumeMessage getVolume(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.VolumeMessage message = new Messages.VolumeMessage();
+        message.setVolume((long) player.getVolume());
+        return message;
+    }
+
+    @Override
+    public void setPlaybackSpeed(Messages.PlaybackSpeedMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setPlaybackSpeed(arg.getSpeed());
+    }
+
+    @Override
+    public Messages.PlaybackSpeedMessage getPlaybackSpeed(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.PlaybackSpeedMessage message = new Messages.PlaybackSpeedMessage();
+        message.setSpeed((double) player.getPlaybackSpeed());
+        return message;
+    }
+
+    @Override
+    public Messages.SnapshotMessage takeSnapshot(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.SnapshotMessage message = new Messages.SnapshotMessage();
+        message.setSnapshot(player.getSnapshot());
+        return message;
+    }
+
+    @Override
+    public Messages.TrackCountMessage getSpuTracksCount(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.TrackCountMessage message = new Messages.TrackCountMessage();
+        message.setCount((long) player.getSpuTracksCount());
+        return message;
+    }
+
+    @Override
+    public Messages.SpuTracksMessage getSpuTracks(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.SpuTracksMessage message = new Messages.SpuTracksMessage();
+        message.setSubtitles(player.getSpuTracks());
+        return message;
+    }
+
+    @Override
+    public void setSpuTrack(Messages.SpuTrackMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setSpuTrack(arg.getSpuTrackNumber().intValue());
+    }
+
+    @Override
+    public Messages.SpuTrackMessage getSpuTrack(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.SpuTrackMessage message = new Messages.SpuTrackMessage();
+        message.setSpuTrackNumber((long) player.getSpuTrack());
+        return message;
+    }
+
+    @Override
+    public void setSpuDelay(Messages.DelayMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setSpuDelay(arg.getDelay());
+    }
+
+    @Override
+    public Messages.DelayMessage getSpuDelay(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.DelayMessage message = new Messages.DelayMessage();
+        message.setDelay(player.getSpuDelay());
+        return message;
     }
 
     @Override
     public void addSubtitleTrack(Messages.AddSubtitleMessage arg) {
-        var player = getPlayer(arg.getPlayerId());
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.addSubtitleTrack(arg.getUri(), arg.getIsSelected());
     }
 
-    // Audio tracks
-
-    @NonNull
     @Override
-    public Long getAudioTracksCount(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getAudioTracksCount();
-    }
-
-    @NonNull
-    @Override
-    public Map<Long, String> getAudioTracks(@NonNull Long playerId) {
-        Map<Integer, String> tracks = getPlayer(playerId).getAudioTracks();
-
-        Map<Long, String> convertedTracks = new HashMap<>();
-        for (Map.Entry<Integer, String> entry : tracks.entrySet()) {
-            convertedTracks.put(entry.getKey().longValue(), entry.getValue());
-        }
-
-        return convertedTracks;
+    public Messages.TrackCountMessage getAudioTracksCount(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.TrackCountMessage message = new Messages.TrackCountMessage();
+        message.setCount((long) player.getAudioTracksCount());
+        return message;
     }
 
     @Override
-    public void setAudioTrack(@NonNull Long playerId, @NonNull Long audioTrackNumber) {
-        var player = getPlayer(playerId);
-        player.setAudioTrack(audioTrackNumber.intValue());
-    }
-
-    @NonNull
-    @Override
-    public Long getAudioTrack(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getAudioTrack();
+    public Messages.AudioTracksMessage getAudioTracks(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.AudioTracksMessage message = new Messages.AudioTracksMessage();
+        message.setAudios(player.getAudioTracks());
+        return message;
     }
 
     @Override
-    public void setAudioDelay(@NonNull Long playerId, @NonNull Long delay) {
-        var player = getPlayer(playerId);
-        player.setAudioDelay(delay);
+    public void setAudioTrack(Messages.AudioTrackMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setAudioTrack(arg.getAudioTrackNumber().intValue());
     }
 
-    @NonNull
     @Override
-    public Long getAudioDelay(@NonNull Long playerId) {
-        return getPlayer(playerId).getAudioDelay();
+    public Messages.AudioTrackMessage getAudioTrack(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.AudioTrackMessage message = new Messages.AudioTrackMessage();
+        message.setAudioTrackNumber((long) player.getAudioTrack());
+        return message;
+    }
+
+    @Override
+    public void setAudioDelay(Messages.DelayMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setAudioDelay(arg.getDelay());
+    }
+
+    @Override
+    public Messages.DelayMessage getAudioDelay(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.DelayMessage message = new Messages.DelayMessage();
+        message.setDelay(player.getAudioDelay());
+        return message;
     }
 
     @Override
     public void addAudioTrack(Messages.AddAudioMessage arg) {
-        var player = getPlayer(arg.getPlayerId());
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.addAudioTrack(arg.getUri(), arg.getIsSelected());
     }
 
-    // Video tracks
-
-
-    @NonNull
     @Override
-    public Long getVideoTracksCount(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getVideoTracksCount();
-    }
-
-    @NonNull
-    @Override
-    public Map<Long, String> getVideoTracks(@NonNull Long playerId) {
-        Map<Integer, String> tracks = getPlayer(playerId).getVideoTracks();
-
-        Map<Long, String> convertedTracks = new HashMap<>();
-        for (Map.Entry<Integer, String> entry : tracks.entrySet()) {
-            convertedTracks.put(entry.getKey().longValue(), entry.getValue());
-        }
-
-        return convertedTracks;
+    public Messages.TrackCountMessage getVideoTracksCount(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.TrackCountMessage message = new Messages.TrackCountMessage();
+        message.setCount((long) player.getVideoTracksCount());
+        return message;
     }
 
     @Override
-    public void setVideoTrack(@NonNull Long playerId, @NonNull Long videoTrackNumber) {
-        var player = getPlayer(playerId);
-        player.setVideoTrack(videoTrackNumber.intValue());
-    }
-
-    @NonNull
-    @Override
-    public Long getVideoTrack(@NonNull Long playerId) {
-        return (long) getPlayer(playerId).getVideoTrack();
-    }
-
-    // Video properties
-
-
-    @Override
-    public void setVideoScale(@NonNull Long playerId, @NonNull Double scale) {
-        var player = getPlayer(playerId);
-        player.setVideoScale(scale.floatValue());
-    }
-
-    @NonNull
-    @Override
-    public Double getVideoScale(@NonNull Long playerId) {
-        return (double) getPlayer(playerId).getVideoScale();
+    public Messages.VideoTracksMessage getVideoTracks(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.VideoTracksMessage message = new Messages.VideoTracksMessage();
+        message.setVideos(player.getVideoTracks());
+        return message;
     }
 
     @Override
-    public void setVideoAspectRatio(@NonNull Long playerId, @NonNull String aspectRatio) {
-        var player = getPlayer(playerId);
-        player.setVideoAspectRatio(aspectRatio);
-    }
-
-    @NonNull
-    @Override
-    public String getVideoAspectRatio(@NonNull Long playerId) {
-        return getPlayer(playerId).getVideoAspectRatio();
-    }
-
-    // Cast
-
-
-    @NonNull
-    @Override
-    public List<String> getAvailableRendererServices(@NonNull Long playerId) {
-        return getPlayer(playerId).getAvailableRendererServices();
+    public void setVideoTrack(Messages.VideoTrackMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setVideoTrack(arg.getVideoTrackNumber().intValue());
     }
 
     @Override
-    public void startRendererScanning(@NonNull Long playerId, @NonNull String rendererService) {
-        var player = getPlayer(playerId);
-        player.startRendererScanning(rendererService);
+    public Messages.VideoTrackMessage getVideoTrack(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.VideoTrackMessage message = new Messages.VideoTrackMessage();
+        message.setVideoTrackNumber((long) player.getVideoTrack());
+        return null;
     }
 
     @Override
-    public void stopRendererScanning(@NonNull Long playerId) {
-        var player = getPlayer(playerId);
+    public void setVideoScale(Messages.VideoScaleMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setVideoScale(arg.getScale().floatValue());
+    }
+
+    @Override
+    public Messages.VideoScaleMessage getVideoScale(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.VideoScaleMessage message = new Messages.VideoScaleMessage();
+        message.setScale((double) player.getVideoScale());
+        return message;
+    }
+
+    @Override
+    public void setVideoAspectRatio(Messages.VideoAspectRatioMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.setVideoAspectRatio(arg.getAspectRatio());
+    }
+
+    @Override
+    public Messages.VideoAspectRatioMessage getVideoAspectRatio(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.VideoAspectRatioMessage message = new Messages.VideoAspectRatioMessage();
+        message.setAspectRatio(player.getVideoAspectRatio());
+        return message;
+    }
+
+    @Override
+    public Messages.RendererServicesMessage getAvailableRendererServices(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.RendererServicesMessage message = new Messages.RendererServicesMessage();
+        message.setServices(player.getAvailableRendererServices());
+        return message;
+    }
+
+    @Override
+    public void startRendererScanning(Messages.RendererScanningMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.startRendererScanning(arg.getRendererService());
+    }
+
+    @Override
+    public void stopRendererScanning(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
         player.stopRendererScanning();
     }
 
-    @NonNull
     @Override
-    public Map<String, String> getRendererDevices(@NonNull Long playerId) {
-        return getPlayer(playerId).getRendererDevices();
+    public Messages.RendererDevicesMessage getRendererDevices(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Messages.RendererDevicesMessage message = new Messages.RendererDevicesMessage();
+        message.setRendererDevices(player.getRendererDevices());
+        return message;
     }
 
     @Override
-    public void castToRenderer(@NonNull Long playerId, @NonNull String rendererId) {
-        var player = getPlayer(playerId);
-        player.castToRenderer(rendererId);
+    public void castToRenderer(Messages.RenderDeviceMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        player.castToRenderer(arg.getRendererDevice());
     }
 
-    // Recording
-
-
-    @NonNull
     @Override
-    public Boolean startRecording(@NonNull Long playerId, @NonNull String saveDirectory) {
-        var player = getPlayer(playerId);
-        return player.startRecording(saveDirectory);
+    public Messages.BooleanMessage startRecording(Messages.RecordMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Boolean result = player.startRecording(arg.getSaveDirectory());
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(result);
+        return message;
     }
 
-    @NonNull
     @Override
-    public Boolean stopRecording(@NonNull Long playerId) {
-        var player = getPlayer(playerId);
-        return player.stopRecording();
+    public Messages.BooleanMessage stopRecording(Messages.ViewMessage arg) {
+        FlutterVlcPlayer player = vlcPlayers.get(arg.getViewId());
+        Boolean result = player.stopRecording();
+        Messages.BooleanMessage message = new Messages.BooleanMessage();
+        message.setResult(result);
+        return message;
     }
 }

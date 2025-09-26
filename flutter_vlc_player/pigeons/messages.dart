@@ -1,190 +1,206 @@
 import 'package:pigeon/pigeon.dart';
 
-// to make changes effect, must run "dart run pigeon --input pigeons/messages.dart"
-@ConfigurePigeon(
-  PigeonOptions(
-    dartOut:
-        '../flutter_vlc_player_platform_interface/lib/src/messages/messages.dart',
-    swiftOut: 'ios/Classes/Messages.swift',
-    javaOut:
-        'android/src/main/java/software/solid/fluttervlcplayer/Messages.java',
-    javaOptions: JavaOptions(package: 'software.solid.fluttervlcplayer'),
-  ),
-)
 //ignore: prefer_match_file_name
-class CreateMessage {
-  final int playerId;
-  final String uri;
-  final int type;
-  final String? packageName;
-  final bool autoPlay;
-  final int? hwAcc;
-  final List<String> options;
+class ViewMessage {
+  int? viewId;
+}
 
-  const CreateMessage({
-    required this.playerId,
-    required this.uri,
-    required this.type,
-    required this.packageName,
-    required this.autoPlay,
-    required this.hwAcc,
-    required this.options,
-  });
+class CreateMessage {
+  int? viewId;
+  String? uri;
+  int? type;
+  String? packageName;
+  bool? autoPlay;
+  int? hwAcc;
+  List<String>? options;
 }
 
 class SetMediaMessage {
-  final int playerId;
-  final String uri;
-  final int type;
-  final String? packageName;
-  final bool autoPlay;
-  final int? hwAcc;
+  int? viewId;
+  String? uri;
+  int? type;
+  String? packageName;
+  bool? autoPlay;
+  int? hwAcc;
+}
 
-  const SetMediaMessage({
-    required this.playerId,
-    required this.uri,
-    required this.type,
-    required this.packageName,
-    required this.autoPlay,
-    required this.hwAcc,
-  });
+class BooleanMessage {
+  int? viewId;
+  bool? result;
+}
+
+class LoopingMessage {
+  int? viewId;
+  bool? isLooping;
+}
+
+class VolumeMessage {
+  int? viewId;
+  int? volume;
+}
+
+class PlaybackSpeedMessage {
+  int? viewId;
+  double? speed;
+}
+
+class PositionMessage {
+  int? viewId;
+  int? position;
+}
+
+class DurationMessage {
+  int? viewId;
+  int? duration;
+}
+
+class DelayMessage {
+  int? viewId;
+  int? delay;
+}
+
+class TrackCountMessage {
+  int? viewId;
+  int? count;
+}
+
+class SnapshotMessage {
+  int? viewId;
+  String? snapshot;
 }
 
 class SpuTracksMessage {
-  final int playerId;
-  final Map<Object, Object> subtitles;
+  int? viewId;
+  Map<Object?, Object?>? subtitles;
+}
 
-  const SpuTracksMessage({required this.playerId, required this.subtitles});
+class SpuTrackMessage {
+  int? viewId;
+  int? spuTrackNumber;
 }
 
 class AddSubtitleMessage {
-  final int playerId;
-  final String uri;
-  final int type;
-  final bool isSelected;
+  int? viewId;
+  String? uri;
+  int? type;
+  bool? isSelected;
+}
 
-  const AddSubtitleMessage({
-    required this.playerId,
-    required this.uri,
-    required this.type,
-    required this.isSelected,
-  });
+class AudioTracksMessage {
+  int? viewId;
+  Map<Object?, Object?>? audios;
+}
+
+class AudioTrackMessage {
+  int? viewId;
+  int? audioTrackNumber;
 }
 
 class AddAudioMessage {
-  final int playerId;
-  final String uri;
-  final int type;
-  final bool isSelected;
+  int? viewId;
+  String? uri;
+  int? type;
+  bool? isSelected;
+}
 
-  const AddAudioMessage({
-    required this.playerId,
-    required this.uri,
-    required this.type,
-    required this.isSelected,
-  });
+class VideoTracksMessage {
+  int? viewId;
+  Map<Object?, Object?>? videos;
+}
+
+class VideoTrackMessage {
+  int? viewId;
+  int? videoTrackNumber;
+}
+
+class VideoScaleMessage {
+  int? viewId;
+  double? scale;
+}
+
+class VideoAspectRatioMessage {
+  int? viewId;
+  String? aspectRatio;
+}
+
+class RendererServicesMessage {
+  int? viewId;
+  List<String>? services;
+}
+
+class RendererScanningMessage {
+  int? viewId;
+  String? rendererService;
+}
+
+class RendererDevicesMessage {
+  int? viewId;
+  Map<Object?, Object?>? rendererDevices;
+}
+
+class RenderDeviceMessage {
+  int? viewId;
+  String? rendererDevice;
+}
+
+class RecordMessage {
+  int? viewId;
+  String? saveDirectory;
 }
 
 @HostApi(dartHostTestHandler: 'TestHostVlcPlayerApi')
 abstract class VlcPlayerApi {
   void initialize();
-
   void create(CreateMessage msg);
-
-  void dispose(int playerId);
-
+  void dispose(ViewMessage msg);
   // general methods
   void setStreamUrl(SetMediaMessage msg);
-
-  void play(int playerId);
-
-  void pause(int playerId);
-
-  void stop(int playerId);
-
-  bool isPlaying(int playerId);
-
-  bool isSeekable(int playerId);
-
-  void setLooping(int playerId, bool isLooping);
-
-  void seekTo(int playerId, int position);
-
-  int position(int playerId);
-
-  int duration(int playerId);
-
-  void setVolume(int playerId, int volume);
-
-  int getVolume(int playerId);
-
-  void setPlaybackSpeed(int playerId, double speed);
-
-  double getPlaybackSpeed(int playerId);
-
-  String? takeSnapshot(int playerId);
-
+  void play(ViewMessage msg);
+  void pause(ViewMessage msg);
+  void stop(ViewMessage msg);
+  BooleanMessage isPlaying(ViewMessage msg);
+  BooleanMessage isSeekable(ViewMessage msg);
+  void setLooping(LoopingMessage msg);
+  void seekTo(PositionMessage msg);
+  PositionMessage position(ViewMessage msg);
+  DurationMessage duration(ViewMessage msg);
+  void setVolume(VolumeMessage msg);
+  VolumeMessage getVolume(ViewMessage msg);
+  void setPlaybackSpeed(PlaybackSpeedMessage msg);
+  PlaybackSpeedMessage getPlaybackSpeed(ViewMessage msg);
+  SnapshotMessage takeSnapshot(ViewMessage msg);
   // captions & subtitles methods
-
-  int getSpuTracksCount(int playerId);
-
-  Map<int, String> getSpuTracks(int playerId);
-
-  void setSpuTrack(int playerId, int spuTrackNumber);
-
-  int getSpuTrack(int playerId);
-
-  void setSpuDelay(int playerId, int delay);
-
-  int getSpuDelay(int playerId);
-
+  TrackCountMessage getSpuTracksCount(ViewMessage msg);
+  SpuTracksMessage getSpuTracks(ViewMessage msg);
+  void setSpuTrack(SpuTrackMessage msg);
+  SpuTrackMessage getSpuTrack(ViewMessage msg);
+  void setSpuDelay(DelayMessage msg);
+  DelayMessage getSpuDelay(ViewMessage msg);
   void addSubtitleTrack(AddSubtitleMessage msg);
-
   // audios methods
-  int getAudioTracksCount(int playerId);
-
-  Map<int, String> getAudioTracks(int playerId);
-
-  void setAudioTrack(int playerId, int audioTrackNumber);
-
-  int getAudioTrack(int playerId);
-
-  void setAudioDelay(int playerId, int delay);
-
-  int getAudioDelay(int playerId);
-
+  TrackCountMessage getAudioTracksCount(ViewMessage msg);
+  AudioTracksMessage getAudioTracks(ViewMessage msg);
+  void setAudioTrack(AudioTrackMessage msg);
+  AudioTrackMessage getAudioTrack(ViewMessage msg);
+  void setAudioDelay(DelayMessage msg);
+  DelayMessage getAudioDelay(ViewMessage msg);
   void addAudioTrack(AddAudioMessage msg);
-
   // videos methods
-  int getVideoTracksCount(int playerId);
-
-  Map<int, String> getVideoTracks(int playerId);
-
-  void setVideoTrack(int playerId, int videoTrackNumber);
-
-  int getVideoTrack(int playerId);
-
-  void setVideoScale(int playerId, double scale);
-
-  double getVideoScale(int playerId);
-
-  void setVideoAspectRatio(int playerId, String aspectRatio);
-
-  String getVideoAspectRatio(int playerId);
-
+  TrackCountMessage getVideoTracksCount(ViewMessage msg);
+  VideoTracksMessage getVideoTracks(ViewMessage msg);
+  void setVideoTrack(VideoTrackMessage msg);
+  VideoTrackMessage getVideoTrack(ViewMessage msg);
+  void setVideoScale(VideoScaleMessage msg);
+  VideoScaleMessage getVideoScale(ViewMessage msg);
+  void setVideoAspectRatio(VideoAspectRatioMessage msg);
+  VideoAspectRatioMessage getVideoAspectRatio(ViewMessage msg);
   // casts & renderers methods
-  List<String> getAvailableRendererServices(int playerId);
-
-  void startRendererScanning(int playerId, String rendererService);
-
-  void stopRendererScanning(int playerId);
-
-  Map<String, String> getRendererDevices(int playerId);
-
-  void castToRenderer(int playerId, String rendererId);
-
+  RendererServicesMessage getAvailableRendererServices(ViewMessage msg);
+  void startRendererScanning(RendererScanningMessage msg);
+  void stopRendererScanning(ViewMessage msg);
+  RendererDevicesMessage getRendererDevices(ViewMessage msg);
+  void castToRenderer(RenderDeviceMessage msg);
   // recording methods
-  bool startRecording(int playerId, String saveDirectory);
-
-  bool stopRecording(int playerId);
+  BooleanMessage startRecording(RecordMessage msg);
+  BooleanMessage stopRecording(ViewMessage msg);
 }

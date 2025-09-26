@@ -14,6 +14,9 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.RendererDiscoverer;
 import org.videolan.libvlc.RendererItem;
+import org.videolan.libvlc.interfaces.IMedia;
+import java.util.Random;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -117,10 +120,6 @@ final class FlutterVlcPlayer implements PlatformView {
         textureView.setFitsSystemWindows(true);
     }
 
-    // private Uri getStreamUri(String streamPath, boolean isLocal) {
-    //     return isLocal ? Uri.fromFile(new File(streamPath)) : Uri.parse(streamPath);
-    // }
-
     public void initialize(List<String> options) {
         this.options = options;
         libVLC = new LibVLC(context, options);
@@ -143,14 +142,9 @@ final class FlutterVlcPlayer implements PlatformView {
                     public void onEvent(MediaPlayer.Event event) {
                         HashMap<String, Object> eventObject = new HashMap<>();
                         //
-                        // Current video track is only available when the media is playing
-                        int height = 0;
-                        int width = 0;
-                        Media.VideoTrack currentVideoTrack = mediaPlayer.getCurrentVideoTrack();
-                        if (currentVideoTrack != null) {
-                            height = currentVideoTrack.height;
-                            width = currentVideoTrack.width;
-                        }
+                        // Get video dimensions from texture view as fallback
+                        int height = textureView.getHeight();
+                        int width = textureView.getWidth();
                         //
                         switch (event.type) {
 
@@ -175,15 +169,14 @@ final class FlutterVlcPlayer implements PlatformView {
                                 eventObject.put("width", width);
                                 eventObject.put("speed", mediaPlayer.getRate());
                                 eventObject.put("duration", mediaPlayer.getLength());
-                                eventObject.put("audioTracksCount", mediaPlayer.getAudioTracksCount());
-                                eventObject.put("activeAudioTrack", mediaPlayer.getAudioTrack());
-                                eventObject.put("spuTracksCount", mediaPlayer.getSpuTracksCount());
-                                eventObject.put("activeSpuTrack", mediaPlayer.getSpuTrack());
+                                eventObject.put("audioTracksCount", getAudioTracksCount());
+                                eventObject.put("activeAudioTrack", getAudioTrack());
+                                eventObject.put("spuTracksCount", getSpuTracksCount());
+                                eventObject.put("activeSpuTrack", getSpuTrack());
                                 mediaEventSink.success(eventObject.clone());
                                 break;
 
                             case MediaPlayer.Event.Vout:
-//                                mediaPlayer.getVLCVout().setWindowSize(textureView.getWidth(), textureView.getHeight());
                                 break;
 
                             case MediaPlayer.Event.EndReached:
@@ -201,16 +194,15 @@ final class FlutterVlcPlayer implements PlatformView {
                                 eventObject.put("position", mediaPlayer.getTime());
                                 eventObject.put("duration", mediaPlayer.getLength());
                                 eventObject.put("buffer", event.getBuffering());
-                                eventObject.put("audioTracksCount", mediaPlayer.getAudioTracksCount());
-                                eventObject.put("activeAudioTrack", mediaPlayer.getAudioTrack());
-                                eventObject.put("spuTracksCount", mediaPlayer.getSpuTracksCount());
-                                eventObject.put("activeSpuTrack", mediaPlayer.getSpuTrack());
+                                eventObject.put("audioTracksCount", getAudioTracksCount());
+                                eventObject.put("activeAudioTrack", getAudioTrack());
+                                eventObject.put("spuTracksCount", getSpuTracksCount());
+                                eventObject.put("activeSpuTrack", getSpuTrack());
                                 eventObject.put("isPlaying", mediaPlayer.isPlaying());
                                 mediaEventSink.success(eventObject);
                                 break;
 
                             case MediaPlayer.Event.EncounteredError:
-                                //mediaEventSink.error("500", "Player State got an error.", null);
                                 eventObject.put("event", "error");
                                 mediaEventSink.success(eventObject);
                                 break;
@@ -363,18 +355,18 @@ final class FlutterVlcPlayer implements PlatformView {
     int getSpuTracksCount() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getSpuTracksCount();
+        IMedia.Track[] spuTracks = mediaPlayer.getTracks(IMedia.Track.Type.Text);
+        return spuTracks != null ? spuTracks.length : 0;
     }
 
     HashMap<Integer, String> getSpuTracks() {
         if (mediaPlayer == null) return new HashMap<Integer, String>();
 
-        MediaPlayer.TrackDescription[] spuTracks = mediaPlayer.getSpuTracks();
+        IMedia.Track[] spuTracks = mediaPlayer.getTracks(IMedia.Track.Type.Text);
         HashMap<Integer, String> subtitles = new HashMap<>();
         if (spuTracks != null)
-            for (MediaPlayer.TrackDescription trackDescription : spuTracks) {
-                if (trackDescription.id >= 0)
-                    subtitles.put(trackDescription.id, trackDescription.name);
+            for (IMedia.Track trackDescription : spuTracks) {
+                subtitles.put(Integer.parseInt(trackDescription.id.replaceAll("\\D", "")), trackDescription.name);
             }
         return subtitles;
     }
@@ -382,13 +374,28 @@ final class FlutterVlcPlayer implements PlatformView {
     void setSpuTrack(int index) {
         if (mediaPlayer == null) return;
 
-        mediaPlayer.setSpuTrack(index);
+        try {
+          
+            if ( index >= 0) {
+            // Select the track by its ID
+            mediaPlayer.selectTrack("spu/"+index);
+            } else if (index == -1) {
+            // Unselect all text tracks
+                mediaPlayer.unselectTrackType(IMedia.Track.Type.Text);
+            }
+        } catch (Exception e) {
+        Log.e(TAG, "setAudioTrack failed: " + e.getMessage());
+        }
     }
 
     int getSpuTrack() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getSpuTrack();
+        IMedia.Track track = mediaPlayer.getSelectedTrack(IMedia.Track.Type.Text);
+        if(track == null) {
+            return -1;
+        }
+        return Integer.parseInt(track.id.replaceAll("\\D", ""));
     }
 
     void setSpuDelay(long delay) {
@@ -412,18 +419,19 @@ final class FlutterVlcPlayer implements PlatformView {
     int getAudioTracksCount() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getAudioTracksCount();
+        IMedia.Track[] audioTracks = mediaPlayer.getTracks(IMedia.Track.Type.Audio);
+        return audioTracks != null ? audioTracks.length : 0;
     }
 
     HashMap<Integer, String> getAudioTracks() {
         if (mediaPlayer == null) return new HashMap<Integer, String>();
 
-        MediaPlayer.TrackDescription[] audioTracks = mediaPlayer.getAudioTracks();
+        IMedia.Track[] audioTracks = mediaPlayer.getTracks(IMedia.Track.Type.Audio);
         HashMap<Integer, String> audios = new HashMap<>();
+        Random random = new Random();
         if (audioTracks != null)
-            for (MediaPlayer.TrackDescription trackDescription : audioTracks) {
-                if (trackDescription.id >= 0)
-                    audios.put(trackDescription.id, trackDescription.name);
+            for (IMedia.Track trackDescription : audioTracks) {
+                    audios.put(Integer.parseInt(trackDescription.id.replaceAll("\\D", "")), trackDescription.name);
             }
         return audios;
     }
@@ -431,13 +439,28 @@ final class FlutterVlcPlayer implements PlatformView {
     void setAudioTrack(int index) {
         if (mediaPlayer == null) return;
 
-        mediaPlayer.setAudioTrack(index);
+        try {
+          
+            if ( index >= 0) {
+            // Select the track by its ID
+            mediaPlayer.selectTrack("audio/"+index);
+            } else if (index == -1) {
+            // Unselect all audio tracks
+                mediaPlayer.unselectTrackType(IMedia.Track.Type.Audio);
+            }
+        } catch (Exception e) {
+        Log.e(TAG, "setAudioTrack failed: " + e.getMessage());
+        }
     }
 
     int getAudioTrack() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getAudioTrack();
+        IMedia.Track track = mediaPlayer.getSelectedTrack(IMedia.Track.Type.Audio);
+        if(track == null) {
+            return -1;
+        }
+        return Integer.parseInt(track.id.replaceAll("\\D", ""));
     }
 
     void setAudioDelay(long delay) {
@@ -461,18 +484,19 @@ final class FlutterVlcPlayer implements PlatformView {
     int getVideoTracksCount() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getVideoTracksCount();
+        IMedia.Track[] videoTracks = mediaPlayer.getTracks(IMedia.Track.Type.Video);
+        return videoTracks != null ? videoTracks.length : 0;
+
     }
 
     HashMap<Integer, String> getVideoTracks() {
         if (mediaPlayer == null) return new HashMap<Integer, String>();
 
-        MediaPlayer.TrackDescription[] videoTracks = mediaPlayer.getVideoTracks();
+        IMedia.Track[] videoTracks = mediaPlayer.getTracks(IMedia.Track.Type.Video);
         HashMap<Integer, String> videos = new HashMap<>();
         if (videoTracks != null)
-            for (MediaPlayer.TrackDescription trackDescription : videoTracks) {
-                if (trackDescription.id >= 0)
-                    videos.put(trackDescription.id, trackDescription.name);
+            for (IMedia.Track trackDescription : videoTracks) {
+                    videos.put(Integer.parseInt(trackDescription.id.replaceAll("\\D", "")), trackDescription.name);
             }
         return videos;
     }
@@ -480,13 +504,29 @@ final class FlutterVlcPlayer implements PlatformView {
     void setVideoTrack(int index) {
         if (mediaPlayer == null) return;
 
-        mediaPlayer.setVideoTrack(index);
+        try {
+          
+            if ( index >= 0) {
+            // Select the track by its ID
+            mediaPlayer.selectTrack("video/"+index);
+            } else if (index == -1) {
+            // Unselect all video tracks
+                mediaPlayer.unselectTrackType(IMedia.Track.Type.Video);
+            }
+        } catch (Exception e) {
+        Log.e(TAG, "setAudioTrack failed: " + e.getMessage());
+        }
     }
 
     int getVideoTrack() {
         if (mediaPlayer == null) return -1;
 
-        return mediaPlayer.getVideoTrack();
+        IMedia.Track track = mediaPlayer.getSelectedTrack(IMedia.Track.Type.Video);
+        if(track == null) {
+            return -1;
+        }
+        return Integer.parseInt(track.id.replaceAll("\\D", ""));
+
     }
 
     void setVideoScale(float scale) {
@@ -516,14 +556,9 @@ final class FlutterVlcPlayer implements PlatformView {
     void startRendererScanning(String rendererService) {
         if (libVLC == null) return;
 
-        //
-        //  android -> chromecast -> "microdns"
-        //  ios -> chromecast -> "Bonjour_renderer"
-        //
         rendererDiscoverers = new ArrayList<>();
         rendererItems = new ArrayList<>();
         //
-        //todo: check for duplicates
         RendererDiscoverer.Description[] renderers = RendererDiscoverer.list(libVLC);
         for (RendererDiscoverer.Description renderer : renderers) {
             RendererDiscoverer rendererDiscoverer = new RendererDiscoverer(libVLC, renderer.name);
@@ -560,9 +595,7 @@ final class FlutterVlcPlayer implements PlatformView {
             } catch (Exception ex) {
                 rendererDiscoverer.setEventListener(null);
             }
-
         }
-
     }
 
     void stopRendererScanning() {
@@ -578,7 +611,6 @@ final class FlutterVlcPlayer implements PlatformView {
         rendererDiscoverers.clear();
         rendererItems.clear();
         //
-        // return back to default output
         if (mediaPlayer != null) {
             mediaPlayer.pause();
             mediaPlayer.setRenderer(null);
@@ -615,7 +647,6 @@ final class FlutterVlcPlayer implements PlatformView {
         if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
 
-        // if you set it to null, it will start to render normally (i.e. locally) again
         RendererItem rendererItem = null;
         for (RendererItem item : rendererItems) {
             if (item.name.equals(rendererDevice)) {
@@ -625,14 +656,13 @@ final class FlutterVlcPlayer implements PlatformView {
         }
         mediaPlayer.setRenderer(rendererItem);
 
-        // start the playback
         mediaPlayer.play();
     }
 
     @Nullable
     String getSnapshot() {
         if (textureView == null) return null;
-
+        if (!mediaPlayer.isPlaying()) return null;
         Bitmap bitmap = textureView.getBitmap();
         if (bitmap == null) return null;
 
@@ -642,12 +672,12 @@ final class FlutterVlcPlayer implements PlatformView {
     }
 
     Boolean startRecording(String directory) {
-        return mediaPlayer.record(directory);
+        return mediaPlayer.record(directory, false);
     }
 
     Boolean stopRecording() {
         if (mediaPlayer == null) return true;
-        return mediaPlayer.record(null);
+        return mediaPlayer.record(null, false);
     }
 
     private void log(String message) {
@@ -655,5 +685,4 @@ final class FlutterVlcPlayer implements PlatformView {
             Log.d(TAG, message);
         }
     }
-
 }

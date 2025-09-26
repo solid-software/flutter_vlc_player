@@ -1,18 +1,16 @@
 package software.solid.fluttervlcplayer;
 
+import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.interfaces.IVLCVout;
+
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.view.TextureView;
+import android.view.View;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.view.TextureView;
-import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-
-import org.videolan.libvlc.MediaPlayer;
-import org.videolan.libvlc.interfaces.IVLCVout;
 
 import io.flutter.view.TextureRegistry;
 
@@ -100,7 +98,7 @@ public class VLCTextureView extends TextureView implements TextureView.SurfaceTe
     }
 
     @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         if (mSurfaceTexture == null || mSurfaceTexture.isReleased()) {
             mSurfaceTexture = surface;
 
@@ -129,12 +127,12 @@ public class VLCTextureView extends TextureView implements TextureView.SurfaceTe
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         setSize(width, height);
     }
 
     @Override
-    public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         if (mMediaPlayer != null) {
             wasPlaying = mMediaPlayer.isPlaying();
         }
@@ -152,14 +150,14 @@ public class VLCTextureView extends TextureView implements TextureView.SurfaceTe
     }
 
     @Override
-    public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
     }
 
     @Override
     public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
         if (width * height == 0) return;
-
+        
         setSize(width, height);
     }
 
@@ -178,21 +176,24 @@ public class VLCTextureView extends TextureView implements TextureView.SurfaceTe
     }
 
     private void setSize(int width, int height) {
-        if (width * height <= 1) return;
+        int mVideoWidth = 0;
+        int mVideoHeight = 0;
+        mVideoWidth = width;
+        mVideoHeight = height;
+        if (mVideoWidth * mVideoHeight <= 1) return;
 
         // Screen size
         int w = this.getWidth();
         int h = this.getHeight();
 
         // Size
-        // TODO: fix this always false condition, it seems to reverse the width and height
         if (w > h && w < h) {
             int i = w;
             w = h;
             h = i;
         }
 
-        float videoAR = (float) width / (float) height;
+        float videoAR = (float) mVideoWidth / (float) mVideoHeight;
         float screenAR = (float) w / (float) h;
 
         if (screenAR < videoAR) {

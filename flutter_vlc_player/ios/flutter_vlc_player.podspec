@@ -13,7 +13,12 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  # Include all source files
+  s.source_files        = 'Classes/**/*.{h,m,swift}'
+
+  # Make the umbrella header public
+  s.public_header_files = 'Classes/**/*.h'
+  
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
   s.dependency 'MobileVLCKit', '~> 3.6.1b1'

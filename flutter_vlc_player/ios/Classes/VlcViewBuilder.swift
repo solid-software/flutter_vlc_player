@@ -1,378 +1,456 @@
-import Flutter
 import Foundation
+import Flutter
 
-public class VLCViewBuilder: NSObject, VlcPlayerApi {
-    var players = [Int: VLCViewController]()
+public class VLCViewBuilder: NSObject, VlcPlayerApi{
+    var players = [Int:VLCViewController]()
     private var registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
     private var options: [String]
     
     init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
-        messenger = registrar.messenger()
+        self.messenger = registrar.messenger()
         options = []
         super.init()
         //
-        VlcPlayerApiSetup.setUp(binaryMessenger: messenger, api: self)
+        VlcPlayerApiSetup(messenger, self)
     }
     
-    public func build(frame: CGRect, viewId: Int64) -> VLCViewController {
+    public func build(frame: CGRect, viewId: Int64) -> VLCViewController{
         //
         var vlcViewController: VLCViewController
         vlcViewController = VLCViewController(frame: frame, viewId: viewId, messenger: messenger)
-        players[viewId.int] = vlcViewController
-        return vlcViewController
+        players[Int(viewId)] = vlcViewController
+        return vlcViewController;
     }
     
-    func getPlayer(id: Int64) throws -> VLCViewController {
-        guard let player = players[id.int] else {
-            throw PigeonError(code: "player_not_found", message: "Player with id \(id) not found", details: nil)
-        }
-        
-        return player
+    public func initialize(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        return
     }
     
-    public func initialize() throws {}
+    func getPlayer(viewId: NSNumber?) -> VLCViewController? {
+      guard viewId != nil else {
+        return nil
+        
+      }
+        return players[Int(truncating: viewId! as NSNumber)]
+    }
     
-    func create(msg: CreateMessage) throws {
-        let player = try getPlayer(id: msg.playerId)
+    public func create(_ input: CreateMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var isAssetUrl = false
-        var mediaUrl = ""
+        let player = getPlayer(viewId: input.viewId)
         
-        if DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET {
+        var isAssetUrl: Bool = false
+        var mediaUrl: String = ""
+        
+        if(DataSourceType(rawValue: Int(truncating: input.type!)) == DataSourceType.ASSET){
             var assetPath: String
-            if let packageName = msg.packageName {
-                assetPath = registrar.lookupKey(forAsset: msg.uri, fromPackage: packageName)
+            if input.packageName != nil {
+                assetPath = registrar.lookupKey(forAsset: input.uri ?? "" , fromPackage: input.packageName ?? "")
             } else {
-                assetPath = registrar.lookupKey(forAsset: msg.uri)
+                assetPath = registrar.lookupKey(forAsset: input.uri ?? "")
             }
             mediaUrl = assetPath
             isAssetUrl = true
-        } else {
-            mediaUrl = msg.uri
+        }else{
+            mediaUrl = input.uri ?? ""
             isAssetUrl = false
         }
         
-        options = msg.options
+        options = input.options as? [String] ?? []
         
-        player.setMediaPlayerUrl(
+        player?.setMediaPlayerUrl(
             uri: mediaUrl,
             isAssetUrl: isAssetUrl,
-            autoPlay: msg.autoPlay,
-            hwAcc: msg.hwAcc?.int ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
+            autoPlay: input.autoPlay?.boolValue ?? true,
+            hwAcc: input.hwAcc?.intValue ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
             options: options
         )
     }
     
-    func dispose(playerId: Int64) throws {
-        let player = try getPlayer(id: playerId)
+    public func dispose(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        player.dispose()
-        players.removeValue(forKey: playerId.int)
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.dispose()
+        players.removeValue(forKey: input.viewId as! Int)
     }
     
-    func setStreamUrl(msg: SetMediaMessage) throws {
-        let player = try getPlayer(id: msg.playerId)
+    public func setStreamUrl(_ input: SetMediaMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        var isAssetUrl = false
-        var mediaUrl = ""
+        let player = getPlayer(viewId: input.viewId)
         
-        if DataSourceType(rawValue: msg.type.int) == DataSourceType.ASSET {
+        var isAssetUrl: Bool = false
+        var mediaUrl: String = ""
+        
+        if(DataSourceType(rawValue: Int(truncating: input.type!)) == DataSourceType.ASSET){
             var assetPath: String
-            if let packageName = msg.packageName {
-                assetPath = registrar.lookupKey(forAsset: msg.uri, fromPackage: packageName)
+            if input.packageName != nil {
+                assetPath = registrar.lookupKey(forAsset: input.uri ?? "" , fromPackage: input.packageName ?? "")
             } else {
-                assetPath = registrar.lookupKey(forAsset: msg.uri)
+                assetPath = registrar.lookupKey(forAsset: input.uri ?? "")
             }
             mediaUrl = assetPath
             isAssetUrl = true
-        } else {
-            mediaUrl = msg.uri
+        }else{
+            mediaUrl = input.uri ?? ""
             isAssetUrl = false
         }
-        
-        player.setMediaPlayerUrl(
+        player?.setMediaPlayerUrl(
             uri: mediaUrl,
             isAssetUrl: isAssetUrl,
-            autoPlay: msg.autoPlay,
-            hwAcc: msg.hwAcc?.int ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
+            autoPlay: input.autoPlay?.boolValue ?? true,
+            hwAcc: input.hwAcc?.intValue ?? HWAccellerationType.HW_ACCELERATION_AUTOMATIC.rawValue,
             options: options
         )
     }
     
-    func play(playerId: Int64) throws {
-        let player = try getPlayer(id: playerId)
+    public func play(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        player.play()
-    }
-    
-    func pause(playerId: Int64) throws {
-        let player = try getPlayer(id: playerId)
+        let player = getPlayer(viewId: input.viewId)
         
-        player.pause()
+        player?.play()
     }
     
-    func stop(playerId: Int64) throws {
-        let player = try getPlayer(id: playerId)
+    public func pause(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        player.stop()
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.pause()
     }
     
-    func isPlaying(playerId: Int64) throws -> Bool {
-        return try getPlayer(id: playerId).isPlaying
+    public func stop(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.stop()
     }
     
-    func isSeekable(playerId: Int64) throws -> Bool {
-        return try getPlayer(id: playerId).isSeekable
-    }
-    
-    func setLooping(playerId: Int64, isLooping: Bool) throws {
-        let player = try getPlayer(id: playerId)
+    public func isPlaying(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
 
-        player.setLooping(isLooping: isLooping)
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.isPlaying()
+        return message
     }
     
-    func seekTo(playerId: Int64, position: Int64) throws {
-        let player = try getPlayer(id: playerId)
-
-        player.seek(position: position)
-    }
-    
-    func position(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).position.int64
-    }
-    
-    func duration(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).duration.int64
-    }
-    
-    func setVolume(playerId: Int64, volume: Int64) throws {
-        let player = try getPlayer(id: playerId)
-        player.setVolume(volume: volume)
-    }
-    
-    func getVolume(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).volume.int64
-    }
-    
-    func setPlaybackSpeed(playerId: Int64, speed: Double) throws {
-        let player = try getPlayer(id: playerId)
-
-        player.setPlaybackSpeed(speed: speed.float)
-    }
-    
-    func getPlaybackSpeed(playerId: Int64) throws -> Double {
-        return try getPlayer(id: playerId).playbackSpeed.double
-    }
-    
-    func takeSnapshot(playerId: Int64) throws -> String? {
-        return try getPlayer(id: playerId).takeSnapshot()
-    }
-    
-    // MARK: - Subtitle Tracks
-    
-    func getSpuTracksCount(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).spuTracksCount.int64
-    }
-    
-    func getSpuTracks(playerId: Int64) throws -> [Int64: String] {
-        return try getPlayer(id: playerId).spuTracks.int64Dictionary
-    }
-    
-    func setSpuTrack(playerId: Int64, spuTrackNumber: Int64) throws {
-        let player = try getPlayer(id: playerId)
-
-        player.setSpuTrack(spuTrackNumber: spuTrackNumber.int32)
-    }
-    
-    func getSpuTrack(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).spuTrack.int64
-    }
-    
-    func setSpuDelay(playerId: Int64, delay: Int64) throws {
-        let player = try getPlayer(id: playerId)
-
-        player.setSpuDelay(delay: delay.int)
-    }
-    
-    func getSpuDelay(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).spuDelay.int64
-    }
-    
-    func addSubtitleTrack(msg: AddSubtitleMessage) throws {
-        let player = try getPlayer(id: msg.playerId)
+    public func isSeekable(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
         
-        player.addSubtitleTrack(uri: msg.uri, isSelected: msg.isSelected)
-    }
-    
-    // MARK: - Audio Tracks
-    
-    func getAudioTracksCount(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).audioTracksCount.int64
-    }
-    
-    func getAudioTracks(playerId: Int64) throws -> [Int64: String] {
-        return try getPlayer(id: playerId).audioTracks.int64Dictionary
-    }
-    
-    func setAudioTrack(playerId: Int64, audioTrackNumber: Int64) throws {
-        let player = try getPlayer(id: playerId)
+        let player = getPlayer(viewId: input.viewId)
         
-        player.setAudioTrack(audioTrackNumber: audioTrackNumber.int32)
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.isSeekable()
+        return message
     }
     
-    func getAudioTrack(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).audioTrack.int64
-    }
-    
-    func getAudioDelay(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).audioDelay.int64
-    }
-    
-    func setAudioDelay(playerId: Int64, delay: Int64) throws {
-        let player = try getPlayer(id: playerId)
+    public func setLooping(_ input: LoopingMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        player.setAudioDelay(delay: delay.int)
-    }
-    
-    func addAudioTrack(msg: AddAudioMessage) throws {
-        let player = try getPlayer(id: msg.playerId)
-        
-        player.addAudioTrack(uri: msg.uri, isSelected: msg.isSelected)
-    }
-    
-    // MARK: - Video Tracks
+        let player = getPlayer(viewId: input.viewId)
 
-    func getVideoTracksCount(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).videoTracksCount.int64
+        player?.setLooping(isLooping: input.isLooping)
     }
     
-    func getVideoTracks(playerId: Int64) throws -> [Int64: String] {
-        return try getPlayer(id: playerId).videoTracks.int64Dictionary
-    }
-    
-    func setVideoTrack(playerId: Int64, videoTrackNumber: Int64) throws {
-        let player = try getPlayer(id: playerId)
+    public func seek(to input: PositionMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
-        player.setVideoTrack(videoTrackNumber: videoTrackNumber.int32)
-    }
-    
-    func getVideoTrack(playerId: Int64) throws -> Int64 {
-        return try getPlayer(id: playerId).videoTrack.int64
-    }
-    
-    // MARK: - Video properties
-    
-    func setVideoScale(playerId: Int64, scale: Double) throws {
-        let player = try getPlayer(id: playerId)
-        
-        player.setVideoScale(scale: scale.float)
-    }
-    
-    func getVideoScale(playerId: Int64) throws -> Double {
-        return try getPlayer(id: playerId).videoScale.double
-    }
-    
-    func setVideoAspectRatio(playerId: Int64, aspectRatio: String) throws {
-        let player = try getPlayer(id: playerId)
-                    
-        player.setVideoAspectRatio(aspectRatio: aspectRatio)
-    }
-    
-    func getVideoAspectRatio(playerId: Int64) throws -> String {
-        return try getPlayer(id: playerId).videoAspectRatio
-    }
-    
-    func getAvailableRendererServices(playerId: Int64) throws -> [String] {
-        return try getPlayer(id: playerId).availableRendererServices
-    }
-    
-    // MARK: - Cast
-    
-    func startRendererScanning(playerId: Int64, rendererService: String) throws {
-        let player = try getPlayer(id: playerId)
-        
-        player.startRendererScanning()
-    }
-    
-    func stopRendererScanning(playerId: Int64) throws {
-        let player = try getPlayer(id: playerId)
-        
-        player.stopRendererScanning()
-    }
-    
-    func getRendererDevices(playerId: Int64) throws -> [String: String] {
-        return try getPlayer(id: playerId).rendererDevices
-    }
-    
-    func castToRenderer(playerId: Int64, rendererId: String) throws {
-        let player = try getPlayer(id: playerId)
-        
-        player.cast(rendererDevice: rendererId)
-    }
-    
-    // MARK: - Recording
-    
-    func startRecording(playerId: Int64, saveDirectory: String) throws -> Bool {
-        let player = try getPlayer(id: playerId)
-        
-        return player.startRecording(saveDirectory: saveDirectory)
-    }
-    
-    func stopRecording(playerId: Int64) throws -> Bool {
-        let player = try getPlayer(id: playerId)
-        
-        return player.stopRecording()
-    }
-}
+        let player = getPlayer(viewId: input.viewId)
 
-extension Int {
-    var int64: Int64 {
-        Int64(self)
+        player?.seek(position: input.position)
     }
     
-    var int32: Int32 {
-        Int32(self)
-    }
-}
+    public func position(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> PositionMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
 
-extension Int64 {
-    var int: Int {
-        Int(self)
+        let message: PositionMessage = PositionMessage()
+        message.position = player?.position()
+        return message
     }
     
-    var int32: Int32 {
-        Int32(truncatingIfNeeded: self)
-    }
-}
-
-extension Int32 {
-    var int: Int {
-        Int(self)
+    public func duration(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DurationMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: DurationMessage = DurationMessage()
+        message.duration = player?.duration()
+        return message
     }
     
-    var int64: Int64 {
-        Int64(truncatingIfNeeded: self)
+    public func setVolume(_ input: VolumeMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setVolume(volume: input.volume)
     }
-}
+    
+    public func getVolume(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VolumeMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
 
-extension Double {
-    var float: Float {
-        Float(self)
+        let message: VolumeMessage = VolumeMessage()
+        message.volume = player?.getVolume()
+        return message
     }
-}
-
-extension Float {
-    var double: Double {
-        Double(self)
+    
+    public func setPlaybackSpeed(_ input: PlaybackSpeedMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setPlaybackSpeed(speed: input.speed)
     }
-}
+    
+    public func getPlaybackSpeed(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> PlaybackSpeedMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: PlaybackSpeedMessage = PlaybackSpeedMessage()
+        message.speed = player?.getPlaybackSpeed()
+        return message
+    }
+    
+    public func takeSnapshot(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SnapshotMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: SnapshotMessage = SnapshotMessage()
+        message.snapshot = player?.takeSnapshot()
+        return message
+    }
+    
+    public func getSpuTracksCount(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
 
-extension Dictionary where Key == Int {
-    var int64Dictionary: [Int64: Value] {
-        [Int64: Value](uniqueKeysWithValues:
-            map { (Int64($0.key), $0.value) }
-        )
+        let message: TrackCountMessage = TrackCountMessage()
+        message.count = player?.getSpuTracksCount()
+        return message
+    }
+    
+    public func getSpuTracks(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SpuTracksMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+
+        let message: SpuTracksMessage = SpuTracksMessage()
+        message.subtitles = player?.getSpuTracks()
+        return message
+    }
+    
+    public func setSpuTrack(_ input: SpuTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+
+        player?.setSpuTrack(spuTrackNumber: input.spuTrackNumber)
+    }
+    
+    public func getSpuTrack(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> SpuTrackMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: SpuTrackMessage = SpuTrackMessage()
+        message.spuTrackNumber = player?.getSpuTrack()
+        return message
+    }
+    
+    public func setSpuDelay(_ input: DelayMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setSpuDelay(delay: input.delay)
+    }
+    
+    public func getSpuDelay(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DelayMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: DelayMessage = DelayMessage()
+        message.delay = player?.getSpuDelay()
+        return message
+    }
+    
+    public func addSubtitleTrack(_ input: AddSubtitleMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.addSubtitleTrack(uri: input.uri, isSelected: input.isSelected)
+    }
+    
+    public func getAudioTracksCount(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: TrackCountMessage = TrackCountMessage()
+        message.count = player?.getAudioTracksCount()
+        return message
+    }
+    
+    public func getAudioTracks(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> AudioTracksMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: AudioTracksMessage = AudioTracksMessage()
+        message.audios = player?.getAudioTracks()
+        return message
+    }
+    
+    public func setAudioTrack(_ input: AudioTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setAudioTrack(audioTrackNumber: input.audioTrackNumber)
+    }
+    
+    public func getAudioTrack(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> AudioTrackMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: AudioTrackMessage = AudioTrackMessage()
+        message.audioTrackNumber = player?.getAudioTrack()
+        return message
+    }
+    
+    public func setAudioDelay(_ input: DelayMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setAudioDelay(delay: input.delay)
+    }
+    
+    public func getAudioDelay(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> DelayMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: DelayMessage = DelayMessage()
+        message.delay = player?.getAudioDelay()
+        return message
+    }
+    
+    public func addAudioTrack(_ input: AddAudioMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.addAudioTrack(uri: input.uri, isSelected: input.isSelected)
+    }
+    
+    public func getVideoTracksCount(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> TrackCountMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: TrackCountMessage = TrackCountMessage()
+        message.count = player?.getVideoTracksCount()
+        return message
+    }
+    
+    public func getVideoTracks(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoTracksMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: VideoTracksMessage = VideoTracksMessage()
+        message.videos = player?.getVideoTracks()
+        return message
+    }
+    
+    public func setVideoTrack(_ input: VideoTrackMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setVideoTrack(videoTrackNumber: input.videoTrackNumber)
+    }
+    
+    public func getVideoTrack(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoTrackMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: VideoTrackMessage = VideoTrackMessage()
+        message.videoTrackNumber = player?.getVideoTrack()
+        return message
+    }
+    
+    public func setVideoScale(_ input: VideoScaleMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setVideoScale(scale: input.scale)
+    }
+    
+    public func getVideoScale(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoScaleMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: VideoScaleMessage = VideoScaleMessage()
+        message.scale = player?.getVideoScale()
+        return message
+    }
+    
+    public func setVideoAspectRatio(_ input: VideoAspectRatioMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.setVideoAspectRatio(aspectRatio: input.aspectRatio)
+    }
+    
+    public func getVideoAspectRatio(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> VideoAspectRatioMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+
+        let message: VideoAspectRatioMessage = VideoAspectRatioMessage()
+        message.aspectRatio = player?.getVideoAspectRatio()
+        return message
+    }
+    
+    public func getAvailableRendererServices(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> RendererServicesMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+
+        let message: RendererServicesMessage = RendererServicesMessage()
+        message.services = player?.getAvailableRendererServices()
+        return message
+    }
+    
+    public func startRendererScanning(_ input: RendererScanningMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.startRendererScanning()
+    }
+    
+    public func stopRendererScanning(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+
+        player?.stopRendererScanning()
+    }
+    
+    public func getRendererDevices(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> RendererDevicesMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: RendererDevicesMessage = RendererDevicesMessage()
+        message.rendererDevices = player?.getRendererDevices()
+        return message
+    }
+    
+    public func cast(toRenderer input: RenderDeviceMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        player?.cast(rendererDevice: input.rendererDevice)
+    }
+    
+    public func startRecording(_ input: RecordMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.startRecording(saveDirectory: input.saveDirectory!)
+        return message
+    }
+    
+    public func stopRecording(_ input: ViewMessage, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> BooleanMessage? {
+        
+        let player = getPlayer(viewId: input.viewId)
+        
+        let message: BooleanMessage = BooleanMessage()
+        message.result = player?.stopRecording()
+        return message
     }
 }
