@@ -1,8 +1,9 @@
 package software.solid.fluttervlcplayer;
 
 import android.content.Context;
+import android.util.LongSparseArray;
 
-import androidx.annotation.NonNull;
+import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.StandardMessageCodec;
@@ -25,7 +26,7 @@ public class FlutterVlcPlayerFactory extends PlatformViewFactory {
     private final KeyForAssetFn keyForAsset;
     private final KeyForAssetAndPackageName keyForAssetAndPackageName;
     //
-    private final FlutterVlcPlayerBuilder flutterVlcPlayerBuilder;
+    private FlutterVlcPlayerBuilder flutterVlcPlayerBuilder;
 
     public FlutterVlcPlayerFactory(BinaryMessenger messenger, TextureRegistry textureRegistry, KeyForAssetFn keyForAsset, KeyForAssetAndPackageName keyForAssetAndPackageName) {
         super(StandardMessageCodec.INSTANCE);
@@ -37,7 +38,6 @@ public class FlutterVlcPlayerFactory extends PlatformViewFactory {
         flutterVlcPlayerBuilder = new FlutterVlcPlayerBuilder();
     }
 
-    @NonNull
     @Override
     public PlatformView create(Context context, int viewId, Object args) {
 //        Map<String, Object> params = (Map<String, Object>) args;
